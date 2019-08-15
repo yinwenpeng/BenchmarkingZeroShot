@@ -358,7 +358,7 @@ def build_zeroshot_trainset():
             if len(parts)==2:
                 label_id = int(parts[0])
                 if label_id != i:
-                    writefile_PU_one.write(line.strip()+'\n'
+                    writefile_PU_one.write(line.strip()+'\n')
                     line_co+=1
         writefile_PU_one.close()
         readfile.close()
