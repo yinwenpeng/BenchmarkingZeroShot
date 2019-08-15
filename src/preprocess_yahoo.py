@@ -308,7 +308,7 @@ def build_zeroshot_testset():
         parts = line.strip().split('\t')
         if len(parts)==2:
             label_id = int(parts[0])
-            copy_size = id2size.get(label_id)
+            copy_size = id2size.get(label_id, 0)
             if copy_size < 10000-1:
                 '''copy to test'''
                 writefile_test.write(line.strip()+'\n')
