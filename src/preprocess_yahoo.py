@@ -2,7 +2,7 @@ import codecs
 from collections import defaultdict
 import numpy as np
 import statistics
-yahoo_path = 'export/home/Dataset/YahooClassification/yahoo_answers_csv/'
+yahoo_path = '/export/home/Dataset/YahooClassification/yahoo_answers_csv/'
 
 # '''
 # Society & Culture
