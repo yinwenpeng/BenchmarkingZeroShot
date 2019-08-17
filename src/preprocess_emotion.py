@@ -83,6 +83,7 @@ def build_zeroshot_test_dev_set():
     dev_write_size = defaultdict(int)
 
     line_co = 0
+    spec_co = 0
     for line2dict in readfile:
         valid_line = False
         text = line2dict.get('text').strip()
@@ -105,6 +106,9 @@ def build_zeroshot_test_dev_set():
                     break
             '''there is weird case that no positive label in the instances'''
             if len(target_emotion) > 0:
+                if target_emotion == 'disgust' and domain =='tweets':
+                    spec_co+=1
+
                 emotion_index = emotion_type_list.index(target_emotion)
                 domain_index = domain_list.index(domain)
                 if test_write_size.get((domain, target_emotion),0) < test_size_matrix[domain_index][emotion_index]:
@@ -123,6 +127,7 @@ def build_zeroshot_test_dev_set():
     writefile_dev.close()
     writefile_remain.close()
     print('test, dev, train build over')
+    print(spec_co)
 
     writefile_test = codecs.open(path+'zero-shot-split/test.txt', 'r', 'utf-8')
     co=defaultdict(int)
