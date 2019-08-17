@@ -72,7 +72,7 @@ def build_zeroshot_test_dev_set():
     test_size_matrix = [[1500,2150,1650,50,800,2150,880,0,0,1100,2750],
     [300,200,400,400,0,200,0,300,300,0,0],
     [300,500,250,120,0,250,220,0,0,0,2750],
-    [200,150,200,30,0,200,100,0,0,0,0]]
+    [200,150,200,30,0,100,100,0,0,0,0]]
 
     dev_size_matrix = [[900,1050,400,40,250,1200,370,0,0,400,900],
     [150,150,150,150,0,150,0,100,100,0,0],
@@ -97,8 +97,6 @@ def build_zeroshot_test_dev_set():
         if single == 'single':
             target_emotion = ''
             emotions =line2dict.get('emotions')
-            # print(emotions)
-            # print(line2dict)
             for emotion, label in emotions.items():
                 # print(emotion, label, label == 1)
                 if label == 1:
