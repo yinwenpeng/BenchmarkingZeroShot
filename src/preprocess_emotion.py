@@ -100,6 +100,7 @@ def build_zeroshot_test_dev_set():
             for emotion, label in emotions.items():
                 if label == 1:
                     target_emotion = emotion
+                    print(emotions)
                     break
 
             emotion_index = emotion_type_list.index(target_emotion)
