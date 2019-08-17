@@ -1,6 +1,8 @@
 
 import jsonlines
 from collections import defaultdict
+import codecs
+
 path = '/export/home/Dataset/Stuttgart_Emotion/unify-emotion-datasets-master/'
 
 def statistics():
