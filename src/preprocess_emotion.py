@@ -69,12 +69,12 @@ def build_zeroshot_test_dev_set():
 
     emotion_type_list = ['sadness', 'joy', 'anger', 'disgust', 'trust', 'fear', 'surprise', 'shame', 'guilt', 'love', 'noemo']
     domain_list = ['tweets', 'emotional_events', 'fairytale_sentences', 'artificial_sentences']
-    test_size_matrix = [[3000,3600,1650,650,800,4150,880,0,0,1100,2750],
+    test_size_matrix = [[3000,3600,1650,50,800,4150,880,0,0,1100,2750],
     [400,400,400,400,0,400,0,300,300,0,0],
     [400,800,250,120,0,250,220,0,0,0,2750],
     [200,200,200,30,0,200,100,0,0,0,0]]
 
-    dev_size_matrix = [[900,1050,400,250,250,1200,370,0,0,400,900],
+    dev_size_matrix = [[900,1050,400,40,250,1200,370,0,0,400,900],
     [150,150,150,150,0,150,0,100,100,0,0],
     [150,300,150,80,0,150,80,0,0,0,900],
     [100,100,100,20,0,100,50,0,0,0,0]]
