@@ -150,10 +150,51 @@ def build_zeroshot_test_dev_set():
     writefile_remain.close()
     print(co)
 
+def build_zeroshot_train_set():
+    readfile_remain = codecs.open(path+'unified-dataset-wo-devandtest.txt', 'r', 'utf-8')
+    emotion_type_list = ['sadness', 'joy', 'anger', 'disgust', 'fear', 'surprise', 'shame', 'guilt', 'love']
+    writefile_PU_half_0 = codecs.open(path+'zero-shot-split/train_pu_half_v0.txt', 'w', 'utf-8')
+    writefile_PU_half_1 = codecs.open(path+'zero-shot-split/train_pu_half_v1.txt', 'w', 'utf-8')
+
+    for line in readfile_remain:
+        parts = line.strip().split('\t')
+        emotion = parts[0]
+        if emotion_type_list.index(emotion) %2==0:
+            writefile_PU_half_0.write(line.strip()+'\n')
+        else:
+            writefile_PU_half_1.write(line.strip()+'\n')
+    writefile_PU_half_0.close()
+    writefile_PU_half_1.close()
+    print('PU half over')
+    '''PU_one'''
+    for i in range(len(emotion_type_list)):
+        readfile=codecs.open(path+'unified-dataset-wo-devandtest.txt', 'r', 'utf-8')
+        writefile_PU_one = codecs.open(path+'zero-shot-split/train_pu_one_'+'wo_'+str(i)+'.txt', 'w', 'utf-8')
+        line_co=0
+        for line in readfile:
+            parts = line.strip().split('\t')
+            if len(parts)==3:
+                label_id = emotion_type_list.index(parts[0])
+                if label_id != i:
+                    writefile_PU_one.write(line.strip()+'\n')
+                    line_co+=1
+        writefile_PU_one.close()
+        readfile.close()
+        print('write size:', line_co)
+    print('build train over')
+
+
+
+
+
+
+
+
 
 
 
 
 if __name__ == '__main__':
     # statistics()
-    build_zeroshot_test_dev_set()
+    # build_zeroshot_test_dev_set()
+    build_zeroshot_train_set()
