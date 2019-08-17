@@ -159,10 +159,11 @@ def build_zeroshot_train_set():
     for line in readfile_remain:
         parts = line.strip().split('\t')
         emotion = parts[0]
-        if emotion_type_list.index(emotion) %2==0:
-            writefile_PU_half_0.write(line.strip()+'\n')
-        else:
-            writefile_PU_half_1.write(line.strip()+'\n')
+        if emotion in set(emotion_type_list):
+            if emotion_type_list.index(emotion) %2==0:
+                writefile_PU_half_0.write(line.strip()+'\n')
+            else:
+                writefile_PU_half_1.write(line.strip()+'\n')
     writefile_PU_half_0.close()
     writefile_PU_half_1.close()
     print('PU half over')
@@ -174,10 +175,12 @@ def build_zeroshot_train_set():
         for line in readfile:
             parts = line.strip().split('\t')
             if len(parts)==3:
-                label_id = emotion_type_list.index(parts[0])
-                if label_id != i:
-                    writefile_PU_one.write(line.strip()+'\n')
-                    line_co+=1
+                emotion = parts[0]
+                if emotion in set(emotion_type_list):
+                    label_id = emotion_type_list.index(emotion)
+                    if label_id != i:
+                        writefile_PU_one.write(line.strip()+'\n')
+                        line_co+=1
         writefile_PU_one.close()
         readfile.close()
         print('write size:', line_co)
