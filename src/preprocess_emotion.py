@@ -121,7 +121,7 @@ def build_zeroshot_test_dev_set():
                     print(line_co)
     writefile_test.close()
     writefile_dev.close()
-    writefile_remainc.close()
+    writefile_remain.close()
     print('test, dev, train build over')
     writefile_test = codecs.open(path+'zero-shot-split/test.txt', 'w', 'utf-8')
     co=defaultdict(int)
