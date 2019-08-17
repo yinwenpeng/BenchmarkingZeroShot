@@ -97,6 +97,7 @@ def build_zeroshot_test_dev_set():
             target_emotion = ''
             emotions =line2dict.get('emotions')
             print(emotions)
+            print(line2dict)
             for emotion, label in emotions.items():
                 print(emotion, label, label == 1)
                 if label == 1:
