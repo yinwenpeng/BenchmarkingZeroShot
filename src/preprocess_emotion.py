@@ -130,7 +130,7 @@ def build_zeroshot_test_dev_set():
         parts = line.strip().split('\t')
         co[(parts[0], parts[1])]+=1
     writefile_test.close()
-    print(co)
+    print(co, '\n')
 
     writefile_dev = codecs.open(path+'zero-shot-split/dev.txt', 'r', 'utf-8')
     co=defaultdict(int)
@@ -138,7 +138,7 @@ def build_zeroshot_test_dev_set():
         parts = line.strip().split('\t')
         co[(parts[0], parts[1])]+=1
     writefile_dev.close()
-    print(co)
+    print(co, '\n')
     writefile_remain = codecs.open(path+'unified-dataset-wo-devandtest.txt', 'r', 'utf-8')
     co=defaultdict(int)
     for line in writefile_remain:
