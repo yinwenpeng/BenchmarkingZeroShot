@@ -96,29 +96,29 @@ def build_zeroshot_test_dev_set():
         if single == 'single':
             target_emotion = ''
             emotions =line2dict.get('emotions')
-            print(emotions)
-            print(line2dict)
+            # print(emotions)
+            # print(line2dict)
             for emotion, label in emotions.items():
-                print(emotion, label, label == 1)
+                # print(emotion, label, label == 1)
                 if label == 1:
                     target_emotion = emotion
-
                     break
+            '''there is weird case that no positive label in the instances'''
+            if len(target_emotion) > 0:
+                emotion_index = emotion_type_list.index(target_emotion)
+                domain_index = domain_list.index(domain)
+                if test_write_size.get((domain, target_emotion),0) < test_size_matrix[domain_index][emotion_index]:
+                    writefile_test.write(target_emotion+'\t'+domain+'\t'+text+'\n')
+                    test_write_size[(domain, target_emotion)]+=1
+                elif dev_write_size.get((domain, target_emotion),0) < dev_size_matrix[domain_index][emotion_index]:
+                    writefile_dev.write(target_emotion+'\t'+domain+'\t'+text+'\n')
+                    dev_write_size[(domain, target_emotion)]+=1
+                else:
+                    writefile_remain.write(target_emotion+'\t'+domain+'\t'+text+'\n')
 
-            emotion_index = emotion_type_list.index(target_emotion)
-            domain_index = domain_list.index(domain)
-            if test_write_size.get((domain, target_emotion),0) < test_size_matrix[domain_index][emotion_index]:
-                writefile_test.write(target_emotion+'\t'+domain+'\t'+text+'\n')
-                test_write_size[(domain, target_emotion)]+=1
-            elif dev_write_size.get((domain, target_emotion),0) < dev_size_matrix[domain_index][emotion_index]:
-                writefile_dev.write(target_emotion+'\t'+domain+'\t'+text+'\n')
-                dev_write_size[(domain, target_emotion)]+=1
-            else:
-                writefile_remain.write(target_emotion+'\t'+domain+'\t'+text+'\n')
-
-            line_co+=1
-            if line_co%100==0:
-                print(line_co)
+                line_co+=1
+                if line_co%100==0:
+                    print(line_co)
     writefile_test.close()
     writefile_dev.close()
     writefile_remainc.close()
