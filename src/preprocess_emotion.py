@@ -134,7 +134,7 @@ def build_zeroshot_test_dev_set():
 
     writefile_dev = codecs.open(path+'zero-shot-split/dev.txt', 'r', 'utf-8')
     co=defaultdict(int)
-    for line in writefile_test:
+    for line in writefile_dev:
         parts = line.strip().split('\t')
         co[(parts[0], parts[1])]+=1
     writefile_dev.close()
