@@ -2,8 +2,10 @@
 import codecs
 from collections import defaultdict
 
+path = '/export/home/Dataset/LORELEI/'
+
 def combine_all_available_labeled_datasets():
-    path = '/export/home/Dataset/LORELEI/'
+
     files = [
     'full_BBN_multi.txt',
     'il9_sf_gold.txt',
