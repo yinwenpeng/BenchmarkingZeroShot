@@ -76,8 +76,10 @@ def build_zeroshot_test_dev_set():
         for line in readfile:
             if test_store_size.get(label, 0) < test_label_size_max.get(label):
                 write_test.write(label+'\t'+line.strip()+'\n')
+                test_store_size[label]+=1
             elif dev_store_size.get(label, 0) < dev_label_size_max.get(label):
                 write_dev.write(label+'\t'+line.strip()+'\n')
+                dev_store_size[label]+=1
             else:
                 writefile_remain.write(label+'\t'+line.strip()+'\n')
         readfile.close()
