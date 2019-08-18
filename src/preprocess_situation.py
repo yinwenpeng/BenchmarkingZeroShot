@@ -1,5 +1,5 @@
 
-
+import codecs
 
 def combine_all_available_labeled_datasets():
     path = '/export/home/Dataset/LORELEI/'
