@@ -57,17 +57,39 @@ def split_all_labeleddata_into_subdata_per_label():
 
 
 
-# def build_zeroshot_test_dev_set():
-#     readfile = codecs.open(path+'sf_all_labeled_data_multilabel.txt', 'r', 'utf-8')
-#     writefile_test = codecs.open(path+'zero-shot-split/test.txt', 'w', 'utf-8')
-#     writefile_dev = codecs.open(path+'zero-shot-split/dev.txt', 'w', 'utf-8')
-#     writefile_remain = codecs.open(path+'unified-dataset-wo-devandtest.txt', 'w', 'utf-8')
-#     label_set = set(['search','evac','infra','utils','water','shelter','med','food', 'crimeviolence', 'terrorism', 'regimechange'])
-#
-#     for line in readfile:
-#         parts=line.strip().split('\t')
-#         label_list = parts[0].strip().split()
-#         if len(label_list) == 1 and label_list[0] == 'out-of-domain':
+def build_zeroshot_test_dev_set():
+
+    test_label_size_max = {'search':80, 'evac':70, 'infra':120, 'utils':100,'water':120,'shelter':175,
+    'med':250,'food':190,'regimechange':30,'terrorism':70,'crimeviolence':250,'out-of-domain':400}
+    dev_label_size_max = {'search':50, 'evac':30, 'infra':50, 'utils':50,'water':50,'shelter':75,
+    'med':100,'food':80,'regimechange':15,'terrorism':40,'crimeviolence':100,'out-of-domain':200}
+
+    label_list = ['search','evac','infra','utils','water','shelter','med','food', 'crimeviolence', 'terrorism', 'regimechange', 'out-of-domain']
+
+    test_store_size = defaultdict(int)
+    dev_store_size = defaultdict(int)
+    write_test = codecs.open(path+'zero-shot-split/test.txt', 'w', 'utf-8')
+    write_dev = codecs.open(path+'zero-shot-split/dev.txt', 'w', 'utf-8')
+    writefile_remain = codecs.open(path+'unified-dataset-wo-devandtest.txt', 'w', 'utf-8')
+    for label in label_list:
+        readfile = codecs.open(path+'data_per_label/'+label+'.txt', 'r', 'utf-8')
+        for line in readfile:
+            if test_store_size.get(label, 0) < test_label_size_max.get(label):
+                write_test.write(label+'\t'+line.strip()+'\n')
+            elif dev_store_size.get(label, 0) < dev_label_size_max.get(label):
+                write_dev.write(label+'\t'+line.strip()+'\n')
+            else:
+                writefile_remain.write(label+'\t'+line.strip()+'\n')
+        readfile.close()
+    write_test.close()
+    write_dev.close()
+    writefile_remain.close()
+
+    print('test and dev build over')
+
+
+
+
 
 
 
@@ -80,4 +102,5 @@ def split_all_labeleddata_into_subdata_per_label():
 
 if __name__ == '__main__':
     # combine_all_available_labeled_datasets()
-    split_all_labeleddata_into_subdata_per_label()
+    # split_all_labeleddata_into_subdata_per_label()
+    build_zeroshot_test_dev_set()
