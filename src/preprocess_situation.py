@@ -8,13 +8,12 @@ def combine_all_available_labeled_datasets():
 
     files = [
     'full_BBN_multi.txt',
-    'il9_sf_gold.txt',
-    'il10_sf_gold.txt',
+    'il9_sf_gold.txt', #repeat
+    'il10_sf_gold.txt', # repeat
     'il5_translated_seg_level_as_training_all_fields.txt',
     'il3_sf_gold.txt',
-    'Mandarin_sf_gold.txt'
+    'Mandarin_sf_gold.txt' #repeat
     ]
-    label_id_re_map = {0:0,1:1, 2:2,3:3,4:4,5:5,6:6,7:7,8:8,9:11,10:9,11:10}
     writefile = codecs.open(path+'sf_all_labeled_data_multilabel.txt', 'w', 'utf-8')
     all_size = 0
     label2co = defaultdict(int)
@@ -22,15 +21,19 @@ def combine_all_available_labeled_datasets():
         print('loading file:', path+fil, '...')
         size = 0
         readfile=codecs.open(path+fil, 'r', 'utf-8')
+        stored_lines = set()
         for line in readfile:
-            parts=line.strip().split('\t') #lowercase all tokens, as we guess this is not important for sentiment task
-            label_list = parts[1].strip().split()
-            for label in set(label_list):
-                label2co[label]+=1
-            text=parts[2].strip()
-            writefile.write(' '.join(label_list)+'\t'+text+'\n')
-            size+=1
-            all_size+=1
+            '''some labeled files have repeated lines'''
+            if line.strip() not in stored_lines:
+                parts=line.strip().split('\t') #lowercase all tokens, as we guess this is not important for sentiment task
+                label_list = parts[1].strip().split()
+                for label in set(label_list):
+                    label2co[label]+=1
+                text=parts[2].strip()
+                writefile.write(' '.join(label_list)+'\t'+text+'\n')
+                size+=1
+                all_size+=1
+                stored_lines.add(line.strip())
         readfile.close()
         print('size:', size)
     writefile.close()
@@ -137,7 +140,7 @@ def build_zeroshot_train_set():
 
 
 if __name__ == '__main__':
-    # combine_all_available_labeled_datasets()
-    # split_all_labeleddata_into_subdata_per_label()
-    # build_zeroshot_test_dev_set()
+    combine_all_available_labeled_datasets()
+    split_all_labeleddata_into_subdata_per_label()
+    build_zeroshot_test_dev_set()
     build_zeroshot_train_set()
