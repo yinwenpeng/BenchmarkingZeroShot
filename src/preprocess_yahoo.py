@@ -366,7 +366,7 @@ def build_zeroshot_trainset():
     print('build train over')
 
 
-def evaluate_Yahoo_zeroshot_TwpPhasePred(pred_probs, pred_binary_labels, eval_label_list, eval_hypo_seen_str_indicator, eval_hypo_2_type_index, seen_types):
+def evaluate_Yahoo_zeroshot_TwpPhasePred(pred_probs, pred_binary_labels_harsh, pred_binary_labels_loose, eval_label_list, eval_hypo_seen_str_indicator, eval_hypo_2_type_index, seen_types):
     '''
     pred_probs: a list, the prob for  "entail"
     pred_binary_labels: a lit, each  for 0 or 1
@@ -377,7 +377,7 @@ def evaluate_Yahoo_zeroshot_TwpPhasePred(pred_probs, pred_binary_labels, eval_la
     '''
 
     pred_probs = list(pred_probs)
-    pred_binary_labels = list(pred_binary_labels)
+    # pred_binary_labels = list(pred_binary_labels)
     total_hypo_size = len(eval_hypo_seen_str_indicator)
     total_premise_size = len(eval_label_list)
     assert len(pred_probs) == total_premise_size*total_hypo_size
@@ -395,7 +395,8 @@ def evaluate_Yahoo_zeroshot_TwpPhasePred(pred_probs, pred_binary_labels, eval_la
 
     for i in range(total_premise_size):
         pred_probs_per_premise = pred_probs[i*total_hypo_size: (i+1)*total_hypo_size]
-        pred_binary_labels_per_premise = pred_binary_labels[i*total_hypo_size: (i+1)*total_hypo_size]
+        pred_binary_labels_per_premise_harsh = pred_binary_labels_harsh[i*total_hypo_size: (i+1)*total_hypo_size]
+        pred_binary_labels_per_premise_loose = pred_binary_labels_loose[i*total_hypo_size: (i+1)*total_hypo_size]
 
 
         # print('pred_probs_per_premise:',pred_probs_per_premise)
@@ -405,16 +406,34 @@ def evaluate_Yahoo_zeroshot_TwpPhasePred(pred_probs, pred_binary_labels, eval_la
         '''first check if seen types get 'entailment'''
         seen_get_entail_flag=False
         for j in range(total_hypo_size):
-            if eval_hypo_seen_str_indicator[j] == 'seen' and pred_binary_labels_per_premise[j]==0:
+            if eval_hypo_seen_str_indicator[j] == 'seen' and pred_binary_labels_per_premise_harsh[j]==0:
                 seen_get_entail_flag=True
                 break
+        '''first check if unseen types get 'entailment'''
+        unseen_get_entail_flag=False
+        for j in range(total_hypo_size):
+            if eval_hypo_seen_str_indicator[j] == 'unseen' and pred_binary_labels_per_premise_loose[j]==0:
+                unseen_get_entail_flag=True
+                break
 
-        if seen_get_entail_flag:
+        if unseen_get_entail_flag:
+            '''find the unseen type with highest prob'''
+            max_j = -1
+            max_prob = -1.0
+            for j in range(total_hypo_size):
+                if eval_hypo_seen_str_indicator[j] == 'unseen':
+                    its_prob = pred_probs_per_premise[j]
+                    if its_prob > max_prob:
+                        max_prob = its_prob
+                        max_j = j
+            pred_type = eval_hypo_2_type_index[max_j]
+
+        elif seen_get_entail_flag:
             '''find the seen type with highest prob'''
             max_j = -1
             max_prob = -1.0
             for j in range(total_hypo_size):
-                if eval_hypo_seen_str_indicator[j] == 'seen' and pred_binary_labels_per_premise[j]==0:
+                if eval_hypo_seen_str_indicator[j] == 'seen' and pred_binary_labels_per_premise_harsh[j]==0:
                     its_prob = pred_probs_per_premise[j]
                     if its_prob > max_prob:
                         max_prob = its_prob

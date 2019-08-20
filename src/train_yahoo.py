@@ -800,13 +800,19 @@ def main():
                     pred_probs = softmax(preds,axis=1)[:,0]
                     # preds = preds[:,0]
                     # pred_binary_labels = np.argmax(preds, axis=1)
-                    pred_binary_labels = []
+                    pred_binary_labels_harsh = []
+                    pred_binary_labels_loose = []
                     for i in range(preds.shape[0]):
-                        if preds[i][0]>preds[i][1]+0.4:
-                            pred_binary_labels.append(0)
+                        if preds[i][0]>preds[i][1]+0.2:
+                            pred_binary_labels_harsh.append(0)
                         else:
-                            pred_binary_labels.append(1)
-                    seen_acc, unseen_acc = evaluate_Yahoo_zeroshot_TwpPhasePred(pred_probs, pred_binary_labels, eval_label_list, eval_hypo_seen_str_indicator, eval_hypo_2_type_index, seen_types)
+                            pred_binary_labels_harsh.append(1)
+                        if preds[i][0]>preds[i][1]:
+                            pred_binary_labels_loose.append(0)
+                        else:
+                            pred_binary_labels_loose.append(1)
+
+                    seen_acc, unseen_acc = evaluate_Yahoo_zeroshot_TwpPhasePred(pred_probs, pred_binary_labels_harsh, pred_binary_labels_loose, eval_label_list, eval_hypo_seen_str_indicator, eval_hypo_2_type_index, seen_types)
                     # result = compute_metrics('F1', preds, all_label_ids.numpy())
                     loss = tr_loss/nb_tr_steps if args.do_train else None
                     # test_acc = mean_f1#result.get("f1")
