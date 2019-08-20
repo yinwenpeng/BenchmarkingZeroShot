@@ -389,7 +389,7 @@ def evaluate_Yahoo_zeroshot_TwpPhasePred(pred_probs, pred_binary_labels, eval_la
     for i in range(total_premise_size):
         pred_probs_per_premise = pred_probs[i*total_hypo_size: (i+1)*total_hypo_size]
         pred_binary_labels_per_premise = pred_binary_labels[i*total_hypo_size: (i+1)*total_hypo_size]
-        '''first check if seen types get 'entailment''''
+        '''first check if seen types get 'entailment'''
         seen_get_entail_flag=False
         for j in range(total_hypo_size):
             if eval_hypo_seen_str_indicator[j] == 'seen' and pred_binary_labels_per_premise[j]==0:
