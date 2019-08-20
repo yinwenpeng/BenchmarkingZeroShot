@@ -43,8 +43,8 @@ from sklearn.metrics import matthews_corrcoef, f1_score
 
 from pytorch_transformers import *
 
-from preprocess_Yahoo import evaluate_Yahoo_zeroshot_TwpPhasePred
-import torch.optim as optimizer_wenpeng
+from preprocess_yahoo import evaluate_Yahoo_zeroshot_TwpPhasePred
+# import torch.optim as optimizer_wenpeng
 
 logging.basicConfig(format = '%(asctime)s - %(levelname)s - %(name)s -   %(message)s',
                     datefmt = '%m/%d/%Y %H:%M:%S',
@@ -661,8 +661,6 @@ def main():
                              lr=args.learning_rate,
                              warmup=args.warmup_proportion,
                              t_total=num_train_optimization_steps)
-        # optimizer = optimizer_wenpeng.Adagrad(optimizer_grouped_parameters, lr=1e-3)
-
     global_step = 0
     nb_tr_steps = 0
     tr_loss = 0
