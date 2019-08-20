@@ -375,12 +375,19 @@ def evaluate_Yahoo_zeroshot_TwpPhasePred(pred_probs, pred_binary_labels, eval_la
     eval_hypo_2_type_index:: total hypo size, the type in [0,...n]
     seen_types: a set of type indices
     '''
+
     pred_probs = list(pred_probs)
     pred_binary_labels = list(pred_binary_labels)
     total_hypo_size = len(eval_hypo_seen_str_indicator)
     total_premise_size = len(eval_label_list)
     assert len(pred_probs) == total_premise_size*total_hypo_size
     assert len(eval_hypo_seen_str_indicator) == len(eval_hypo_2_type_index)
+
+    print('seen_types:', seen_types)
+    print('eval_hypo_seen_str_indicator:', eval_hypo_seen_str_indicator)
+    print('eval_hypo_2_type_index:', eval_hypo_2_type_index)
+
+
     seen_hit=0
     unseen_hit = 0
     seen_size = 0
@@ -389,6 +396,12 @@ def evaluate_Yahoo_zeroshot_TwpPhasePred(pred_probs, pred_binary_labels, eval_la
     for i in range(total_premise_size):
         pred_probs_per_premise = pred_probs[i*total_hypo_size: (i+1)*total_hypo_size]
         pred_binary_labels_per_premise = pred_binary_labels[i*total_hypo_size: (i+1)*total_hypo_size]
+
+
+        print('pred_probs_per_premise:',pred_probs_per_premise)
+        print('pred_binary_labels_per_premise:', pred_binary_labels_per_premise)
+
+
         '''first check if seen types get 'entailment'''
         seen_get_entail_flag=False
         for j in range(total_hypo_size):
@@ -421,6 +434,8 @@ def evaluate_Yahoo_zeroshot_TwpPhasePred(pred_probs, pred_binary_labels, eval_la
                         max_j = j
             pred_type = eval_hypo_2_type_index[max_j]
         gold_type = eval_label_list[i]
+
+        print('pred_type:', pred_type, 'gold_type:', gold_type)
         if gold_type in seen_types:
             seen_size+=1
             if gold_type == pred_type:
