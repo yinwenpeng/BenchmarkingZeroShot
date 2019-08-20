@@ -182,9 +182,9 @@ class RteProcessor(DataProcessor):
                                 InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
                             exam_co+=1
                 line_co+=1
-                if line % 1000 == 0:
+                if line_co % 1000 == 0:
                     print('loading training size:', line_co)
-                if line == 10000:
+                if line_co == 10000:
                     break
         readfile.close()
         print('loaded size:', line_co)
@@ -238,9 +238,9 @@ class RteProcessor(DataProcessor):
                                 InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
                             exam_co+=1
                 line_co+=1
-                if line % 1000 == 0:
+                if line_co % 1000 == 0:
                     print('loading test size:', line_co)
-                if line == 10000:
+                if line_co == 10000:
                     break
 
 
