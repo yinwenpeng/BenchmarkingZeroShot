@@ -705,16 +705,16 @@ def main():
                 # print('train label_ids:', label_ids.view(-1))
 
                 # define a new function to compute loss values for both output_modes
-                outputs = model(input_ids, segment_ids, input_mask, labels=None)
-                print(outputs)
-                print(label_ids)
-
-                print(outputs.view(-1, num_labels))
-                print(label_ids.view(-1))
-                exit(0)
+                logits = model(input_ids, segment_ids, input_mask, labels=None)
+                # print(logits)
+                # print(label_ids)
+                #
+                # print(logits.view(-1, num_labels))
+                # print(label_ids.view(-1))
+                # exit(0)
 
                 loss_fct = CrossEntropyLoss()
-                loss = loss_fct(logits.view(-1, num_labels), label_ids.view(-1))
+                loss = loss_fct(logits[0].view(-1, num_labels), label_ids.view(-1))
 
                 if n_gpu > 1:
                     loss = loss.mean() # mean() to average on multi-gpu.
