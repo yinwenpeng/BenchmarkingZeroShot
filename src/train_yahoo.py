@@ -622,7 +622,7 @@ def main():
     num_train_optimization_steps = None
     if args.do_train:
         # train_examples = processor.get_train_examples_wenpeng('/home/wyin3/Datasets/glue_data/RTE/train.tsv')
-        train_examples, seen_types = processor.get_examples_Yahoo_train('/export/home/Dataset/YahooClassification/yahoo_answers_csv/zero-shot-split/train_pu_half_v0.txt', 100)
+        train_examples, seen_types = processor.get_examples_Yahoo_train('/export/home/Dataset/YahooClassification/yahoo_answers_csv/zero-shot-split/train_pu_half_v0.txt', 1000)
         # seen_classes=[0,2,4,6,8]
 
         num_train_optimization_steps = int(
@@ -746,7 +746,7 @@ def main():
                 optimizer.zero_grad()
                 global_step += 1
                 iter_co+=1
-                if iter_co %20==0:
+                if iter_co %50==0:
                     '''
                     start evaluate on test set after this epoch
                     '''
