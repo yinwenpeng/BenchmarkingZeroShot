@@ -36,12 +36,12 @@ from scipy.special import softmax
 from scipy.stats import pearsonr, spearmanr
 from sklearn.metrics import matthews_corrcoef, f1_score
 
-# from pytorch_pretrained_bert.file_utils import PYTORCH_PRETRAINED_BERT_CACHE
-# from pytorch_pretrained_bert.modeling import BertForSequenceClassification, BertConfig, WEIGHTS_NAME, CONFIG_NAME
-# from pytorch_pretrained_bert.tokenization import BertTokenizer
-# from pytorch_pretrained_bert.optimization import BertAdam, warmup_linear
+from pytorch_transformers.file_utils import PYTORCH_TRANSFORMERS_CACHE
+from pytorch_transformers.modeling_bert import BertForSequenceClassification, BertConfig, WEIGHTS_NAME, CONFIG_NAME
+from pytorch_transformers.tokenization_bert import BertTokenizer
+from pytorch_transformers.optimization import AdamW, warmup_linear
 
-from pytorch_transformers import *
+# from pytorch_transformers import *
 
 from preprocess_yahoo import evaluate_Yahoo_zeroshot_TwpPhasePred
 # import torch.optim as optimizer_wenpeng
@@ -616,7 +616,7 @@ def main():
             num_train_optimization_steps = num_train_optimization_steps // torch.distributed.get_world_size()
 
     # Prepare model
-    cache_dir = args.cache_dir if args.cache_dir else os.path.join(str(PYTORCH_PRETRAINED_BERT_CACHE), 'distributed_{}'.format(args.local_rank))
+    cache_dir = args.cache_dir if args.cache_dir else os.path.join(str(PYTORCH_TRANSFORMERS_CACHE), 'distributed_{}'.format(args.local_rank))
     # model = BertForSequenceClassification.from_pretrained(args.bert_model,
     #           cache_dir=cache_dir,
     #           num_labels=num_labels)
@@ -657,7 +657,7 @@ def main():
             optimizer = FP16_Optimizer(optimizer, static_loss_scale=args.loss_scale)
 
     else:
-        optimizer = BertAdam(optimizer_grouped_parameters,
+        optimizer = AdamW(optimizer_grouped_parameters,
                              lr=args.learning_rate,
                              warmup=args.warmup_proportion,
                              t_total=num_train_optimization_steps)
