@@ -707,6 +707,10 @@ def main():
                 # define a new function to compute loss values for both output_modes
                 outputs = model(input_ids, segment_ids, input_mask, labels=None)
                 print(outputs)
+                print(label_ids)
+
+                print(outputs.view(-1, num_labels))
+                print(label_ids.view(-1))
                 exit(0)
 
                 loss_fct = CrossEntropyLoss()
