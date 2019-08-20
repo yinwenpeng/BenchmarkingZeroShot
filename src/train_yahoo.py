@@ -658,9 +658,7 @@ def main():
 
     else:
         optimizer = AdamW(optimizer_grouped_parameters,
-                             lr=args.learning_rate,
-                             warmup=args.warmup_proportion,
-                             t_total=num_train_optimization_steps)
+                             lr=args.learning_rate)
     global_step = 0
     nb_tr_steps = 0
     tr_loss = 0
