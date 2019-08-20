@@ -662,7 +662,7 @@ def main():
     global_step = 0
     nb_tr_steps = 0
     tr_loss = 0
-    max_test_acc = 0.0
+    max_test_unseen_acc = 0.0
     if args.do_train:
         train_features = convert_examples_to_features(
             train_examples, label_list, args.max_seq_length, tokenizer, output_mode)
