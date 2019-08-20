@@ -39,7 +39,7 @@ from sklearn.metrics import matthews_corrcoef, f1_score
 from pytorch_transformers.file_utils import PYTORCH_TRANSFORMERS_CACHE
 from pytorch_transformers.modeling_bert import BertForSequenceClassification, BertConfig, WEIGHTS_NAME, CONFIG_NAME
 from pytorch_transformers.tokenization_bert import BertTokenizer
-from pytorch_transformers.optimization import AdamW, warmup_linear
+from pytorch_transformers.optimization import AdamW
 
 # from pytorch_transformers import *
 
