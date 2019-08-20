@@ -802,7 +802,7 @@ def main():
                     # pred_binary_labels = np.argmax(preds, axis=1)
                     pred_binary_labels = []
                     for i in range(preds.shape[0]):
-                        if preds[i][0]>preds[i][1]+0.2:
+                        if preds[i][0]>preds[i][1]+0.3:
                             pred_binary_labels.append(0)
                         else:
                             pred_binary_labels.append(1)
