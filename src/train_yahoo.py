@@ -146,45 +146,49 @@ class RteProcessor(DataProcessor):
         return examples
 
 
-    def get_examples_Yahoo_train(self, filename):
+    def get_examples_Yahoo_train(self, filename, size_limit_per_type):
         readfile = codecs.open(filename, 'r', 'utf-8')
         line_co=0
         exam_co = 0
         examples=[]
         label_list = []
         seen_types = set()
+        type_load_size = defaultdict(int)
         for row in readfile:
             line=row.strip().split('\t')
             if len(line)==2: # label_id, text
 
                 type_index =  int(line[0])
-                seen_types.add(type_index)
-                for i in range(10):
-                    hypo_list = type2hypothesis.get(i)
-                    if i == type_index:
-                        '''pos pair'''
-                        for hypo in hypo_list:
-                            guid = "train-"+str(exam_co)
-                            text_a = line[1]
-                            text_b = hypo
-                            label = 'entailment' #if line[0] == '1' else 'not_entailment'
-                            examples.append(
-                                InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
-                            exam_co+=1
-                    else:
-                        '''neg pair'''
-                        for hypo in hypo_list:
-                            guid = "train-"+str(exam_co)
-                            text_a = line[1]
-                            text_b = hypo
-                            label = 'not_entailment' #if line[0] == '1' else 'not_entailment'
-                            examples.append(
-                                InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
-                            exam_co+=1
-                line_co+=1
-                if line_co % 1000 == 0:
-                    print('loading training size:', line_co)
-                if line_co == 1000:
+                if type_load_size.get(type_index,0)< size_limit_per_type:
+                    seen_types.add(type_index)
+                    for i in range(10):
+                        hypo_list = type2hypothesis.get(i)
+                        if i == type_index:
+                            '''pos pair'''
+                            for hypo in hypo_list:
+                                guid = "train-"+str(exam_co)
+                                text_a = line[1]
+                                text_b = hypo
+                                label = 'entailment' #if line[0] == '1' else 'not_entailment'
+                                examples.append(
+                                    InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
+                                exam_co+=1
+                        else:
+                            '''neg pair'''
+                            for hypo in hypo_list:
+                                guid = "train-"+str(exam_co)
+                                text_a = line[1]
+                                text_b = hypo
+                                label = 'not_entailment' #if line[0] == '1' else 'not_entailment'
+                                examples.append(
+                                    InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
+                                exam_co+=1
+                    line_co+=1
+                    if line_co % 1000 == 0:
+                        print('loading training size:', line_co)
+
+                    type_load_size[type_index]+=1
+                else:
                     break
         readfile.close()
         print('loaded size:', line_co)
@@ -607,7 +611,7 @@ def main():
     num_train_optimization_steps = None
     if args.do_train:
         # train_examples = processor.get_train_examples_wenpeng('/home/wyin3/Datasets/glue_data/RTE/train.tsv')
-        train_examples, seen_types = processor.get_examples_Yahoo_train('/export/home/Dataset/YahooClassification/yahoo_answers_csv/zero-shot-split/train_pu_half_v0.txt')
+        train_examples, seen_types = processor.get_examples_Yahoo_train('/export/home/Dataset/YahooClassification/yahoo_answers_csv/zero-shot-split/train_pu_half_v0.txt', 100)
         # seen_classes=[0,2,4,6,8]
 
         num_train_optimization_steps = int(
