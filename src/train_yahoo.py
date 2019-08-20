@@ -184,7 +184,7 @@ class RteProcessor(DataProcessor):
                 line_co+=1
                 if line_co % 1000 == 0:
                     print('loading training size:', line_co)
-                if line_co == 10000:
+                if line_co == 1000:
                     break
         readfile.close()
         print('loaded size:', line_co)
@@ -240,7 +240,7 @@ class RteProcessor(DataProcessor):
                 line_co+=1
                 if line_co % 1000 == 0:
                     print('loading test size:', line_co)
-                if line_co == 10000:
+                if line_co == 1000:
                     break
 
 
