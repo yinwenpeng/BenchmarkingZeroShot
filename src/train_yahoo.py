@@ -746,7 +746,7 @@ def main():
                 optimizer.zero_grad()
                 global_step += 1
                 iter_co+=1
-                if iter_co %50==0:
+                if iter_co %200==0:
                     '''
                     start evaluate on test set after this epoch
                     '''
