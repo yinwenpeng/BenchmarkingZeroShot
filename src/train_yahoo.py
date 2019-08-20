@@ -193,6 +193,7 @@ class RteProcessor(DataProcessor):
                     break
         readfile.close()
         print('loaded size:', line_co)
+        print('seen_types:', seen_types)
         return examples, seen_types
 
 
