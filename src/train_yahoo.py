@@ -190,7 +190,7 @@ class RteProcessor(DataProcessor):
 
                     type_load_size[type_index]+=1
                 else:
-                    break
+                    continue
         readfile.close()
         print('loaded size:', line_co)
         print('seen_types:', seen_types)
