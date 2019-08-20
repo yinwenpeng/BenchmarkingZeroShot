@@ -153,7 +153,17 @@ class RteProcessor(DataProcessor):
         exam_co = 0
         examples=[]
         label_list = []
+
+        '''first get all the seen types, since we will only create pos and neg hypo in seen types'''
         seen_types = set()
+        for row in readfile:
+            line=row.strip().split('\t')
+            if len(line)==2: # label_id, text
+                type_index =  int(line[0])
+                seen_types.add(type_index)
+        readfile.close()
+
+        readfile = codecs.open(filename, 'r', 'utf-8')
         type_load_size = defaultdict(int)
         for row in readfile:
             line=row.strip().split('\t')
@@ -161,7 +171,6 @@ class RteProcessor(DataProcessor):
 
                 type_index =  int(line[0])
                 if type_load_size.get(type_index,0)< size_limit_per_type:
-                    seen_types.add(type_index)
                     for i in range(10):
                         hypo_list = type2hypothesis.get(i)
                         if i == type_index:
@@ -174,7 +183,7 @@ class RteProcessor(DataProcessor):
                                 examples.append(
                                     InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
                                 exam_co+=1
-                        else:
+                        elif i in seen_types:
                             '''neg pair'''
                             for hypo in hypo_list:
                                 guid = "train-"+str(exam_co)
