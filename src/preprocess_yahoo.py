@@ -430,7 +430,8 @@ def evaluate_Yahoo_zeroshot_TwpPhasePred(pred_probs, pred_binary_labels, eval_la
             if gold_type == pred_type:
                 unseen_hit+=1
 
-
+    print(seen_hit, seen_size)
+    print(unseen_hit, unseen_size)
     seen_acc = seen_hit/(1e-6+seen_size)
     unseen_acc = unseen_hit/(1e-6+unseen_size)
 
