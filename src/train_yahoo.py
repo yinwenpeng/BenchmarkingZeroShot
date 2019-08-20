@@ -538,28 +538,28 @@ def main():
     #     ptvsd.wait_for_attach()
 
     processors = {
-        "cola": ColaProcessor,
-        "mnli": MnliProcessor,
-        "mnli-mm": MnliMismatchedProcessor,
-        "mrpc": MrpcProcessor,
-        "sst-2": Sst2Processor,
-        "sts-b": StsbProcessor,
-        "qqp": QqpProcessor,
-        "qnli": QnliProcessor,
-        "rte": RteProcessor,
-        "wnli": WnliProcessor,
+        # "cola": ColaProcessor,
+        # "mnli": MnliProcessor,
+        # "mnli-mm": MnliMismatchedProcessor,
+        # "mrpc": MrpcProcessor,
+        # "sst-2": Sst2Processor,
+        # "sts-b": StsbProcessor,
+        # "qqp": QqpProcessor,
+        # "qnli": QnliProcessor,
+        "rte": RteProcessor
+        # "wnli": WnliProcessor,
     }
 
     output_modes = {
-        "cola": "classification",
-        "mnli": "classification",
-        "mrpc": "classification",
-        "sst-2": "classification",
-        "sts-b": "regression",
-        "qqp": "classification",
-        "qnli": "classification",
-        "rte": "classification",
-        "wnli": "classification",
+        # "cola": "classification",
+        # "mnli": "classification",
+        # "mrpc": "classification",
+        # "sst-2": "classification",
+        # "sts-b": "regression",
+        # "qqp": "classification",
+        # "qnli": "classification",
+        "rte": "classification"
+        # "wnli": "classification",
     }
 
     if args.local_rank == -1 or args.no_cuda:
