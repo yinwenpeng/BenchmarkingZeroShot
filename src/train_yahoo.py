@@ -149,6 +149,7 @@ class RteProcessor(DataProcessor):
     def get_examples_Yahoo_train(self, filename):
         readfile = codecs.open(filename, 'r', 'utf-8')
         line_co=0
+        exam_co = 0
         examples=[]
         label_list = []
         seen_types = set()
@@ -163,23 +164,28 @@ class RteProcessor(DataProcessor):
                     if i == type_index:
                         '''pos pair'''
                         for hypo in hypo_list:
-                            guid = "train-"+str(line_co)
+                            guid = "train-"+str(exam_co)
                             text_a = line[1]
                             text_b = hypo
                             label = 'entailment' #if line[0] == '1' else 'not_entailment'
                             examples.append(
                                 InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
-                            line_co+=1
+                            exam_co+=1
                     else:
                         '''neg pair'''
                         for hypo in hypo_list:
-                            guid = "train-"+str(line_co)
+                            guid = "train-"+str(exam_co)
                             text_a = line[1]
                             text_b = hypo
                             label = 'not_entailment' #if line[0] == '1' else 'not_entailment'
                             examples.append(
                                 InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
-                            line_co+=1
+                            exam_co+=1
+                line_co+=1
+                if line % 1000 == 0:
+                    print('loading training size:', line_co)
+                if line == 10000:
+                    break
         readfile.close()
         print('loaded size:', line_co)
         return examples, seen_types
@@ -188,6 +194,7 @@ class RteProcessor(DataProcessor):
     def get_examples_Yahoo_test(self, filename, seen_types):
         readfile = codecs.open(filename, 'r', 'utf-8')
         line_co=0
+        exam_co = 0
         examples=[]
 
         hypo_seen_str_indicator=[]
@@ -196,7 +203,7 @@ class RteProcessor(DataProcessor):
             hypo_list = type2hypothesis.get(i)
             for hypo in hypo_list:
                 hypo_2_type_index.append(i) # this hypo is for type i
-                if i in seen_types
+                if i in seen_types:
                     hypo_seen_str_indicator.append('seen')# this hypo is for a seen type
                 else:
                     hypo_seen_str_indicator.append('unseen')
@@ -213,25 +220,28 @@ class RteProcessor(DataProcessor):
                     if i == type_index:
                         '''pos pair'''
                         for hypo in hypo_list:
-                            guid = "test-"+str(line_co)
+                            guid = "test-"+str(exam_co)
                             text_a = line[1]
                             text_b = hypo
                             label = 'entailment' #if line[0] == '1' else 'not_entailment'
                             examples.append(
                                 InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
-                            line_co+=1
+                            exam_co+=1
                     else:
                         '''neg pair'''
                         for hypo in hypo_list:
-                            guid = "test-"+str(line_co)
+                            guid = "test-"+str(exam_co)
                             text_a = line[1]
                             text_b = hypo
                             label = 'not_entailment' #if line[0] == '1' else 'not_entailment'
                             examples.append(
                                 InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
-                            line_co+=1
-
-
+                            exam_co+=1
+                line_co+=1
+                if line % 1000 == 0:
+                    print('loading test size:', line_co)
+                if line == 10000:
+                    break
 
 
         readfile.close()
