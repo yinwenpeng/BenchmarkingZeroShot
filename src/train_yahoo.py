@@ -731,7 +731,7 @@ def main():
                 optimizer.zero_grad()
                 global_step += 1
                 iter_co+=1
-                if iter_co %200==0:
+                if iter_co %20==0:
                     '''
                     start evaluate on test set after this epoch
                     '''
@@ -763,6 +763,7 @@ def main():
 
                         with torch.no_grad():
                             logits = model(input_ids, segment_ids, input_mask, labels=None)
+                        logits = logits[0]
 
                         loss_fct = CrossEntropyLoss()
                         tmp_eval_loss = loss_fct(logits.view(-1, num_labels), label_ids.view(-1))
