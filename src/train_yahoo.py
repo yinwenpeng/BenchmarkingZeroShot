@@ -26,6 +26,7 @@ import sys
 import codecs
 import numpy as np
 import torch
+from collections import defaultdict
 from torch.utils.data import (DataLoader, RandomSampler, SequentialSampler,
                               TensorDataset)
 from torch.utils.data.distributed import DistributedSampler
