@@ -323,7 +323,7 @@ def convert_examples_to_features(examples, label_list, max_seq_length,
         segment_ids_A = [0] * len(tokens_A)
         tokens_B = tokens_b + ["[SEP]"]
         segment_ids_B = [1] * (len(tokens_b) + 1)
-
+        tokens = tokens_A+tokens_B
         segment_ids = segment_ids_A+segment_ids_B
 
 
