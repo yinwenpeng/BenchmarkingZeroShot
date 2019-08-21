@@ -826,7 +826,7 @@ def main():
                         '''
                         start evaluate on test set after this epoch
                         '''
-                        # model.eval()
+                        model.eval()
 
                         logger.info("***** Running testing *****")
                         logger.info("  Num examples = %d", len(test_examples))
