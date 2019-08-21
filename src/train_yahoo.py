@@ -255,8 +255,8 @@ class RteProcessor(DataProcessor):
                 line_co+=1
                 if line_co % 1000 == 0:
                     print('loading test size:', line_co)
-                # if line_co == 1000:
-                #     break
+                if line_co == 1000:
+                    break
 
 
         readfile.close()
