@@ -255,8 +255,8 @@ class RteProcessor(DataProcessor):
                 line_co+=1
                 if line_co % 1000 == 0:
                     print('loading test size:', line_co)
-                if line_co == 1000:
-                    break
+                # if line_co == 1000:
+                #     break
 
 
         readfile.close()
@@ -622,7 +622,7 @@ def main():
     num_train_optimization_steps = None
     if args.do_train:
         # train_examples = processor.get_train_examples_wenpeng('/home/wyin3/Datasets/glue_data/RTE/train.tsv')
-        train_examples, seen_types = processor.get_examples_Yahoo_train('/export/home/Dataset/YahooClassification/yahoo_answers_csv/zero-shot-split/train_pu_half_v0.txt', 100)
+        train_examples, seen_types = processor.get_examples_Yahoo_train('/export/home/Dataset/YahooClassification/yahoo_answers_csv/zero-shot-split/train_pu_half_v0.txt', 130000)
         # seen_classes=[0,2,4,6,8]
 
         num_train_optimization_steps = int(
@@ -760,7 +760,7 @@ def main():
                 optimizer.zero_grad()
                 global_step += 1
                 iter_co+=1
-                if iter_co %10==0:
+                if iter_co %1000==0:
                     '''
                     start evaluate on dev set after this epoch
                     '''
