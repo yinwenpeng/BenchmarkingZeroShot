@@ -474,7 +474,7 @@ def evaluate_Yahoo_zeroshot_TwpPhasePred(pred_probs, pred_binary_labels_harsh, p
         #                 max_prob = its_prob
         #                 max_j = j
         #     pred_type = eval_hypo_2_type_index[max_j]
-        # gold_type = eval_label_list[i]
+        gold_type = eval_label_list[i]
 
         # print('pred_type:', pred_type, 'gold_type:', gold_type)
         if gold_type in seen_types:
