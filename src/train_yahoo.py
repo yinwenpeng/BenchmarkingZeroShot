@@ -798,8 +798,6 @@ def main():
                     wenpeng added a softxmax so that each row is a prob vec
                     '''
                     pred_probs = softmax(preds,axis=1)[:,0]
-                    # preds = preds[:,0]
-                    # pred_binary_labels = np.argmax(preds, axis=1)
                     pred_binary_labels_harsh = []
                     pred_binary_labels_loose = []
                     for i in range(preds.shape[0]):
