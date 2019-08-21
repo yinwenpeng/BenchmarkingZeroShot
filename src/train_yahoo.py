@@ -300,6 +300,7 @@ def convert_examples_to_features(examples, label_list, max_seq_length,
 
     premise_2_tokenzed={}
     hypothesis_2_tokenzed={}
+    list_2_tokenizedID = {}
 
     features = []
     for (ex_index, example) in enumerate(examples):
@@ -318,14 +319,33 @@ def convert_examples_to_features(examples, label_list, max_seq_length,
 
         _truncate_seq_pair(tokens_a, tokens_b, max_seq_length - 3)
 
+        tokens_A = ["[CLS]"] + tokens_a + ["[SEP]"]
+        segment_ids_A = [0] * len(tokens_A)
+        tokens_B = tokens_b + ["[SEP]"]
+        segment_ids_B = [1] * (len(tokens_B) + 1)
 
-        tokens = ["[CLS]"] + tokens_a + ["[SEP]"]
-        segment_ids = [0] * len(tokens)
+        segment_ids = segment_ids_A+segment_ids_B
 
-        tokens += tokens_b + ["[SEP]"]
-        segment_ids += [1] * (len(tokens_b) + 1)
 
-        input_ids = tokenizer.convert_tokens_to_ids(tokens)
+        input_ids_A = list_2_tokenizedID.get(tokens_A)
+        if input_ids_A is None:
+            input_ids_A = tokenizer.convert_tokens_to_ids(tokens_A)
+            list_2_tokenizedID[tokens_A] = input_ids_A
+        input_ids_B = list_2_tokenizedID.get(tokens_B)
+        if input_ids_B is None:
+            input_ids_B = tokenizer.convert_tokens_to_ids(tokens_B)
+            list_2_tokenizedID[tokens_B] = input_ids_B
+
+        input_ids = input_ids_A + input_ids_B
+
+
+        # tokens = ["[CLS]"] + tokens_a + ["[SEP]"]
+        # segment_ids = [0] * len(tokens)
+        #
+        # tokens += tokens_b + ["[SEP]"]
+        # segment_ids += [1] * (len(tokens_b) + 1)
+        #
+        # input_ids = tokenizer.convert_tokens_to_ids(tokens)
 
         # The mask has 1 for real tokens and 0 for padding tokens. Only real
         # tokens are attended to.
