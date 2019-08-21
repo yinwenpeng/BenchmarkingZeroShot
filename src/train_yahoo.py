@@ -685,7 +685,7 @@ def main():
             train_examples, label_list, args.max_seq_length, tokenizer, output_mode)
 
         '''load dev set'''
-        eval_examples, eval_label_list, eval_hypo_seen_str_indicator, eval_hypo_2_type_index = processor.get_examples_Yahoo_test('/export/home/Dataset/YahooClassification/yahoo_answers_csv/zero-shot-split/test.txt', seen_types)
+        eval_examples, eval_label_list, eval_hypo_seen_str_indicator, eval_hypo_2_type_index = processor.get_examples_Yahoo_test('/export/home/Dataset/YahooClassification/yahoo_answers_csv/zero-shot-split/dev.txt', seen_types)
         eval_features = convert_examples_to_features(
             eval_examples, label_list, args.max_seq_length, tokenizer, output_mode)
 
@@ -699,7 +699,7 @@ def main():
         eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, batch_size=args.eval_batch_size)
 
         '''load test set'''
-        test_examples, test_label_list, test_hypo_seen_str_indicator, test_hypo_2_type_index = processor.get_examples_Yahoo_test('/export/home/Dataset/YahooClassification/yahoo_answers_csv/zero-shot-split/dev.txt', seen_types)
+        test_examples, test_label_list, test_hypo_seen_str_indicator, test_hypo_2_type_index = processor.get_examples_Yahoo_test('/export/home/Dataset/YahooClassification/yahoo_answers_csv/zero-shot-split/test.txt', seen_types)
         test_features = convert_examples_to_features(
             test_examples, label_list, args.max_seq_length, tokenizer, output_mode)
 
@@ -858,11 +858,6 @@ def main():
 
                         # eval_loss = eval_loss / nb_eval_steps
                         preds = preds[0]
-
-                        '''
-                        preds: size*2 (entail, not_entail)
-                        wenpeng added a softxmax so that each row is a prob vec
-                        '''
                         pred_probs = softmax(preds,axis=1)[:,0]
                         pred_binary_labels_harsh = []
                         pred_binary_labels_loose = []
@@ -876,7 +871,7 @@ def main():
                             else:
                                 pred_binary_labels_loose.append(1)
 
-                        seen_acc, unseen_acc = evaluate_Yahoo_zeroshot_TwpPhasePred(pred_probs, pred_binary_labels_harsh, pred_binary_labels_loose, eval_label_list, eval_hypo_seen_str_indicator, eval_hypo_2_type_index, seen_types)
+                        seen_acc, unseen_acc = evaluate_Yahoo_zeroshot_TwpPhasePred(pred_probs, pred_binary_labels_harsh, pred_binary_labels_loose, test_label_list, test_hypo_seen_str_indicator, test_hypo_2_type_index, seen_types)
                         # result = compute_metrics('F1', preds, all_label_ids.numpy())
                         # loss = tr_loss/nb_tr_steps if args.do_train else None
                         # test_acc = mean_f1#result.get("f1")
