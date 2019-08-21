@@ -417,7 +417,7 @@ def evaluate_Yahoo_zeroshot_TwpPhasePred(pred_probs, pred_binary_labels_harsh, p
                 break
 
         if seen_get_entail_flag and unseen_get_entail_flag or \
-        (!seen_get_entail_flag and !unseen_get_entail_flag):
+        (not seen_get_entail_flag and not unseen_get_entail_flag):
             '''compare their max prob'''
             max_prob_seen = -1.0
             max_seen_index = -1
