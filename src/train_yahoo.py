@@ -622,7 +622,7 @@ def main():
     num_train_optimization_steps = None
     if args.do_train:
         # train_examples = processor.get_train_examples_wenpeng('/home/wyin3/Datasets/glue_data/RTE/train.tsv')
-        train_examples, seen_types = processor.get_examples_Yahoo_train('/export/home/Dataset/YahooClassification/yahoo_answers_csv/zero-shot-split/train_pu_half_v0.txt', 10000)
+        train_examples, seen_types = processor.get_examples_Yahoo_train('/export/home/Dataset/YahooClassification/yahoo_answers_csv/zero-shot-split/train_pu_half_v0.txt', 100)
         # seen_classes=[0,2,4,6,8]
 
         num_train_optimization_steps = int(
@@ -678,16 +678,40 @@ def main():
     nb_tr_steps = 0
     tr_loss = 0
     max_test_unseen_acc = 0.0
+    max_dev_unseen_acc = 0.0
+    max_overall_acc = 0.0
     if args.do_train:
         train_features = convert_examples_to_features(
             train_examples, label_list, args.max_seq_length, tokenizer, output_mode)
 
-        '''
-        gold_label_list, hypo_seen_str_indicator, hypo_2_type_index
-        '''
+        '''load dev set'''
         eval_examples, eval_label_list, eval_hypo_seen_str_indicator, eval_hypo_2_type_index = processor.get_examples_Yahoo_test('/export/home/Dataset/YahooClassification/yahoo_answers_csv/zero-shot-split/dev.txt', seen_types)
         eval_features = convert_examples_to_features(
             eval_examples, label_list, args.max_seq_length, tokenizer, output_mode)
+
+        eval_all_input_ids = torch.tensor([f.input_ids for f in eval_features], dtype=torch.long)
+        eval_all_input_mask = torch.tensor([f.input_mask for f in eval_features], dtype=torch.long)
+        eval_all_segment_ids = torch.tensor([f.segment_ids for f in eval_features], dtype=torch.long)
+        eval_all_label_ids = torch.tensor([f.label_id for f in eval_features], dtype=torch.long)
+
+        eval_data = TensorDataset(eval_all_input_ids, eval_all_input_mask, eval_all_segment_ids, eval_all_label_ids)
+        eval_sampler = SequentialSampler(eval_data)
+        eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, batch_size=args.eval_batch_size)
+
+        '''load test set'''
+        test_examples, test_label_list, test_hypo_seen_str_indicator, test_hypo_2_type_index = processor.get_examples_Yahoo_test('/export/home/Dataset/YahooClassification/yahoo_answers_csv/zero-shot-split/test.txt', seen_types)
+        test_features = convert_examples_to_features(
+            test_examples, label_list, args.max_seq_length, tokenizer, output_mode)
+
+        test_all_input_ids = torch.tensor([f.input_ids for f in test_features], dtype=torch.long)
+        test_all_input_mask = torch.tensor([f.input_mask for f in test_features], dtype=torch.long)
+        test_all_segment_ids = torch.tensor([f.segment_ids for f in test_features], dtype=torch.long)
+        test_all_label_ids = torch.tensor([f.label_id for f in test_features], dtype=torch.long)
+
+        test_data = TensorDataset(test_all_input_ids, test_all_input_mask, test_all_segment_ids, test_all_label_ids)
+        test_sampler = SequentialSampler(test_data)
+        test_dataloader = DataLoader(test_data, sampler=test_sampler, batch_size=args.eval_batch_size)
+
 
         logger.info("***** Running training *****")
         logger.info("  Num examples = %d", len(train_examples))
@@ -717,17 +741,7 @@ def main():
                 model.train()
                 batch = tuple(t.to(device) for t in batch)
                 input_ids, input_mask, segment_ids, label_ids = batch
-                # print('train label_ids:', label_ids.view(-1))
-
-                # define a new function to compute loss values for both output_modes
                 logits = model(input_ids, segment_ids, input_mask, labels=None)
-                # print(logits)
-                # print(label_ids)
-                #
-                # print(logits.view(-1, num_labels))
-                # print(label_ids.view(-1))
-                # exit(0)
-
                 loss_fct = CrossEntropyLoss()
                 loss = loss_fct(logits[0].view(-1, num_labels), label_ids.view(-1))
 
@@ -746,25 +760,15 @@ def main():
                 optimizer.zero_grad()
                 global_step += 1
                 iter_co+=1
-                if iter_co %400==0:
+                if iter_co %10==0:
                     '''
-                    start evaluate on test set after this epoch
+                    start evaluate on dev set after this epoch
                     '''
                     model.eval()
 
                     logger.info("***** Running evaluation *****")
                     logger.info("  Num examples = %d", len(eval_examples))
                     logger.info("  Batch size = %d", args.eval_batch_size)
-                    all_input_ids = torch.tensor([f.input_ids for f in eval_features], dtype=torch.long)
-                    all_input_mask = torch.tensor([f.input_mask for f in eval_features], dtype=torch.long)
-                    all_segment_ids = torch.tensor([f.segment_ids for f in eval_features], dtype=torch.long)
-                    all_label_ids = torch.tensor([f.label_id for f in eval_features], dtype=torch.long)
-
-                    eval_data = TensorDataset(all_input_ids, all_input_mask, all_segment_ids, all_label_ids)
-                    '''not shuffle the dev/test set'''
-                    eval_sampler = SequentialSampler(eval_data)
-                    eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, batch_size=args.eval_batch_size)
-
 
                     eval_loss = 0
                     nb_eval_steps = 0
@@ -814,9 +818,71 @@ def main():
                     # result = compute_metrics('F1', preds, all_label_ids.numpy())
                     loss = tr_loss/nb_tr_steps if args.do_train else None
                     # test_acc = mean_f1#result.get("f1")
-                    if unseen_acc > max_test_unseen_acc:
-                        max_test_unseen_acc = unseen_acc
-                    print('\ntest seen_acc & acc_unseen:', seen_acc,unseen_acc, ' max_test_unseen_acc:', max_test_unseen_acc, '\n')
+                    if unseen_acc > max_dev_unseen_acc:
+                        max_dev_unseen_acc = unseen_acc
+                    print('\ndev seen_acc & acc_unseen:', seen_acc,unseen_acc, ' max_dev_unseen_acc:', max_dev_unseen_acc, '\n')
+                    if seen_acc+unseen_acc > max_overall_acc:
+                        max_overall_acc = seen_acc + unseen_acc
+                        '''
+                        start evaluate on test set after this epoch
+                        '''
+                        # model.eval()
+
+                        logger.info("***** Running testing *****")
+                        logger.info("  Num examples = %d", len(test_examples))
+                        logger.info("  Batch size = %d", args.eval_batch_size)
+
+                        test_loss = 0
+                        nb_test_steps = 0
+                        preds = []
+                        print('Testing...')
+                        for input_ids, input_mask, segment_ids, label_ids in test_dataloader:
+                            input_ids = input_ids.to(device)
+                            input_mask = input_mask.to(device)
+                            segment_ids = segment_ids.to(device)
+                            label_ids = label_ids.to(device)
+
+                            with torch.no_grad():
+                                logits = model(input_ids, segment_ids, input_mask, labels=None)
+                            logits = logits[0]
+
+                            # loss_fct = CrossEntropyLoss()
+                            # tmp_eval_loss = loss_fct(logits.view(-1, num_labels), label_ids.view(-1))
+
+                            # eval_loss += tmp_eval_loss.mean().item()
+                            # nb_eval_steps += 1
+                            if len(preds) == 0:
+                                preds.append(logits.detach().cpu().numpy())
+                            else:
+                                preds[0] = np.append(preds[0], logits.detach().cpu().numpy(), axis=0)
+
+                        # eval_loss = eval_loss / nb_eval_steps
+                        preds = preds[0]
+
+                        '''
+                        preds: size*2 (entail, not_entail)
+                        wenpeng added a softxmax so that each row is a prob vec
+                        '''
+                        pred_probs = softmax(preds,axis=1)[:,0]
+                        pred_binary_labels_harsh = []
+                        pred_binary_labels_loose = []
+                        for i in range(preds.shape[0]):
+                            if preds[i][0]>preds[i][1]+0.1:
+                                pred_binary_labels_harsh.append(0)
+                            else:
+                                pred_binary_labels_harsh.append(1)
+                            if preds[i][0]>preds[i][1]:
+                                pred_binary_labels_loose.append(0)
+                            else:
+                                pred_binary_labels_loose.append(1)
+
+                        seen_acc, unseen_acc = evaluate_Yahoo_zeroshot_TwpPhasePred(pred_probs, pred_binary_labels_harsh, pred_binary_labels_loose, eval_label_list, eval_hypo_seen_str_indicator, eval_hypo_2_type_index, seen_types)
+                        # result = compute_metrics('F1', preds, all_label_ids.numpy())
+                        # loss = tr_loss/nb_tr_steps if args.do_train else None
+                        # test_acc = mean_f1#result.get("f1")
+                        if unseen_acc > max_test_unseen_acc:
+                            max_test_unseen_acc = unseen_acc
+                        print('\n\n\t test seen_acc & acc_unseen:', seen_acc,unseen_acc, ' max_test_unseen_acc:', max_test_unseen_acc, '\n')
 
 if __name__ == "__main__":
     main()
