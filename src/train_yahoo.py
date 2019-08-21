@@ -331,21 +331,28 @@ def convert_examples_to_features(examples, label_list, max_seq_length,
         if input_ids_A is None:
             input_ids_A = tokenizer.convert_tokens_to_ids(tokens_A)
             list_2_tokenizedID[' '.join(tokens_A)] = input_ids_A
+        print('len(tokens_A):', len(tokens_A))
+        print('len(input_ids_A):', len(input_ids_A))
         input_ids_B = list_2_tokenizedID.get(' '.join(tokens_B))
         if input_ids_B is None:
             input_ids_B = tokenizer.convert_tokens_to_ids(tokens_B)
             list_2_tokenizedID[' '.join(tokens_B)] = input_ids_B
-
+        print('len(tokens_B):', len(tokens_B))
+        print('len(input_ids_B):', len(input_ids_B))
         input_ids = input_ids_A + input_ids_B
+        print('input_ids:', len(input_ids), input_ids)
 
 
-        # tokens = ["[CLS]"] + tokens_a + ["[SEP]"]
-        # segment_ids = [0] * len(tokens)
-        #
-        # tokens += tokens_b + ["[SEP]"]
-        # segment_ids += [1] * (len(tokens_b) + 1)
-        #
-        # input_ids = tokenizer.convert_tokens_to_ids(tokens)
+        tokens = ["[CLS]"] + tokens_a + ["[SEP]"]
+        segment_ids = [0] * len(tokens)
+
+        tokens += tokens_b + ["[SEP]"]
+        segment_ids += [1] * (len(tokens_b) + 1)
+
+        input_ids = tokenizer.convert_tokens_to_ids(tokens)
+        print('tokens:', len(tokens), tokens)
+        print('input_ids:', len(input_ids), input_ids)
+        exit(0)
 
         # The mask has 1 for real tokens and 0 for padding tokens. Only real
         # tokens are attended to.
