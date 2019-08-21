@@ -406,7 +406,7 @@ def evaluate_Yahoo_zeroshot_TwpPhasePred(pred_probs, pred_binary_labels_harsh, p
         '''first check if seen types get 'entailment'''
         seen_get_entail_flag=False
         for j in range(total_hypo_size):
-            if eval_hypo_seen_str_indicator[j] == 'seen' and pred_binary_labels_per_premise_harsh[j]==0:
+            if eval_hypo_seen_str_indicator[j] == 'seen' and pred_binary_labels_per_premise_loose[j]==0:
                 seen_get_entail_flag=True
                 break
         '''first check if unseen types get 'entailment'''
