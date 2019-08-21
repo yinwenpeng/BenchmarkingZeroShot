@@ -327,14 +327,14 @@ def convert_examples_to_features(examples, label_list, max_seq_length,
         segment_ids = segment_ids_A+segment_ids_B
 
 
-        input_ids_A = list_2_tokenizedID.get(tokens_A)
+        input_ids_A = list_2_tokenizedID.get(' '.join(tokens_A))
         if input_ids_A is None:
             input_ids_A = tokenizer.convert_tokens_to_ids(tokens_A)
-            list_2_tokenizedID[tokens_A] = input_ids_A
-        input_ids_B = list_2_tokenizedID.get(tokens_B)
+            list_2_tokenizedID[' '.join(tokens_A)] = input_ids_A
+        input_ids_B = list_2_tokenizedID.get(' '.join(tokens_B))
         if input_ids_B is None:
             input_ids_B = tokenizer.convert_tokens_to_ids(tokens_B)
-            list_2_tokenizedID[tokens_B] = input_ids_B
+            list_2_tokenizedID[' '.join(tokens_B)] = input_ids_B
 
         input_ids = input_ids_A + input_ids_B
 
