@@ -455,7 +455,7 @@ def evaluate_Yahoo_zeroshot_TwpPhasePred(pred_probs, pred_binary_labels_harsh, p
             max_j = -1
             max_prob = -1.0
             for j in range(total_hypo_size):
-                if eval_hypo_seen_str_indicator[j] == 'seen' and pred_binary_labels_per_premise_harsh[j]==0:
+                if eval_hypo_seen_str_indicator[j] == 'seen' and pred_binary_labels_per_premise_loose[j]==0:
                     its_prob = pred_probs_per_premise[j]
                     if its_prob > max_prob:
                         max_prob = its_prob
