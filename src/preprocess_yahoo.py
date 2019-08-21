@@ -449,7 +449,7 @@ def evaluate_Yahoo_zeroshot_TwpPhasePred(pred_probs, pred_binary_labels_harsh, p
                         max_j = j
             pred_type = eval_hypo_2_type_index[max_j]
 
-        elif: seen_get_entail_flag:
+        elif seen_get_entail_flag:
             '''find the seen type with highest prob'''
             max_j = -1
             max_prob = -1.0
