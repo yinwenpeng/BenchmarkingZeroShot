@@ -462,18 +462,6 @@ def evaluate_Yahoo_zeroshot_TwpPhasePred(pred_probs, pred_binary_labels_harsh, p
                         max_j = j
             assert max_prob > 0.5
             pred_type = eval_hypo_2_type_index[max_j]
-
-        # else:
-        #     '''both seen and unseen did not get ENTAILMENT, find the unseen type with highest prob'''
-        #     max_j = -1
-        #     max_prob = -1.0
-        #     for j in range(total_hypo_size):
-        #         if eval_hypo_seen_str_indicator[j] == 'unseen':
-        #             its_prob = pred_probs_per_premise[j]
-        #             if its_prob > max_prob:
-        #                 max_prob = its_prob
-        #                 max_j = j
-        #     pred_type = eval_hypo_2_type_index[max_j]
         gold_type = eval_label_list[i]
 
         # print('pred_type:', pred_type, 'gold_type:', gold_type)
