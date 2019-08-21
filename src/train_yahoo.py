@@ -255,8 +255,8 @@ class RteProcessor(DataProcessor):
                 line_co+=1
                 if line_co % 1000 == 0:
                     print('loading test size:', line_co)
-                # if line_co == 1000:
-                #     break
+                if line_co == 1000:
+                    break
 
 
         readfile.close()
@@ -498,11 +498,11 @@ def main():
                         action='store_true',
                         help="Set this flag if you are using an uncased model.")
     parser.add_argument("--train_batch_size",
-                        default=32,
+                        default=128,
                         type=int,
                         help="Total batch size for training.")
     parser.add_argument("--eval_batch_size",
-                        default=32,
+                        default=128,
                         type=int,
                         help="Total batch size for eval.")
     parser.add_argument("--learning_rate",
@@ -622,7 +622,7 @@ def main():
     num_train_optimization_steps = None
     if args.do_train:
         # train_examples = processor.get_train_examples_wenpeng('/home/wyin3/Datasets/glue_data/RTE/train.tsv')
-        train_examples, seen_types = processor.get_examples_Yahoo_train('/export/home/Dataset/YahooClassification/yahoo_answers_csv/zero-shot-split/train_pu_half_v0.txt', 10000)
+        train_examples, seen_types = processor.get_examples_Yahoo_train('/export/home/Dataset/YahooClassification/yahoo_answers_csv/zero-shot-split/train_pu_half_v0.txt', 100)
         # seen_classes=[0,2,4,6,8]
 
         num_train_optimization_steps = int(
@@ -760,7 +760,7 @@ def main():
                 optimizer.zero_grad()
                 global_step += 1
                 iter_co+=1
-                if iter_co %500==0:
+                if iter_co %10==0:
                     '''
                     start evaluate on dev set after this epoch
                     '''
