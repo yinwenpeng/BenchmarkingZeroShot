@@ -325,6 +325,7 @@ def convert_examples_to_features(examples, label_list, max_seq_length,
         segment_ids_B = [1] * (len(tokens_B) + 1)
 
         segment_ids = segment_ids_A+segment_ids_B
+        print('segment_ids:', len(segment_ids), segment_ids)
 
 
         input_ids_A = list_2_tokenizedID.get(' '.join(tokens_A))
@@ -348,7 +349,7 @@ def convert_examples_to_features(examples, label_list, max_seq_length,
 
         tokens += tokens_b + ["[SEP]"]
         segment_ids += [1] * (len(tokens_b) + 1)
-
+        print('segment_ids:', len(segment_ids), segment_ids)
         input_ids = tokenizer.convert_tokens_to_ids(tokens)
         print('tokens:', len(tokens), tokens)
         print('input_ids:', len(input_ids), input_ids)
