@@ -697,7 +697,7 @@ def main():
     num_train_optimization_steps = None
     if args.do_train:
         # train_examples = processor.get_train_examples_wenpeng('/home/wyin3/Datasets/glue_data/RTE/train.tsv')
-        train_examples, seen_types = processor.get_examples_Yahoo_train('/export/home/Dataset/YahooClassification/yahoo_answers_csv/zero-shot-split/train_pu_half_v1.txt', 130000)
+        train_examples, seen_types = processor.get_examples_Yahoo_train('/export/home/Dataset/YahooClassification/yahoo_answers_csv/zero-shot-split/train_pu_half_v0.txt', 130000)
         # seen_classes=[0,2,4,6,8]
 
         num_train_optimization_steps = int(
@@ -754,6 +754,7 @@ def main():
     tr_loss = 0
     max_test_unseen_acc = 0.0
     max_dev_unseen_acc = 0.0
+    max_dev_seen_acc = 0.0
     max_overall_acc = 0.0
     if args.do_train:
         train_features = convert_examples_to_features(
@@ -835,7 +836,7 @@ def main():
                 optimizer.zero_grad()
                 global_step += 1
                 iter_co+=1
-                if iter_co %200==0:
+                if iter_co %1000==0:
                     '''
                     start evaluate on dev set after this epoch
                     '''
@@ -896,8 +897,10 @@ def main():
                     if unseen_acc > max_dev_unseen_acc:
                         max_dev_unseen_acc = unseen_acc
                     print('\ndev seen_acc & acc_unseen:', seen_acc,unseen_acc, ' max_dev_unseen_acc:', max_dev_unseen_acc, '\n')
-                    if seen_acc+unseen_acc > max_overall_acc:
-                        max_overall_acc = seen_acc + unseen_acc
+                    # if seen_acc+unseen_acc > max_overall_acc:
+                    #     max_overall_acc = seen_acc + unseen_acc
+                    if seen_acc > max_dev_seen_acc:
+                        max_dev_seen_acc = seen_acc
                         '''
                         start evaluate on test set after this epoch
                         '''
