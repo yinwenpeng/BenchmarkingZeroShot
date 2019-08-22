@@ -194,7 +194,7 @@ class RteProcessor(DataProcessor):
                                     InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
                                 exam_co+=1
                     line_co+=1
-                    if line_co % 1000 == 0:
+                    if line_co % 10000 == 0:
                         print('loading training size:', line_co)
 
                     type_load_size[type_index]+=1
@@ -697,7 +697,7 @@ def main():
     num_train_optimization_steps = None
     if args.do_train:
         # train_examples = processor.get_train_examples_wenpeng('/home/wyin3/Datasets/glue_data/RTE/train.tsv')
-        train_examples, seen_types = processor.get_examples_Yahoo_train('/export/home/Dataset/YahooClassification/yahoo_answers_csv/zero-shot-split/train_pu_half_v1.txt', 130000)
+        train_examples, seen_types = processor.get_examples_Yahoo_train('/export/home/Dataset/YahooClassification/yahoo_answers_csv/zero-shot-split/train_pu_half_v0.txt', 130000)
         # seen_classes=[0,2,4,6,8]
 
         num_train_optimization_steps = int(
@@ -712,7 +712,7 @@ def main():
     #           num_labels=num_labels)
     # tokenizer = BertTokenizer.from_pretrained(args.bert_model, do_lower_case=args.do_lower_case)
 
-    pretrain_model_dir = '/export/home/Dataset/fine_tune_Bert_stored/FineTuneOnMNLI' #FineTuneOnCombined'# FineTuneOnMNLI
+    pretrain_model_dir = '/export/home/Dataset/fine_tune_Bert_stored/FineTuneOnCombined' #FineTuneOnCombined'# FineTuneOnMNLI
     model = BertForSequenceClassification.from_pretrained(pretrain_model_dir, num_labels=num_labels)
     tokenizer = BertTokenizer.from_pretrained(pretrain_model_dir, do_lower_case=args.do_lower_case)
 
