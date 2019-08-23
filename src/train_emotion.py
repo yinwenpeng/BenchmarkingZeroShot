@@ -834,7 +834,7 @@ def main():
                 optimizer.zero_grad()
                 global_step += 1
                 iter_co+=1
-                if iter_co %10==0:
+                if iter_co %500==0:
                     '''
                     start evaluate on dev set after this epoch
                     '''
