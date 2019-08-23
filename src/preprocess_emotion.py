@@ -254,7 +254,7 @@ def evaluate_emotion_zeroshot_TwpPhasePred(pred_probs, pred_binary_labels_harsh,
                     if its_prob > max_prob_seen:
                         max_prob_seen = its_prob
                         max_seen_index = j
-            if  max_prob_seen - max_prob_unseen > 0.1:
+            if  max_prob_seen - max_prob_unseen > 0.05:
                 pred_type = eval_hypo_2_type_index[max_seen_index]
             else:
                 pred_type = eval_hypo_2_type_index[max_unseen_index]
