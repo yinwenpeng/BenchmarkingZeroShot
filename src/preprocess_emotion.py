@@ -292,6 +292,9 @@ def evaluate_emotion_zeroshot_TwpPhasePred(pred_probs, pred_binary_labels_harsh,
 
     all_test_labels = list(set(eval_label_list))
     f1_score_per_type = f1_score(eval_label_list, pred_label_list, labels = all_test_labels, average=None)
+    print('all_test_labels:', all_test_labels)
+    print('f1_score_per_type:', f1_score_per_type)
+    print('type size:', [eval_label_list.count(type) for type in all_test_labels])
 
     '''seen F1'''
     seen_f1_accu = 0.0
