@@ -577,7 +577,7 @@ def main():
                         type=int,
                         help="Total batch size for training.")
     parser.add_argument("--eval_batch_size",
-                        default=64,
+                        default=256,
                         type=int,
                         help="Total batch size for eval.")
     parser.add_argument("--learning_rate",
@@ -697,7 +697,7 @@ def main():
     num_train_optimization_steps = None
     if args.do_train:
         # train_examples = processor.get_train_examples_wenpeng('/home/wyin3/Datasets/glue_data/RTE/train.tsv')
-        train_examples, seen_types = processor.get_examples_Yahoo_train('/export/home/Dataset/YahooClassification/yahoo_answers_csv/zero-shot-split/train_pu_half_v1.txt', 130000)
+        train_examples, seen_types = processor.get_examples_Yahoo_train('/export/home/Dataset/YahooClassification/yahoo_answers_csv/zero-shot-split/train_pu_one_wo_0.txt', 130000) #train_pu_half_v1.txt
         # seen_classes=[0,2,4,6,8]
 
         num_train_optimization_steps = int(
