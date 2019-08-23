@@ -44,7 +44,7 @@ from pytorch_transformers.optimization import AdamW
 
 # from pytorch_transformers import *
 
-from preprocess_yahoo import evaluate_Yahoo_zeroshot_TwpPhasePred
+from preprocess_emotion import evaluate_emotion_zeroshot_TwpPhasePred
 # import torch.optim as optimizer_wenpeng
 
 logging.basicConfig(format = '%(asctime)s - %(levelname)s - %(name)s -   %(message)s',
@@ -834,7 +834,7 @@ def main():
                 optimizer.zero_grad()
                 global_step += 1
                 iter_co+=1
-                if iter_co %1000==0:
+                if iter_co %10==0:
                     '''
                     start evaluate on dev set after this epoch
                     '''
@@ -888,7 +888,7 @@ def main():
                         else:
                             pred_binary_labels_loose.append(1)
 
-                    seen_acc, unseen_acc = evaluate_Yahoo_zeroshot_TwpPhasePred(pred_probs, pred_binary_labels_harsh, pred_binary_labels_loose, eval_label_list, eval_hypo_seen_str_indicator, eval_hypo_2_type_index, seen_types)
+                    seen_acc, unseen_acc = evaluate_emotion_zeroshot_TwpPhasePred(pred_probs, pred_binary_labels_harsh, pred_binary_labels_loose, eval_label_list, eval_hypo_seen_str_indicator, eval_hypo_2_type_index, seen_types)
                     # result = compute_metrics('F1', preds, all_label_ids.numpy())
                     loss = tr_loss/nb_tr_steps if args.do_train else None
                     # test_acc = mean_f1#result.get("f1")
