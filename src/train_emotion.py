@@ -54,15 +54,15 @@ logger = logging.getLogger(__name__)
 
 type2hypothesis = {
 
-'sadness': ['this person feels sad', 'this person expresses emotions experienced when not in a state of well-being'],
+# 'sadness': ['this person feels sad', 'this person expresses emotions experienced when not in a state of well-being'],
 'joy': ['the person feels joyful', 'the person expresses a feeling of great pleasure and happiness.'],
-'anger': ['the person feels angry', 'the person expresses a strong feeling of annoyance, displeasure, or hostility'],
+# 'anger': ['the person feels angry', 'the person expresses a strong feeling of annoyance, displeasure, or hostility'],
 'disgust': ['the person feels disgusted', 'the person expresses a feeling of revulsion or strong disapproval aroused by something unpleasant or offensive'],
-'fear': ['the person is afraid of something', 'the person expresses an unpleasant emotion caused by the belief that someone or something is dangerous, likely to cause pain , or a threat'],
+# 'fear': ['the person is afraid of something', 'the person expresses an unpleasant emotion caused by the belief that someone or something is dangerous, likely to cause pain , or a threat'],
 'surprise': ['the person feels surprised', 'the person expresses a feeling of mild astonishment or shock caused by something unexpected'],
-'shame': ['the person feels shameful', 'the person expresses a painful feeling of humiliation or distress caused by the consciousness of wrong or foolish behavior'],
-'guilt': ['the person feels guilty', 'the person expresses a feeling of having done wrong or failed in an obligation'],
-'love': ['the person loves that', 'the person expresses a great interest and pleasure in something']
+# 'shame': ['the person feels shameful', 'the person expresses a painful feeling of humiliation or distress caused by the consciousness of wrong or foolish behavior'],
+'guilt': ['the person feels guilty', 'the person expresses a feeling of having done wrong or failed in an obligation']
+# 'love': ['the person loves that', 'the person expresses a great interest and pleasure in something']
 }
 
 class InputExample(object):
@@ -226,35 +226,36 @@ class RteProcessor(DataProcessor):
             if len(line)==3: # label_id, domain, text
 
                 type_index =  line[0].strip()
-                gold_label_list.append(type_index)
-                for type, hypo_list in type2hypothesis.items():
-                # for i in range(10):
-                #     hypo_list = type2hypothesis.get(i)
-                    if type == type_index:
-                        '''pos pair'''
-                        for hypo in hypo_list:
-                            guid = "test-"+str(exam_co)
-                            text_a = line[2]
-                            text_b = hypo
-                            label = 'entailment' #if line[0] == '1' else 'not_entailment'
-                            examples.append(
-                                InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
-                            exam_co+=1
-                    else:
-                        '''neg pair'''
-                        for hypo in hypo_list:
-                            guid = "test-"+str(exam_co)
-                            text_a = line[2]
-                            text_b = hypo
-                            label = 'not_entailment' #if line[0] == '1' else 'not_entailment'
-                            examples.append(
-                                InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
-                            exam_co+=1
-                line_co+=1
-                if line_co % 1000 == 0:
-                    print('loading test size:', line_co)
-                # if line_co == 1000:
-                #     break
+                if type_index in type2hypothesis.keys():
+                    gold_label_list.append(type_index)
+                    for type, hypo_list in type2hypothesis.items():
+                    # for i in range(10):
+                    #     hypo_list = type2hypothesis.get(i)
+                        if type == type_index:
+                            '''pos pair'''
+                            for hypo in hypo_list:
+                                guid = "test-"+str(exam_co)
+                                text_a = line[2]
+                                text_b = hypo
+                                label = 'entailment' #if line[0] == '1' else 'not_entailment'
+                                examples.append(
+                                    InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
+                                exam_co+=1
+                        else:
+                            '''neg pair'''
+                            for hypo in hypo_list:
+                                guid = "test-"+str(exam_co)
+                                text_a = line[2]
+                                text_b = hypo
+                                label = 'not_entailment' #if line[0] == '1' else 'not_entailment'
+                                examples.append(
+                                    InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
+                                exam_co+=1
+                    line_co+=1
+                    if line_co % 1000 == 0:
+                        print('loading test size:', line_co)
+                    # if line_co == 1000:
+                    #     break
 
 
         readfile.close()
