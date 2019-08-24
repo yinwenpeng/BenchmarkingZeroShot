@@ -695,7 +695,7 @@ def main():
     num_train_optimization_steps = None
     if args.do_train:
         # train_examples = processor.get_train_examples_wenpeng('/home/wyin3/Datasets/glue_data/RTE/train.tsv')
-        train_examples, seen_types = processor.get_examples_emotion_train('/export/home/Dataset/Stuttgart_Emotion/unify-emotion-datasets-master/zero-shot-split/train_pu_half_v1.txt') #train_pu_half_v1.txt
+        train_examples, seen_types = processor.get_examples_emotion_train('/export/home/Dataset/Stuttgart_Emotion/unify-emotion-datasets-master/zero-shot-split/train_pu_half_v0.txt') #train_pu_half_v1.txt
         # seen_classes=[0,2,4,6,8]
 
         num_train_optimization_steps = int(
@@ -894,7 +894,7 @@ def main():
                     # test_acc = mean_f1#result.get("f1")
                     if unseen_acc > max_dev_unseen_acc:
                         max_dev_unseen_acc = unseen_acc
-                    print('\ndev seen_acc & acc_unseen:', seen_acc,unseen_acc, ' max_dev_unseen_acc:', max_dev_unseen_acc, '\n')
+                    print('\ndev seen_f1 & unseen_f1:', seen_acc,unseen_acc, ' max_dev_unseen_f1:', max_dev_unseen_acc, '\n')
                     # if seen_acc+unseen_acc > max_overall_acc:
                     #     max_overall_acc = seen_acc + unseen_acc
                     # if seen_acc > max_dev_seen_acc:
@@ -947,7 +947,7 @@ def main():
                     # test_acc = mean_f1#result.get("f1")
                     if unseen_acc > max_test_unseen_acc:
                         max_test_unseen_acc = unseen_acc
-                    print('\n\n\t test seen_acc & acc_unseen:', seen_acc,unseen_acc, ' max_test_unseen_acc:', max_test_unseen_acc, '\n')
+                    print('\n\n\t test seen_f1 & unseen_f1:', seen_acc,unseen_acc, ' max_test_unseen_f1:', max_test_unseen_acc, '\n')
 
 if __name__ == "__main__":
     main()
