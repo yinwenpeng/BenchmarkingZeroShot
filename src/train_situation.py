@@ -147,7 +147,7 @@ class RteProcessor(DataProcessor):
         return examples
 
 
-    def get_examples_emotion_train(self, filename):
+    def get_examples_situation_train(self, filename):
         readfile = codecs.open(filename, 'r', 'utf-8')
         line_co=0
         exam_co = 0
@@ -158,7 +158,7 @@ class RteProcessor(DataProcessor):
         seen_types = set()
         for row in readfile:
             line=row.strip().split('\t')
-            if len(line)==3: # label_id, domain, text
+            if len(line)==2: # label_id, text
                 type_index =  line[0].strip()
                 seen_types.add(type_index)
         readfile.close()
@@ -167,7 +167,7 @@ class RteProcessor(DataProcessor):
         # type_load_size = defaultdict(int)
         for row in readfile:
             line=row.strip().split('\t')
-            if len(line)==3: # label_id, domain, text
+            if len(line)==2: # label_id, text
 
                 type_index =  line[0].strip()
                 # if type_load_size.get(type_index,0)< size_limit_per_type:
@@ -177,7 +177,7 @@ class RteProcessor(DataProcessor):
                         '''pos pair'''
                         for hypo in hypo_list:
                             guid = "train-"+str(exam_co)
-                            text_a = line[2]
+                            text_a = line[1]
                             text_b = hypo
                             label = 'entailment' #if line[0] == '1' else 'not_entailment'
                             examples.append(
@@ -187,14 +187,14 @@ class RteProcessor(DataProcessor):
                         '''neg pair'''
                         for hypo in hypo_list:
                             guid = "train-"+str(exam_co)
-                            text_a = line[2]
+                            text_a = line[1]
                             text_b = hypo
                             label = 'not_entailment' #if line[0] == '1' else 'not_entailment'
                             examples.append(
                                 InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
                             exam_co+=1
                 line_co+=1
-                if line_co % 10000 == 0:
+                if line_co % 100 == 0:
                     print('loading training size:', line_co)
 
         readfile.close()
@@ -203,7 +203,7 @@ class RteProcessor(DataProcessor):
         return examples, seen_types
 
 
-    def get_examples_emotion_test(self, filename, seen_types):
+    def get_examples_situation_test(self, filename, seen_types):
         readfile = codecs.open(filename, 'r', 'utf-8')
         line_co=0
         exam_co = 0
@@ -223,7 +223,7 @@ class RteProcessor(DataProcessor):
         gold_label_list = []
         for row in readfile:
             line=row.strip().split('\t')
-            if len(line)==3: # label_id, domain, text
+            if len(line)==2: # label_id, text
 
                 type_index =  line[0].strip()
                 gold_label_list.append(type_index)
@@ -234,7 +234,7 @@ class RteProcessor(DataProcessor):
                         '''pos pair'''
                         for hypo in hypo_list:
                             guid = "test-"+str(exam_co)
-                            text_a = line[2]
+                            text_a = line[1]
                             text_b = hypo
                             label = 'entailment' #if line[0] == '1' else 'not_entailment'
                             examples.append(
@@ -244,14 +244,14 @@ class RteProcessor(DataProcessor):
                         '''neg pair'''
                         for hypo in hypo_list:
                             guid = "test-"+str(exam_co)
-                            text_a = line[2]
+                            text_a = line[1]
                             text_b = hypo
                             label = 'not_entailment' #if line[0] == '1' else 'not_entailment'
                             examples.append(
                                 InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
                             exam_co+=1
                 line_co+=1
-                if line_co % 1000 == 0:
+                if line_co % 100 == 0:
                     print('loading test size:', line_co)
                 # if line_co == 1000:
                 #     break
@@ -695,7 +695,7 @@ def main():
     num_train_optimization_steps = None
     if args.do_train:
         # train_examples = processor.get_train_examples_wenpeng('/home/wyin3/Datasets/glue_data/RTE/train.tsv')
-        train_examples, seen_types = processor.get_examples_emotion_train('/export/home/Dataset/LORELEI/zero-shot-split/train_pu_half_v0.txt') #train_pu_half_v1.txt
+        train_examples, seen_types = processor.get_examples_situation_train('/export/home/Dataset/LORELEI/zero-shot-split/train_pu_half_v0.txt') #train_pu_half_v1.txt
         # seen_classes=[0,2,4,6,8]
 
         num_train_optimization_steps = int(
@@ -759,7 +759,7 @@ def main():
             train_examples, label_list, args.max_seq_length, tokenizer, output_mode)
 
         '''load dev set'''
-        eval_examples, eval_label_list, eval_hypo_seen_str_indicator, eval_hypo_2_type_index = processor.get_examples_emotion_test('/export/home/Dataset/LORELEI/zero-shot-split/dev.txt', seen_types)
+        eval_examples, eval_label_list, eval_hypo_seen_str_indicator, eval_hypo_2_type_index = processor.get_examples_situation_test('/export/home/Dataset/LORELEI/zero-shot-split/dev.txt', seen_types)
         eval_features = convert_examples_to_features(
             eval_examples, label_list, args.max_seq_length, tokenizer, output_mode)
 
@@ -773,7 +773,7 @@ def main():
         eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, batch_size=args.eval_batch_size)
 
         '''load test set'''
-        test_examples, test_label_list, test_hypo_seen_str_indicator, test_hypo_2_type_index = processor.get_examples_emotion_test('/export/home/Dataset/LORELEI/zero-shot-split/test.txt', seen_types)
+        test_examples, test_label_list, test_hypo_seen_str_indicator, test_hypo_2_type_index = processor.get_examples_situation_test('/export/home/Dataset/LORELEI/zero-shot-split/test.txt', seen_types)
         test_features = convert_examples_to_features(
             test_examples, label_list, args.max_seq_length, tokenizer, output_mode)
 
