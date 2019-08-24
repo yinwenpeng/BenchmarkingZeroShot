@@ -1,6 +1,7 @@
 
 import codecs
 from collections import defaultdict
+from sklearn.metrics import f1_score
 
 path = '/export/home/Dataset/LORELEI/'
 
