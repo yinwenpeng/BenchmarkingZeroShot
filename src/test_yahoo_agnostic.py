@@ -760,7 +760,7 @@ def main():
         # train_features = convert_examples_to_features(
         #     train_examples, label_list, args.max_seq_length, tokenizer, output_mode)
 
-        '''load dev set'''
+        # '''load dev set'''
         # eval_examples, eval_label_list, eval_hypo_seen_str_indicator, eval_hypo_2_type_index = processor.get_examples_Yahoo_test('/export/home/Dataset/YahooClassification/yahoo_answers_csv/zero-shot-split/dev.txt', seen_types)
         # eval_features = convert_examples_to_features(
         #     eval_examples, label_list, args.max_seq_length, tokenizer, output_mode)
