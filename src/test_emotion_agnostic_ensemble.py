@@ -253,8 +253,8 @@ class RteProcessor(DataProcessor):
                 line_co+=1
                 if line_co % 1000 == 0:
                     print('loading test size:', line_co)
-                if line_co == 100:
-                    break
+                # if line_co == 100:
+                #     break
 
 
         readfile.close()
@@ -775,7 +775,7 @@ def main():
             else:
                 preds[0] = np.append(preds[0], logits.detach().cpu().numpy(), axis=0)
 
-        print('preds:', preds)
+        # print('preds:', preds)
         preds = preds[0]
 
         pred_probs_i = softmax(preds,axis=1)[:,0]
