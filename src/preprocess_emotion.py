@@ -336,4 +336,6 @@ def majority_baseline():
 if __name__ == '__main__':
     # statistics()
     # build_zeroshot_test_dev_set()
-    build_zeroshot_train_set()
+    # build_zeroshot_train_set()
+
+    majority_baseline()
