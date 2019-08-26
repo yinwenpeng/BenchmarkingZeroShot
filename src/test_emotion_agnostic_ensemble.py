@@ -711,7 +711,7 @@ def main():
     seen_types = set()
     test_examples, test_label_list, test_hypo_seen_str_indicator, test_hypo_2_type_index = processor.get_examples_emotion_test('/export/home/Dataset/Stuttgart_Emotion/unify-emotion-datasets-master/zero-shot-split/test.txt', seen_types)
     test_features = convert_examples_to_features(
-        test_examples, label_list, args.max_seq_length, tokenizer, output_mode)
+        test_examples, label_list, args.max_seq_length, BertTokenizer.from_pretrained('/export/home/Dataset/fine_tune_Bert_stored/FineTuneOnRTE', do_lower_case=args.do_lower_case), output_mode)
 
     test_all_input_ids = torch.tensor([f.input_ids for f in test_features], dtype=torch.long)
     test_all_input_mask = torch.tensor([f.input_mask for f in test_features], dtype=torch.long)
