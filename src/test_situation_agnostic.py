@@ -710,7 +710,7 @@ def main():
     #           num_labels=num_labels)
     # tokenizer = BertTokenizer.from_pretrained(args.bert_model, do_lower_case=args.do_lower_case)
 
-    pretrain_model_dir = '/export/home/Dataset/fine_tune_Bert_stored/FineTuneOnSciTail' #FineTuneOnCombined'# FineTuneOnMNLI, FineTuneOnFEVER
+    pretrain_model_dir = '/export/home/Dataset/fine_tune_Bert_stored/FineTuneMNLI_FEVER_SciTail_SICK_RTE' #FineTuneOnCombined'# FineTuneOnMNLI, FineTuneOnFEVER, FineTuneOnRTE
     model = BertForSequenceClassification.from_pretrained(pretrain_model_dir, num_labels=num_labels)
     tokenizer = BertTokenizer.from_pretrained(pretrain_model_dir, do_lower_case=args.do_lower_case)
 
