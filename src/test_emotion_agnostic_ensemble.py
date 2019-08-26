@@ -253,7 +253,7 @@ class RteProcessor(DataProcessor):
                 line_co+=1
                 if line_co % 1000 == 0:
                     print('loading test size:', line_co)
-                if line_co == 1000:
+                if line_co == 100:
                     break
 
 
@@ -775,14 +775,14 @@ def main():
             else:
                 preds[0] = np.append(preds[0], logits.detach().cpu().numpy(), axis=0)
 
-        # eval_loss = eval_loss / nb_eval_steps
+        print('preds:', preds)
         preds = preds[0]
 
         if pred_probs == 0.0:
             pred_probs = softmax(preds,axis=1)
         else:
             pred_probs += softmax(preds,axis=1)
-        print('this model preds over')
+        print('\n\n this model preds over\n\n\n')
 
 
 
