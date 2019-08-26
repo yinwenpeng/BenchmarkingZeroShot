@@ -263,12 +263,23 @@ def evaluate_situation_zeroshot_TwpPhasePred(pred_probs, pred_binary_labels_hars
 
 
 
+def majority_baseline():
+    readfile = codecs.open(path+'zero-shot-split/test.txt', 'r', 'utf-8')
+    gold_label_list = []
+    for line in readfile:
+        gold_label_list.append(line.strip().split('\t')[0])
+
+    pred_label_list = ['out-of-domain'] *len(gold_label_list)
+    f1_score_per_type = f1_score(gold_label_list, pred_label_list, labels = list(set(gold_label_list)), average='weighted')
+    print(f1_score_per_type)
 
 
 
 
 if __name__ == '__main__':
-    combine_all_available_labeled_datasets()
-    split_all_labeleddata_into_subdata_per_label()
-    build_zeroshot_test_dev_set()
-    build_zeroshot_train_set()
+    # combine_all_available_labeled_datasets()
+    # split_all_labeleddata_into_subdata_per_label()
+    # build_zeroshot_test_dev_set()
+    # build_zeroshot_train_set()
+
+    majority_baseline()
