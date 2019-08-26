@@ -776,7 +776,7 @@ def main():
         # eval_loss = eval_loss / nb_eval_steps
         preds = preds[0]
 
-        if pred_probs == 0.0
+        if pred_probs == 0.0:
             pred_probs = softmax(preds,axis=1)
         else:
             pred_probs += softmax(preds,axis=1)
