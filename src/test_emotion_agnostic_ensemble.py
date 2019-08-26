@@ -696,80 +696,95 @@ def main():
     # Prepare model
     cache_dir = args.cache_dir if args.cache_dir else os.path.join(str(PYTORCH_TRANSFORMERS_CACHE), 'distributed_{}'.format(args.local_rank))
 
-    pretrain_model_dir = '/export/home/Dataset/fine_tune_Bert_stored/FineTuneOnRTE' #FineTuneOnCombined'# FineTuneOnMNLI
-    model = BertForSequenceClassification.from_pretrained(pretrain_model_dir, num_labels=num_labels)
-    tokenizer = BertTokenizer.from_pretrained(pretrain_model_dir, do_lower_case=args.do_lower_case)
+    modelpaths = ['/export/home/Dataset/fine_tune_Bert_stored/FineTuneOnRTE',
+    '/export/home/Dataset/fine_tune_Bert_stored/FineTuneOnMNLI',
+    '/export/home/Dataset/fine_tune_Bert_stored/FineTuneOnFEVER']
 
-    if args.fp16:
-        model.half()
-    model.to(device)
+    pred_probs = 0.0
+    for modelpath in modelpaths:
+        # pretrain_model_dir = '/export/home/Dataset/fine_tune_Bert_stored/FineTuneOnRTE' #FineTuneOnCombined'# FineTuneOnMNLI
+        model = BertForSequenceClassification.from_pretrained(modelpath, num_labels=num_labels)
+        tokenizer = BertTokenizer.from_pretrained(modelpath, do_lower_case=args.do_lower_case)
 
-    if n_gpu > 1:
-        model = torch.nn.DataParallel(model)
+        if args.fp16:
+            model.half()
+        model.to(device)
 
-    # Prepare optimizer
-    param_optimizer = list(model.named_parameters())
-    no_decay = ['bias', 'LayerNorm.bias', 'LayerNorm.weight']
-    optimizer_grouped_parameters = [
-        {'params': [p for n, p in param_optimizer if not any(nd in n for nd in no_decay)], 'weight_decay': 0.01},
-        {'params': [p for n, p in param_optimizer if any(nd in n for nd in no_decay)], 'weight_decay': 0.0}
-        ]
+        if n_gpu > 1:
+            model = torch.nn.DataParallel(model)
 
-    optimizer = AdamW(optimizer_grouped_parameters,
-                             lr=args.learning_rate)
-    global_step = 0
-    nb_tr_steps = 0
-    tr_loss = 0
-    max_test_unseen_acc = 0.0
-    max_dev_unseen_acc = 0.0
-    max_dev_seen_acc = 0.0
-    max_overall_acc = 0.0
+        # Prepare optimizer
+        param_optimizer = list(model.named_parameters())
+        no_decay = ['bias', 'LayerNorm.bias', 'LayerNorm.weight']
+        optimizer_grouped_parameters = [
+            {'params': [p for n, p in param_optimizer if not any(nd in n for nd in no_decay)], 'weight_decay': 0.01},
+            {'params': [p for n, p in param_optimizer if any(nd in n for nd in no_decay)], 'weight_decay': 0.0}
+            ]
 
-    '''load test set'''
-    seen_types = set()
-    test_examples, test_label_list, test_hypo_seen_str_indicator, test_hypo_2_type_index = processor.get_examples_emotion_test('/export/home/Dataset/Stuttgart_Emotion/unify-emotion-datasets-master/zero-shot-split/test.txt', seen_types)
-    test_features = convert_examples_to_features(
-        test_examples, label_list, args.max_seq_length, tokenizer, output_mode)
+        optimizer = AdamW(optimizer_grouped_parameters,
+                                 lr=args.learning_rate)
+        global_step = 0
+        nb_tr_steps = 0
+        tr_loss = 0
+        max_test_unseen_acc = 0.0
+        max_dev_unseen_acc = 0.0
+        max_dev_seen_acc = 0.0
+        max_overall_acc = 0.0
 
-    test_all_input_ids = torch.tensor([f.input_ids for f in test_features], dtype=torch.long)
-    test_all_input_mask = torch.tensor([f.input_mask for f in test_features], dtype=torch.long)
-    test_all_segment_ids = torch.tensor([f.segment_ids for f in test_features], dtype=torch.long)
-    test_all_label_ids = torch.tensor([f.label_id for f in test_features], dtype=torch.long)
+        '''load test set'''
+        seen_types = set()
+        test_examples, test_label_list, test_hypo_seen_str_indicator, test_hypo_2_type_index = processor.get_examples_emotion_test('/export/home/Dataset/Stuttgart_Emotion/unify-emotion-datasets-master/zero-shot-split/test.txt', seen_types)
+        test_features = convert_examples_to_features(
+            test_examples, label_list, args.max_seq_length, tokenizer, output_mode)
 
-    test_data = TensorDataset(test_all_input_ids, test_all_input_mask, test_all_segment_ids, test_all_label_ids)
-    test_sampler = SequentialSampler(test_data)
-    test_dataloader = DataLoader(test_data, sampler=test_sampler, batch_size=args.eval_batch_size)
+        test_all_input_ids = torch.tensor([f.input_ids for f in test_features], dtype=torch.long)
+        test_all_input_mask = torch.tensor([f.input_mask for f in test_features], dtype=torch.long)
+        test_all_segment_ids = torch.tensor([f.segment_ids for f in test_features], dtype=torch.long)
+        test_all_label_ids = torch.tensor([f.label_id for f in test_features], dtype=torch.long)
 
-    '''
-    start evaluate on test set after this epoch
-    '''
-    model.eval()
+        test_data = TensorDataset(test_all_input_ids, test_all_input_mask, test_all_segment_ids, test_all_label_ids)
+        test_sampler = SequentialSampler(test_data)
+        test_dataloader = DataLoader(test_data, sampler=test_sampler, batch_size=args.eval_batch_size)
 
-    logger.info("***** Running testing *****")
-    logger.info("  Num examples = %d", len(test_examples))
-    logger.info("  Batch size = %d", args.eval_batch_size)
+        '''
+        start evaluate on test set after this epoch
+        '''
+        model.eval()
 
-    test_loss = 0
-    nb_test_steps = 0
-    preds = []
-    print('Testing...')
-    for input_ids, input_mask, segment_ids, label_ids in test_dataloader:
-        input_ids = input_ids.to(device)
-        input_mask = input_mask.to(device)
-        segment_ids = segment_ids.to(device)
-        label_ids = label_ids.to(device)
+        logger.info("***** Running testing *****")
+        logger.info("  Num examples = %d", len(test_examples))
+        logger.info("  Batch size = %d", args.eval_batch_size)
 
-        with torch.no_grad():
-            logits = model(input_ids, segment_ids, input_mask, labels=None)
-        logits = logits[0]
-        if len(preds) == 0:
-            preds.append(logits.detach().cpu().numpy())
+        test_loss = 0
+        nb_test_steps = 0
+        preds = []
+        print('Testing...')
+        for input_ids, input_mask, segment_ids, label_ids in test_dataloader:
+            input_ids = input_ids.to(device)
+            input_mask = input_mask.to(device)
+            segment_ids = segment_ids.to(device)
+            label_ids = label_ids.to(device)
+
+            with torch.no_grad():
+                logits = model(input_ids, segment_ids, input_mask, labels=None)
+            logits = logits[0]
+            if len(preds) == 0:
+                preds.append(logits.detach().cpu().numpy())
+            else:
+                preds[0] = np.append(preds[0], logits.detach().cpu().numpy(), axis=0)
+
+        # eval_loss = eval_loss / nb_eval_steps
+        preds = preds[0]
+
+        if pred_probs == 0.0
+            pred_probs = softmax(preds,axis=1)
         else:
-            preds[0] = np.append(preds[0], logits.detach().cpu().numpy(), axis=0)
+            pred_probs += softmax(preds,axis=1)
+        print('this model preds over')
 
-    # eval_loss = eval_loss / nb_eval_steps
-    preds = preds[0]
-    pred_probs = softmax(preds,axis=1)[:,0]
+
+
+    pred_probs = softmax(pred_probs,axis=1)[:,0]
     pred_binary_labels_harsh = []
     pred_binary_labels_loose = []
     for i in range(preds.shape[0]):
