@@ -321,7 +321,15 @@ def evaluate_emotion_zeroshot_TwpPhasePred(pred_probs, pred_binary_labels_harsh,
 
 
 
-
+def majority_baseline():
+    readfile = codecs.open(path+'zero-shot-split/test.txt', 'r', 'utf-8')
+    gold_label_list = []
+    for line in readfile:
+        gold_label_list.append(line.strip().split('\t')[0])
+    '''joy is the main emoion'''
+    pred_label_list = ['joy'] *len(gold_label_list)
+    f1_score_per_type = f1_score(gold_label_list, pred_label_list, labels = list(set(gold_label_list)), average='weighted')
+    print(f1_score_per_type)
 
 
 
