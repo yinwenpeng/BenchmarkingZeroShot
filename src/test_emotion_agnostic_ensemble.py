@@ -730,7 +730,7 @@ def main():
     '/export/home/Dataset/fine_tune_Bert_stored/FineTuneOnFEVER']
 
     pred_probs = 0.0
-    for modelpath in modelpaths:
+    for i, modelpath in enumerate(modelpaths):
         # pretrain_model_dir = '/export/home/Dataset/fine_tune_Bert_stored/FineTuneOnRTE' #FineTuneOnCombined'# FineTuneOnMNLI
         model = BertForSequenceClassification.from_pretrained(modelpath, num_labels=num_labels)
         tokenizer = BertTokenizer.from_pretrained(modelpath, do_lower_case=args.do_lower_case)
@@ -778,7 +778,7 @@ def main():
         print('preds:', preds)
         preds = preds[0]
 
-        if pred_probs == 0.0:
+        if i == 0:
             pred_probs = softmax(preds,axis=1)
         else:
             pred_probs += softmax(preds,axis=1)
