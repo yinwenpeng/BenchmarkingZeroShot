@@ -778,11 +778,25 @@ def main():
         print('preds:', preds)
         preds = preds[0]
 
+        pred_probs_i = softmax(preds,axis=1)[:,0]
+        pred_binary_labels_harsh = []
+        pred_binary_labels_loose = []
+        for i in range(preds.shape[0]):
+            if preds[i][0]>preds[i][1]+0.1:
+                pred_binary_labels_harsh.append(0)
+            else:
+                pred_binary_labels_harsh.append(1)
+            if preds[i][0]>preds[i][1]:
+                pred_binary_labels_loose.append(0)
+            else:
+                pred_binary_labels_loose.append(1)
+        seen_acc, unseen_acc = evaluate_emotion_zeroshot_TwpPhasePred(pred_probs_i, pred_binary_labels_harsh, pred_binary_labels_loose, test_label_list, test_hypo_seen_str_indicator, test_hypo_2_type_index, seen_types)
+        print('seen:', seen_acc, 'unseen:', unseen_acc)
+        print('\n\n this model preds over\n\n\n')
         if i == 0:
             pred_probs = softmax(preds,axis=1)
         else:
             pred_probs += softmax(preds,axis=1)
-        print('\n\n this model preds over\n\n\n')
 
 
 
