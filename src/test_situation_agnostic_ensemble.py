@@ -44,7 +44,7 @@ from pytorch_transformers.optimization import AdamW
 
 # from pytorch_transformers import *
 
-from preprocess_emotion import evaluate_emotion_zeroshot_TwpPhasePred
+from preprocess_situation import evaluate_situation_zeroshot_TwpPhasePred
 # import torch.optim as optimizer_wenpeng
 
 logging.basicConfig(format = '%(asctime)s - %(levelname)s - %(name)s -   %(message)s',
@@ -53,17 +53,17 @@ logging.basicConfig(format = '%(asctime)s - %(levelname)s - %(name)s -   %(messa
 logger = logging.getLogger(__name__)
 
 type2hypothesis = {
-
-'sadness': ['this person feels sad', 'this person expresses emotions experienced when not in a state of well-being'],
-'joy': ['the person feels joyful', 'the person expresses a feeling of great pleasure and happiness.'],
-'anger': ['the person feels angry', 'the person expresses a strong feeling of annoyance, displeasure, or hostility'],
-'disgust': ['the person feels disgusted', 'the person expresses a feeling of revulsion or strong disapproval aroused by something unpleasant or offensive'],
-'fear': ['the person is afraid of something', 'the person expresses an unpleasant emotion caused by the belief that someone or something is dangerous, likely to cause pain , or a threat'],
-'surprise': ['the person feels surprised', 'the person expresses a feeling of mild astonishment or shock caused by something unexpected'],
-'shame': ['the person feels shameful', 'the person expresses a painful feeling of humiliation or distress caused by the consciousness of wrong or foolish behavior'],
-'guilt': ['the person feels guilty', 'the person expresses a feeling of having done wrong or failed in an obligation'],
-'love': ['the person loves that', 'the person expresses a great interest and pleasure in something']
-}
+'food': ['people there need food', 'people there need any substance that can be metabolized by an animal to give energy and build tissue'],
+'infra':['people there need infrastructures', 'people there need the basic structure or features of a system or organization'],
+'med': ['people need medical assistance', 'people need an allied health professional who supports the work of physicians and other health professionals'],
+'search': ['people there need search', 'people there need the activity of looking thoroughly in order to find something or someone'],
+'shelter': ['people there need shelter', 'people there need a structure that provides privacy and protection from danger'],
+'utils': ['people there need utilities', 'people there need the service (electric power or water or transportation) provided by a public utility'],
+'water': ['people there need water', 'Clean drinking water is urgently needed'],
+'crimeviolence': ['crime violence happened there', 'an act punishable by law; usually considered an evil act happened there'],
+'terrorism': ['this text describes terrorist activity','There was a terrorist activity in that place, such as an explosion, shooting'],
+'evac': ['This place is very dangerous and it is urgent to evacuate people to safety.', 'we need to move people from a place of danger to a safer place.'],
+'regimechange': ['Regime change happened in this country', 'Rebellion happens in that country']}
 
 class InputExample(object):
     """A single training/test example for simple sequence classification."""
@@ -147,7 +147,7 @@ class RteProcessor(DataProcessor):
         return examples
 
 
-    def get_examples_emotion_train(self, filename):
+    def get_examples_situation_train(self, filename):
         readfile = codecs.open(filename, 'r', 'utf-8')
         line_co=0
         exam_co = 0
@@ -158,7 +158,7 @@ class RteProcessor(DataProcessor):
         seen_types = set()
         for row in readfile:
             line=row.strip().split('\t')
-            if len(line)==3: # label_id, domain, text
+            if len(line)==2: # label_id, text
                 type_index =  line[0].strip()
                 seen_types.add(type_index)
         readfile.close()
@@ -167,7 +167,7 @@ class RteProcessor(DataProcessor):
         # type_load_size = defaultdict(int)
         for row in readfile:
             line=row.strip().split('\t')
-            if len(line)==3: # label_id, domain, text
+            if len(line)==2: # label_id, text
 
                 type_index =  line[0].strip()
                 # if type_load_size.get(type_index,0)< size_limit_per_type:
@@ -177,7 +177,7 @@ class RteProcessor(DataProcessor):
                         '''pos pair'''
                         for hypo in hypo_list:
                             guid = "train-"+str(exam_co)
-                            text_a = line[2]
+                            text_a = line[1]
                             text_b = hypo
                             label = 'entailment' #if line[0] == '1' else 'not_entailment'
                             examples.append(
@@ -187,14 +187,14 @@ class RteProcessor(DataProcessor):
                         '''neg pair'''
                         for hypo in hypo_list:
                             guid = "train-"+str(exam_co)
-                            text_a = line[2]
+                            text_a = line[1]
                             text_b = hypo
                             label = 'not_entailment' #if line[0] == '1' else 'not_entailment'
                             examples.append(
                                 InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
                             exam_co+=1
                 line_co+=1
-                if line_co % 10000 == 0:
+                if line_co % 100 == 0:
                     print('loading training size:', line_co)
 
         readfile.close()
@@ -203,7 +203,7 @@ class RteProcessor(DataProcessor):
         return examples, seen_types
 
 
-    def get_examples_emotion_test(self, filename, seen_types):
+    def get_examples_situation_test(self, filename, seen_types):
         readfile = codecs.open(filename, 'r', 'utf-8')
         line_co=0
         exam_co = 0
@@ -223,7 +223,7 @@ class RteProcessor(DataProcessor):
         gold_label_list = []
         for row in readfile:
             line=row.strip().split('\t')
-            if len(line)==3: # label_id, domain, text
+            if len(line)==2: # label_id, text
 
                 type_index =  line[0].strip()
                 gold_label_list.append(type_index)
@@ -234,7 +234,7 @@ class RteProcessor(DataProcessor):
                         '''pos pair'''
                         for hypo in hypo_list:
                             guid = "test-"+str(exam_co)
-                            text_a = line[2]
+                            text_a = line[1]
                             text_b = hypo
                             label = 'entailment' #if line[0] == '1' else 'not_entailment'
                             examples.append(
@@ -244,16 +244,16 @@ class RteProcessor(DataProcessor):
                         '''neg pair'''
                         for hypo in hypo_list:
                             guid = "test-"+str(exam_co)
-                            text_a = line[2]
+                            text_a = line[1]
                             text_b = hypo
                             label = 'not_entailment' #if line[0] == '1' else 'not_entailment'
                             examples.append(
                                 InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
                             exam_co+=1
                 line_co+=1
-                if line_co % 1000 == 0:
+                if line_co % 100 == 0:
                     print('loading test size:', line_co)
-                # if line_co == 100:
+                # if line_co == 1000:
                 #     break
 
 
@@ -692,11 +692,8 @@ def main():
 
 
     train_examples = None
-
     # Prepare model
     cache_dir = args.cache_dir if args.cache_dir else os.path.join(str(PYTORCH_TRANSFORMERS_CACHE), 'distributed_{}'.format(args.local_rank))
-
-
 
 
     global_step = 0
@@ -709,7 +706,7 @@ def main():
 
     '''load test set'''
     seen_types = set()
-    test_examples, test_label_list, test_hypo_seen_str_indicator, test_hypo_2_type_index = processor.get_examples_emotion_test('/export/home/Dataset/Stuttgart_Emotion/unify-emotion-datasets-master/zero-shot-split/test.txt', seen_types)
+    test_examples, test_label_list, test_hypo_seen_str_indicator, test_hypo_2_type_index = processor.get_examples_situation_test('/export/home/Dataset/LORELEI/zero-shot-split/test.txt', seen_types)
     test_features = convert_examples_to_features(
         test_examples, label_list, args.max_seq_length, BertTokenizer.from_pretrained('/export/home/Dataset/fine_tune_Bert_stored/FineTuneOnRTE', do_lower_case=args.do_lower_case), output_mode)
 
@@ -729,9 +726,9 @@ def main():
     '/export/home/Dataset/fine_tune_Bert_stored/FineTuneOnMNLI',
     '/export/home/Dataset/fine_tune_Bert_stored/FineTuneOnFEVER']
 
-    pred_probs = 0.0
+    pred_probs_ensemble = 0.0
     for i, modelpath in enumerate(modelpaths):
-        # pretrain_model_dir = '/export/home/Dataset/fine_tune_Bert_stored/FineTuneOnRTE' #FineTuneOnCombined'# FineTuneOnMNLI
+        # pretrain_model_dir = '/export/home/Dataset/fine_tune_Bert_stored/FineTuneOnRTE' #FineTuneOnCombined'# FineTuneOnMNLI, FineTuneOnFEVER, FineTuneOnRTE
         model = BertForSequenceClassification.from_pretrained(modelpath, num_labels=num_labels)
         tokenizer = BertTokenizer.from_pretrained(modelpath, do_lower_case=args.do_lower_case)
 
@@ -741,6 +738,7 @@ def main():
 
         if n_gpu > 1:
             model = torch.nn.DataParallel(model)
+
         # Prepare optimizer
         param_optimizer = list(model.named_parameters())
         no_decay = ['bias', 'LayerNorm.bias', 'LayerNorm.weight']
@@ -790,30 +788,30 @@ def main():
                 pred_binary_labels_loose.append(0)
             else:
                 pred_binary_labels_loose.append(1)
-        seen_acc, unseen_acc = evaluate_emotion_zeroshot_TwpPhasePred(pred_probs_i, pred_binary_labels_harsh, pred_binary_labels_loose, test_label_list, test_hypo_seen_str_indicator, test_hypo_2_type_index, seen_types)
+        seen_acc, unseen_acc = evaluate_situation_zeroshot_TwpPhasePred(pred_probs_i, pred_binary_labels_harsh, pred_binary_labels_loose, test_label_list, test_hypo_seen_str_indicator, test_hypo_2_type_index, seen_types)
         print('seen:', seen_acc, 'unseen:', unseen_acc)
         print('\n\n this model preds over\n\n\n')
         if i == 0:
-            pred_probs = softmax(preds,axis=1)
+            pred_probs_ensemble = softmax(preds,axis=1)
         else:
-            pred_probs += softmax(preds,axis=1)
-
-
-
-    pred_probs = softmax(pred_probs,axis=1)[:,0]
+            pred_probs_ensemble += softmax(preds,axis=1)
+    # preds = preds[0]
+    pred_probs_ensemble = softmax(pred_probs_ensemble,axis=1)
+    pred_probs = pred_probs_ensemble[:,0]
     pred_binary_labels_harsh = []
     pred_binary_labels_loose = []
     for i in range(preds.shape[0]):
-        if preds[i][0]>preds[i][1]+0.1:#?????????what is preds
+        if pred_probs_ensemble[i][0]>pred_probs_ensemble[i][1]+0.1:
             pred_binary_labels_harsh.append(0)
         else:
             pred_binary_labels_harsh.append(1)
-        if preds[i][0]>preds[i][1]:
+        if pred_probs_ensemble[i][0]>pred_probs_ensemble[i][1]:
             pred_binary_labels_loose.append(0)
         else:
             pred_binary_labels_loose.append(1)
 
-    seen_acc, unseen_acc = evaluate_emotion_zeroshot_TwpPhasePred(pred_probs, pred_binary_labels_harsh, pred_binary_labels_loose, test_label_list, test_hypo_seen_str_indicator, test_hypo_2_type_index, seen_types)
+    seen_acc, unseen_acc = evaluate_situation_zeroshot_TwpPhasePred(pred_probs, pred_binary_labels_harsh, pred_binary_labels_loose, test_label_list, test_hypo_seen_str_indicator, test_hypo_2_type_index, seen_types)
+
     if unseen_acc > max_test_unseen_acc:
         max_test_unseen_acc = unseen_acc
     print('\n\n\t test seen_f1 & unseen_f1:', seen_acc,unseen_acc, ' max_test_unseen_f1:', max_test_unseen_acc, '\n')
