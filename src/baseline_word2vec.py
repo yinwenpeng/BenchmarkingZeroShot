@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.spatial.distance import cosine
 from sklearn.metrics import f1_score
-
+import codecs
 
 
 def sent_2_emb(wordlist):
