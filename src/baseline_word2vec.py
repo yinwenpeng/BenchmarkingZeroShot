@@ -39,8 +39,9 @@ def baseline_w2v():
         text = parts[2].strip()
         max_cos = 0.0
         max_type = -1
+        text_emb = sent_2_emb(text.split())
         for i, type in enumerate(type_list):
-            text_emb = sent_2_emb(text.split())
+
             type_emb = type_2_emb[i]
             cos = 1.0-cosine(text_emb, type_emb)
             if cos > max_cos:
@@ -79,6 +80,7 @@ def baseline_w2v():
     print('overall:', f1_score(gold_label_list, pred_label_list, labels = all_test_labels, average='weighted'))
 
     '''situation'''
+    origin_type_list = ['search','evac','infra','utils','water','shelter','med','food', 'crimeviolence', 'terrorism', 'regimechange', 'out-of-domain']
     type_list = ['search','evacuation','infrastructure','utilities utility','water','shelter','medical assistance','food', 'crime violence', 'terrorism', 'regime change']#, 'out-of-domain']
     type_2_emb = []
     for type in type_list:
@@ -93,8 +95,8 @@ def baseline_w2v():
         text = parts[1].strip()
         max_cos = 0.0
         max_type = ''
-        for i, type in enumerate(type_list):
-            text_emb = sent_2_emb(text.split())
+        text_emb = sent_2_emb(text.split())
+        for i, type in enumerate(origin_type_list[:-1]):
             type_emb = type_2_emb[i]
             cos = 1.0-cosine(text_emb, type_emb)
             if cos > max_cos:
@@ -150,8 +152,9 @@ def baseline_w2v():
         text = parts[1].strip()
         max_cos = 0.0
         max_type = ''
+        text_emb = sent_2_emb(text.split())
         for i, type in enumerate(type_list):
-            text_emb = sent_2_emb(text.split())
+
             type_emb = type_2_emb[i]
             cos = 1.0-cosine(text_emb, type_emb)
             if cos > max_cos:
