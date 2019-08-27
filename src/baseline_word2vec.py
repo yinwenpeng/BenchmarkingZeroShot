@@ -30,6 +30,7 @@ def baseline_w2v():
     readfile = codecs.open('/export/home/Dataset/YahooClassification/yahoo_answers_csv/zero-shot-split/test.txt', 'r', 'utf-8')
     gold_label_list = []
     pred_label_list = []
+    co = 0
     for line in readfile:
         parts = line.strip().split('\t')
         gold_label_list.append(parts[0])
@@ -44,6 +45,9 @@ def baseline_w2v():
                 max_cos = cos
                 max_type = str(i)
         pred_label_list.append(max_type)
+        co+=1
+        if co % 100 == 0:
+            print('yahoo co:', co)
     readfile.close()
 
     # all_test_labels = list(set(gold_label_list))
@@ -86,6 +90,7 @@ def baseline_w2v():
     readfile = codecs.open('/export/home/Dataset/Stuttgart_Emotion/unify-emotion-datasets-master/zero-shot-split/test.txt', 'r', 'utf-8')
     gold_label_list = []
     pred_label_list = []
+    co = 0
     for line in readfile:
         parts = line.strip().split('\t')
         gold_label_list.append(parts[0])
@@ -103,6 +108,9 @@ def baseline_w2v():
             pred_label_list.append(max_type)
         else:
             pred_label_list.append('noemo')
+        co+=1
+        if co % 100 == 0:
+            print('emotion co:', co)
     readfile.close()
 
     all_test_labels = list(set(gold_label_list))
@@ -135,6 +143,7 @@ def baseline_w2v():
     readfile = codecs.open('/export/home/Dataset/LORELEI/zero-shot-split/test.txt', 'r', 'utf-8')
     gold_label_list = []
     pred_label_list = []
+    co=0
     for line in readfile:
         parts = line.strip().split('\t')
         gold_label_list.append(parts[0])
@@ -152,6 +161,9 @@ def baseline_w2v():
             pred_label_list.append(max_type)
         else:
             pred_label_list.append('out-of-domain')
+        co+=1
+        if co % 100 == 0:
+            print('yahoo co:', co)
     readfile.close()
 
     all_test_labels = list(set(gold_label_list))
