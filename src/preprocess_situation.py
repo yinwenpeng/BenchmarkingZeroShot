@@ -263,17 +263,51 @@ def evaluate_situation_zeroshot_TwpPhasePred(pred_probs, pred_binary_labels_hars
 
 
 
+# def majority_baseline():
+#     readfile = codecs.open(path+'zero-shot-split/test.txt', 'r', 'utf-8')
+#     gold_label_list = []
+#     for line in readfile:
+#         gold_label_list.append(line.strip().split('\t')[0])
+#
+#     pred_label_list = ['out-of-domain'] *len(gold_label_list)
+#     f1_score_per_type = f1_score(gold_label_list, pred_label_list, labels = list(set(gold_label_list)), average='weighted')
+#     print(f1_score_per_type)
+
 def majority_baseline():
     readfile = codecs.open(path+'zero-shot-split/test.txt', 'r', 'utf-8')
     gold_label_list = []
     for line in readfile:
         gold_label_list.append(line.strip().split('\t')[0])
-
+    '''out-of-domain is the main type'''
     pred_label_list = ['out-of-domain'] *len(gold_label_list)
-    f1_score_per_type = f1_score(gold_label_list, pred_label_list, labels = list(set(gold_label_list)), average='weighted')
-    print(f1_score_per_type)
+    # seen_labels = set(['search','evac','infra','utils','water','shelter','med','food', 'crimeviolence', 'terrorism', 'regimechange'])
+    seen_types = set(['search','infra','water','med', 'crimeviolence', 'regimechange'])
+    # f1_score_per_type = f1_score(gold_label_list, pred_label_list, labels = list(set(gold_label_list)), average='weighted')
+
+    all_test_labels = list(set(gold_label_list))
+    f1_score_per_type = f1_score(gold_label_list, pred_label_list, labels = all_test_labels, average=None)
+
+    seen_f1_accu = 0.0
+    seen_size = 0
+    unseen_f1_accu = 0.0
+    unseen_size = 0
+    for i in range(len(all_test_labels)):
+        f1=f1_score_per_type[i]
+        co = gold_label_list.count(all_test_labels[i])
+        if all_test_labels[i] in seen_types:
+            seen_f1_accu+=f1*co
+            seen_size+=co
+        else:
+            unseen_f1_accu+=f1*co
+            unseen_size+=co
 
 
+
+
+    seen_f1 = seen_f1_accu/(1e-6+seen_size)
+    unseen_f1 = unseen_f1_accu/(1e-6+unseen_size)
+
+    print('seen_f1:', seen_f1, 'unseen_f1:', unseen_f1)
 
 
 if __name__ == '__main__':
