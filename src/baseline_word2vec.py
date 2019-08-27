@@ -51,7 +51,7 @@ def baseline_w2v():
         else:
             pred_label_list.append('noemo')
         co+=1
-        if co % 100 == 0:
+        if co % 1000 == 0:
             print('emotion co:', co)
     readfile.close()
 
@@ -104,8 +104,8 @@ def baseline_w2v():
         else:
             pred_label_list.append('out-of-domain')
         co+=1
-        if co % 100 == 0:
-            print('yahoo co:', co)
+        if co % 1000 == 0:
+            print('situation co:', co)
     readfile.close()
 
     all_test_labels = list(set(gold_label_list))
@@ -134,7 +134,7 @@ def baseline_w2v():
 
 
     '''yahoo'''
-    type_list = ['Society & Culture', 'Science & Mathematics', 'Health', 'Education & Reference','Computers & Internet','Sports','Business & Finance','Entertainment & Music','Family & Relationships','Politics & Government']
+    type_list = ['society & culture', 'science & mathematics', 'health', 'education & reference','computer & internet','sports sport','business & finance','entertainment & music','Family & relationships relationship','politics & government']
     type_2_emb = []
     for type in type_list:
         type_2_emb.append(sent_2_emb(type.split()))
@@ -157,9 +157,10 @@ def baseline_w2v():
                 max_type = str(i)
         pred_label_list.append(max_type)
         co+=1
-        if co % 100 == 0:
+        if co % 1000 == 0:
             print('yahoo co:', co)
     readfile.close()
+    print('pred_label_list:', pred_label_list)
 
     # all_test_labels = list(set(gold_label_list))
     # f1_score_per_type = f1_score(gold_label_list, pred_label_list, labels = all_test_labels, average=None)
