@@ -729,7 +729,7 @@ def main():
     '/export/home/Dataset/fine_tune_Bert_stored/FineTuneOnMNLI',
     '/export/home/Dataset/fine_tune_Bert_stored/FineTuneOnFEVER']
 
-    pred_probs = 0.0
+    pred_probs_ensemble = 0.0
     for i, modelpath in enumerate(modelpaths):
         # pretrain_model_dir = '/export/home/Dataset/fine_tune_Bert_stored/FineTuneOnRTE' #FineTuneOnCombined'# FineTuneOnMNLI
         model = BertForSequenceClassification.from_pretrained(modelpath, num_labels=num_labels)
@@ -794,21 +794,21 @@ def main():
         print('seen:', seen_acc, 'unseen:', unseen_acc)
         print('\n\n this model preds over\n\n\n')
         if i == 0:
-            pred_probs = softmax(preds,axis=1)
+            pred_probs_ensemble = softmax(preds,axis=1)
         else:
-            pred_probs += softmax(preds,axis=1)
+            pred_probs_ensemble += softmax(preds,axis=1)
 
 
-
-    pred_probs = softmax(pred_probs,axis=1)[:,0]
+    pred_probs_ensemble = softmax(pred_probs_ensemble,axis=1)
+    pred_probs = pred_probs_ensemble[:,0]
     pred_binary_labels_harsh = []
     pred_binary_labels_loose = []
     for i in range(preds.shape[0]):
-        if preds[i][0]>preds[i][1]+0.1:#?????????what is preds
+        if pred_probs_ensemble[i][0]>pred_probs_ensemble[i][1]+0.1:
             pred_binary_labels_harsh.append(0)
         else:
             pred_binary_labels_harsh.append(1)
-        if preds[i][0]>preds[i][1]:
+        if pred_probs_ensemble[i][0]>pred_probs_ensemble[i][1]:
             pred_binary_labels_loose.append(0)
         else:
             pred_binary_labels_loose.append(1)
