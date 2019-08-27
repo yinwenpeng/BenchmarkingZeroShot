@@ -92,6 +92,7 @@ def build_zeroshot_test_dev_train_set():
 
         '''train set build'''
         remain_type_v0 = type_set & set(seen_types_v0)
+        print('remain_type_v0:', remain_type_v0, 'type_set:', type_set, 'seen_types_v0:', seen_types_v0)
         if len(remain_type_v0) > 0:
             write_train_v0.write(' '.join(list(remain_type_v0))+'\t'+parts[1].strip()+'\n')
         remain_type_v1 = type_set & set(seen_types_v1)
@@ -415,7 +416,7 @@ if __name__ == '__main__':
     # split_all_labeleddata_into_subdata_per_label()
     # build_zeroshot_test_dev_set()
     # build_zeroshot_train_set()
-    # build_zeroshot_test_dev_train_set()
+    build_zeroshot_test_dev_train_set()
     statistics()
 
     # majority_baseline()
