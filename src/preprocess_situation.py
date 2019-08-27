@@ -281,7 +281,7 @@ def majority_baseline():
     '''out-of-domain is the main type'''
     pred_label_list = ['out-of-domain'] *len(gold_label_list)
     # seen_labels = set(['search','evac','infra','utils','water','shelter','med','food', 'crimeviolence', 'terrorism', 'regimechange'])
-    seen_types = set(['search','infra','water','med', 'crimeviolence', 'regimechange'])
+    seen_types = set(['evac','utils','shelter','food', 'terrorism'])
     # f1_score_per_type = f1_score(gold_label_list, pred_label_list, labels = list(set(gold_label_list)), average='weighted')
 
     all_test_labels = list(set(gold_label_list))
