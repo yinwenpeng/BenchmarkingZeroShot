@@ -328,8 +328,34 @@ def majority_baseline():
         gold_label_list.append(line.strip().split('\t')[0])
     '''joy is the main emoion'''
     pred_label_list = ['joy'] *len(gold_label_list)
-    f1_score_per_type = f1_score(gold_label_list, pred_label_list, labels = list(set(gold_label_list)), average='weighted')
-    print(f1_score_per_type)
+    # seen_labels = set(['sadness', 'joy', 'anger', 'disgust', 'fear', 'surprise', 'shame', 'guilt', 'love'])
+    seen_types = set(['sadness', 'anger',  'fear',  'shame',  'love'])
+    # f1_score_per_type = f1_score(gold_label_list, pred_label_list, labels = list(set(gold_label_list)), average='weighted')
+
+    all_test_labels = list(set(gold_label_list))
+    f1_score_per_type = f1_score(gold_label_list, pred_label_list, labels = all_test_labels, average=None)
+
+    seen_f1_accu = 0.0
+    seen_size = 0
+    unseen_f1_accu = 0.0
+    unseen_size = 0
+    for i in range(len(all_test_labels)):
+        f1=f1_score_per_type[i]
+        co = gold_label_list.count(all_test_labels[i])
+        if all_test_labels[i] in seen_types:
+            seen_f1_accu+=f1*co
+            seen_size+=co
+        else:
+            unseen_f1_accu+=f1*co
+            unseen_size+=co
+
+
+
+
+    seen_f1 = seen_f1_accu/(1e-6+seen_size)
+    unseen_f1 = unseen_f1_accu/(1e-6+unseen_size)
+
+    print('seen_f1:', seen_f1, 'unseen_f1:', unseen_f1)
 
 
 
