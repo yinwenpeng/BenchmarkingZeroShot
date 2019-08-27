@@ -206,7 +206,7 @@ if __name__ == '__main__':
         l = line.split()
         word2vec[l[0]] = list(map(float, l[1:]))
         co+=1
-        if co % 1000 == 0:
-            break
+        # if co % 1000 == 0:
+        #     break
     print("==> word2vec is loaded")
     baseline_w2v()
