@@ -695,7 +695,7 @@ def main():
     num_train_optimization_steps = None
     if args.do_train:
         # train_examples = processor.get_train_examples_wenpeng('/home/wyin3/Datasets/glue_data/RTE/train.tsv')
-        train_examples, seen_types = processor.get_examples_emotion_train('/export/home/Dataset/Stuttgart_Emotion/unify-emotion-datasets-master/zero-shot-split/train_pu_half_v1.txt') #train_pu_half_v1.txt
+        train_examples, seen_types = processor.get_examples_emotion_train('/export/home/Dataset/Stuttgart_Emotion/unify-emotion-datasets-master/zero-shot-split/train_pu_half_v0.txt') #train_pu_half_v1.txt
         # seen_classes=[0,2,4,6,8]
 
         num_train_optimization_steps = int(
@@ -710,7 +710,7 @@ def main():
     #           num_labels=num_labels)
     # tokenizer = BertTokenizer.from_pretrained(args.bert_model, do_lower_case=args.do_lower_case)
 
-    pretrain_model_dir = '/export/home/Dataset/fine_tune_Bert_stored/FineTuneOnMNLI' #FineTuneOnCombined'# FineTuneOnMNLI
+    pretrain_model_dir = '/export/home/Dataset/fine_tune_Bert_stored/FineTuneOnFEVER' #FineTuneOnCombined'# FineTuneOnMNLI
     model = BertForSequenceClassification.from_pretrained(pretrain_model_dir, num_labels=num_labels)
     tokenizer = BertTokenizer.from_pretrained(pretrain_model_dir, do_lower_case=args.do_lower_case)
 
@@ -942,9 +942,6 @@ def main():
                             pred_binary_labels_loose.append(1)
 
                     seen_acc, unseen_acc = evaluate_emotion_zeroshot_TwpPhasePred(pred_probs, pred_binary_labels_harsh, pred_binary_labels_loose, test_label_list, test_hypo_seen_str_indicator, test_hypo_2_type_index, seen_types)
-                    # result = compute_metrics('F1', preds, all_label_ids.numpy())
-                    # loss = tr_loss/nb_tr_steps if args.do_train else None
-                    # test_acc = mean_f1#result.get("f1")
                     if unseen_acc > max_test_unseen_acc:
                         max_test_unseen_acc = unseen_acc
                     print('\n\n\t test seen_f1 & unseen_f1:', seen_acc,unseen_acc, ' max_test_unseen_f1:', max_test_unseen_acc, '\n')
