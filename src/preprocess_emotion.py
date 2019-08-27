@@ -319,7 +319,79 @@ def evaluate_emotion_zeroshot_TwpPhasePred(pred_probs, pred_binary_labels_harsh,
 
     return seen_f1, unseen_f1
 
+def evaluate_emotion_zeroshot_SinglePhasePred(pred_probs, pred_binary_labels_harsh, pred_binary_labels_loose, eval_label_list, eval_hypo_seen_str_indicator, eval_hypo_2_type_index, seen_types):
+    '''
+    pred_probs: a list, the prob for  "entail"
+    pred_binary_labels: a lit, each  for 0 or 1
+    eval_label_list: the gold type index; list length == lines in dev.txt
+    eval_hypo_seen_str_indicator: totally hypo size, seen or unseen
+    eval_hypo_2_type_index:: total hypo size, the type in [0,...n]
+    seen_types: a set of type indices
+    '''
 
+    pred_probs = list(pred_probs)
+    # pred_binary_labels = list(pred_binary_labels)
+    total_hypo_size = len(eval_hypo_seen_str_indicator)
+    total_premise_size = len(eval_label_list)
+    assert len(pred_probs) == total_premise_size*total_hypo_size
+    assert len(eval_hypo_seen_str_indicator) == len(eval_hypo_2_type_index)
+
+    # print('seen_types:', seen_types)
+    # print('eval_hypo_seen_str_indicator:', eval_hypo_seen_str_indicator)
+    # print('eval_hypo_2_type_index:', eval_hypo_2_type_index)
+
+
+    pred_label_list = []
+
+    for i in range(total_premise_size):
+        pred_probs_per_premise = pred_probs[i*total_hypo_size: (i+1)*total_hypo_size]
+        pred_binary_labels_per_premise_harsh = pred_binary_labels_harsh[i*total_hypo_size: (i+1)*total_hypo_size]
+        pred_binary_labels_per_premise_loose = pred_binary_labels_loose[i*total_hypo_size: (i+1)*total_hypo_size]
+
+
+        max_prob = -100.0
+        max_index = -1
+        for j in range(total_hypo_size):
+            if pred_binary_labels_per_premise_loose[j]==0: # is entailment
+                if pred_probs_per_premise[j] > max_prob:
+                    max_prob = pred_probs_per_premise[j]
+                    max_index = j
+
+        if max_index == -1:
+            pred_label_list.append('out-of-domain')
+        else:
+            pred_label_list.append(eval_hypo_2_type_index[max_index])
+
+    assert len(pred_label_list) ==  len(eval_label_list)
+
+    all_test_labels = list(set(eval_label_list))
+    f1_score_per_type = f1_score(eval_label_list, pred_label_list, labels = all_test_labels, average=None)
+    print('all_test_labels:', all_test_labels)
+    print('f1_score_per_type:', f1_score_per_type)
+    print('type size:', [eval_label_list.count(type) for type in all_test_labels])
+
+    '''seen F1'''
+    seen_f1_accu = 0.0
+    seen_size = 0
+    unseen_f1_accu = 0.0
+    unseen_size = 0
+    for i in range(len(all_test_labels)):
+        f1=f1_score_per_type[i]
+        co = eval_label_list.count(all_test_labels[i])
+        if all_test_labels[i] in seen_types:
+            seen_f1_accu+=f1*co
+            seen_size+=co
+        else:
+            unseen_f1_accu+=f1*co
+            unseen_size+=co
+
+
+
+
+    seen_f1 = seen_f1_accu/(1e-6+seen_size)
+    unseen_f1 = unseen_f1_accu/(1e-6+unseen_size)
+
+    return seen_f1, unseen_f1
 
 def majority_baseline():
     readfile = codecs.open(path+'zero-shot-split/test.txt', 'r', 'utf-8')
