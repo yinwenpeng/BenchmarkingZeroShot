@@ -38,14 +38,14 @@ def baseline_w2v():
         gold_label_list.append(parts[0])
         text = parts[2].strip()
         max_cos = 0.0
-        max_type = ''
+        max_type = -1
         for i, type in enumerate(type_list):
             text_emb = sent_2_emb(text.split())
-            type_emb = type_2_emb[i]
+            type_emb = type_2_emb[type.split()]
             cos = 1.0-cosine(text_emb, type_emb)
             if cos > max_cos:
                 max_cos = cos
-                max_type = str(i)
+                max_type = type
         if max_cos > 0.0:
             pred_label_list.append(max_type)
         else:
@@ -54,8 +54,8 @@ def baseline_w2v():
         if co % 1000 == 0:
             print('emotion co:', co)
     readfile.close()
-    print('gold_label_list:', gold_label_list)
-    print('pred_label_list:', pred_label_list)
+    print('gold_label_list:', gold_label_list[:200])
+    print('pred_label_list:', pred_label_list[:200])
     all_test_labels = list(set(gold_label_list))
     f1_score_per_type = f1_score(gold_label_list, pred_label_list, labels = all_test_labels, average=None)
     seen_types_group = [['sadness',  'anger',  'fear',  'shame',  'love'],['joy',  'disgust',  'surprise',  'guilt']]
@@ -95,11 +95,11 @@ def baseline_w2v():
         max_type = ''
         for i, type in enumerate(type_list):
             text_emb = sent_2_emb(text.split())
-            type_emb = type_2_emb[i]
+            type_emb = type_2_emb[type.split()]
             cos = 1.0-cosine(text_emb, type_emb)
             if cos > max_cos:
                 max_cos = cos
-                max_type = str(i)
+                max_type = type
         if max_cos > 0.0:
             pred_label_list.append(max_type)
         else:
@@ -108,7 +108,8 @@ def baseline_w2v():
         if co % 1000 == 0:
             print('situation co:', co)
     readfile.close()
-
+    print('gold_label_list:', gold_label_list[:200])
+    print('pred_label_list:', pred_label_list[:200])
     all_test_labels = list(set(gold_label_list))
     f1_score_per_type = f1_score(gold_label_list, pred_label_list, labels = all_test_labels, average=None)
     seen_types_group = [['search','infrastructure','water','medical assistance', 'crime violence',  'regime change'],
@@ -161,7 +162,8 @@ def baseline_w2v():
         if co % 1000 == 0:
             print('yahoo co:', co)
     readfile.close()
-    # print('pred_label_list:', pred_label_list)
+    print('gold_label_list:', gold_label_list[:200])
+    print('pred_label_list:', pred_label_list[:200])
 
     # all_test_labels = list(set(gold_label_list))
     # f1_score_per_type = f1_score(gold_label_list, pred_label_list, labels = all_test_labels, average=None)
@@ -207,7 +209,7 @@ if __name__ == '__main__':
         l = line.split()
         word2vec[l[0]] = list(map(float, l[1:]))
         co+=1
-        # if co % 1000 == 0:
-        #     break
+        if co % 10000 == 0:
+            print('loading w2v size:', co)
     print("==> word2vec is loaded")
     baseline_w2v()
