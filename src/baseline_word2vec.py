@@ -46,7 +46,7 @@ def baseline_w2v():
             if cos > max_cos:
                 max_cos = cos
                 max_type = str(i)
-        if max_cos > 0.5:
+        if max_cos > 0.0:
             pred_label_list.append(max_type)
         else:
             pred_label_list.append('noemo')
@@ -100,7 +100,7 @@ def baseline_w2v():
             if cos > max_cos:
                 max_cos = cos
                 max_type = str(i)
-        if max_cos > 0.5:
+        if max_cos > 0.0:
             pred_label_list.append(max_type)
         else:
             pred_label_list.append('out-of-domain')
