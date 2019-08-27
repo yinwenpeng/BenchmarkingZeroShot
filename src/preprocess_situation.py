@@ -103,6 +103,18 @@ def build_zeroshot_test_dev_train_set():
     write_train_v1.close()
     print('zero-shot data split over')
 
+def statistics():
+    filename=[path+'zero-shot-split/test.txt', path+'zero-shot-split/dev.txt',
+    path+'zero-shot-split/train_pu_half_v0.txt',path+'zero-shot-split/train_pu_half_v1.txt']
+    for fil in filename:
+        type2size= defaultdict(int)
+        readfile=codecs.open(fil, 'r', 'utf-8')
+        for line in readfile:
+            type_list = line.strip().split('\t')[0].split()
+            for type in type_list:
+                type2size[type]+=1
+        readfile.close()
+        print('type2size:', type2size)
 
 
 # def build_zeroshot_train_set():
@@ -403,6 +415,7 @@ if __name__ == '__main__':
     # split_all_labeleddata_into_subdata_per_label()
     # build_zeroshot_test_dev_set()
     # build_zeroshot_train_set()
-    build_zeroshot_test_dev_train_set()
+    # build_zeroshot_test_dev_train_set()
+    statistics()
 
     # majority_baseline()
