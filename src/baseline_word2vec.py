@@ -54,7 +54,8 @@ def baseline_w2v():
         if co % 1000 == 0:
             print('emotion co:', co)
     readfile.close()
-
+    print('gold_label_list:', gold_label_list)
+    print('pred_label_list:', pred_label_list)
     all_test_labels = list(set(gold_label_list))
     f1_score_per_type = f1_score(gold_label_list, pred_label_list, labels = all_test_labels, average=None)
     seen_types_group = [['sadness',  'anger',  'fear',  'shame',  'love'],['joy',  'disgust',  'surprise',  'guilt']]
