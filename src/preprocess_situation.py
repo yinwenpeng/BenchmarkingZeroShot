@@ -80,6 +80,9 @@ def build_zeroshot_test_dev_train_set():
     write_train_v1 = codecs.open(path+'zero-shot-split/train_pu_half_v1.txt', 'w', 'utf-8')
     seen_types_v1 = ['evac','utils', 'shelter','food', 'terrorism']
     readfile = codecs.open(path+'sf_all_labeled_data_multilabel.txt', 'r', 'utf-8')
+
+    orig2size = defaultdict(int)
+    new2size = defaultdict(int)
     for line in readfile:
         parts = line.strip().split('\t')
         type_set = set(parts[0].strip().split())
@@ -93,6 +96,10 @@ def build_zeroshot_test_dev_train_set():
         '''train set build'''
         remain_type_v0 = type_set & set(seen_types_v0)
         print('remain_type_v0:', remain_type_v0, 'type_set:', type_set, 'seen_types_v0:', seen_types_v0)
+        for type in remain_type_v0:
+            new2size[type]+=1
+        for type in type_set:
+            orig2size[type]+=1
         if len(remain_type_v0) > 0:
             write_train_v0.write(' '.join(list(remain_type_v0))+'\t'+parts[1].strip()+'\n')
         remain_type_v1 = type_set & set(seen_types_v1)
@@ -103,6 +110,7 @@ def build_zeroshot_test_dev_train_set():
     write_train_v0.close()
     write_train_v1.close()
     print('zero-shot data split over')
+    print('orig2size:', orig2size, 'new2size:', new2size)
 
 def statistics():
     filename=[path+'zero-shot-split/test.txt', path+'zero-shot-split/dev.txt',
