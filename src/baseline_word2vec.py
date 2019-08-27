@@ -214,7 +214,7 @@ if __name__ == '__main__':
         co+=1
         if co % 50000 == 0:
             print('loading w2v size:', co)
-        if co % 10000 == 0:
-            break
+        # if co % 10000 == 0:
+        #     break
     print("==> word2vec is loaded")
     baseline_w2v()
