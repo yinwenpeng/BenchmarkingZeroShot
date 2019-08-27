@@ -329,7 +329,7 @@ def majority_baseline():
     '''joy is the main emoion'''
     pred_label_list = ['joy'] *len(gold_label_list)
     # seen_labels = set(['sadness', 'joy', 'anger', 'disgust', 'fear', 'surprise', 'shame', 'guilt', 'love'])
-    seen_types = set(['sadness', 'anger',  'fear',  'shame',  'love'])
+    seen_types = set(['joy',  'disgust',  'surprise',  'guilt'])
     # f1_score_per_type = f1_score(gold_label_list, pred_label_list, labels = list(set(gold_label_list)), average='weighted')
 
     all_test_labels = list(set(gold_label_list))
