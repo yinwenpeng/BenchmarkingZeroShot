@@ -41,7 +41,7 @@ def baseline_w2v():
         max_type = -1
         for i, type in enumerate(type_list):
             text_emb = sent_2_emb(text.split())
-            type_emb = type_2_emb[type.split()]
+            type_emb = type_2_emb[i]
             cos = 1.0-cosine(text_emb, type_emb)
             if cos > max_cos:
                 max_cos = cos
@@ -95,7 +95,7 @@ def baseline_w2v():
         max_type = ''
         for i, type in enumerate(type_list):
             text_emb = sent_2_emb(text.split())
-            type_emb = type_2_emb[type.split()]
+            type_emb = type_2_emb[i]
             cos = 1.0-cosine(text_emb, type_emb)
             if cos > max_cos:
                 max_cos = cos
@@ -209,7 +209,7 @@ if __name__ == '__main__':
         l = line.split()
         word2vec[l[0]] = list(map(float, l[1:]))
         co+=1
-        if co % 10000 == 0:
+        if co % 50000 == 0:
             print('loading w2v size:', co)
     print("==> word2vec is loaded")
     baseline_w2v()
