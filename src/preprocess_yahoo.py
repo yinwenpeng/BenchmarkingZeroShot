@@ -479,7 +479,57 @@ def evaluate_Yahoo_zeroshot_TwpPhasePred(pred_probs, pred_binary_labels_harsh, p
 
     return seen_acc, unseen_acc
 
+def evaluate_Yahoo_zeroshot_SinglePhasePred(pred_probs, pred_binary_labels_harsh, pred_binary_labels_loose, eval_label_list, eval_hypo_seen_str_indicator, eval_hypo_2_type_index, seen_types):
+    '''
+    pred_probs: a list, the prob for  "entail"
+    pred_binary_labels: a lit, each  for 0 or 1
+    eval_label_list: the gold type index; list length == lines in dev.txt
+    eval_hypo_seen_str_indicator: totally hypo size, seen or unseen
+    eval_hypo_2_type_index:: total hypo size, the type in [0,...n]
+    seen_types: a set of type indices
+    '''
 
+    pred_probs = list(pred_probs)
+    # pred_binary_labels = list(pred_binary_labels)
+    total_hypo_size = len(eval_hypo_seen_str_indicator)
+    total_premise_size = len(eval_label_list)
+    assert len(pred_probs) == total_premise_size*total_hypo_size
+    assert len(eval_hypo_seen_str_indicator) == len(eval_hypo_2_type_index)
+
+    seen_hit=0
+    unseen_hit = 0
+    seen_size = 0
+    unseen_size = 0
+
+    for i in range(total_premise_size):
+        pred_probs_per_premise = pred_probs[i*total_hypo_size: (i+1)*total_hypo_size]
+        pred_binary_labels_per_premise_harsh = pred_binary_labels_harsh[i*total_hypo_size: (i+1)*total_hypo_size]
+        pred_binary_labels_per_premise_loose = pred_binary_labels_loose[i*total_hypo_size: (i+1)*total_hypo_size]
+
+        max_prob = -100.0
+        max_index = -1
+        for j in range(total_hypo_size):
+            if pred_probs_per_premise[j] > max_prob:
+                max_prob = pred_probs_per_premise[j]
+                max_index = j
+
+        pred_type = eval_hypo_2_type_index[max_index])
+        gold_type = eval_label_list[i]
+
+        # print('pred_type:', pred_type, 'gold_type:', gold_type)
+        if gold_type in seen_types:
+            seen_size+=1
+            if gold_type == pred_type:
+                seen_hit+=1
+        else:
+            unseen_size+=1
+            if gold_type == pred_type:
+                unseen_hit+=1
+
+    seen_acc = seen_hit/(1e-6+seen_size)
+    unseen_acc = unseen_hit/(1e-6+unseen_size)
+
+    return seen_acc, unseen_acc
 
 
 
