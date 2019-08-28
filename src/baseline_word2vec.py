@@ -19,65 +19,65 @@ def sent_2_emb(wordlist):
 
 
 def baseline_w2v():
-
-
-
-
-
-    '''emotion'''
-    type_list = ['sadness', 'joy', 'anger', 'disgust', 'fear', 'surprise', 'shame', 'guilt', 'love']#, 'noemo']
-    type_2_emb = []
-    for type in type_list:
-        type_2_emb.append(sent_2_emb(type.split()))
-    readfile = codecs.open('/export/home/Dataset/Stuttgart_Emotion/unify-emotion-datasets-master/zero-shot-split/test.txt', 'r', 'utf-8')
-    gold_label_list = []
-    pred_label_list = []
-    co = 0
-    for line in readfile:
-        parts = line.strip().split('\t')
-        gold_label_list.append(parts[0])
-        text = parts[2].strip()
-        max_cos = 0.0
-        max_type = -1
-        text_emb = sent_2_emb(text.split())
-        for i, type in enumerate(type_list):
-
-            type_emb = type_2_emb[i]
-            cos = 1.0-cosine(text_emb, type_emb)
-            if cos > max_cos:
-                max_cos = cos
-                max_type = type
-        if max_cos > 0.0:
-            pred_label_list.append(max_type)
-        else:
-            pred_label_list.append('noemo')
-        co+=1
-        if co % 1000 == 0:
-            print('emotion co:', co)
-    readfile.close()
-    print('gold_label_list:', gold_label_list[:200])
-    print('pred_label_list:', pred_label_list[:200])
-    all_test_labels = list(set(gold_label_list))
-    f1_score_per_type = f1_score(gold_label_list, pred_label_list, labels = all_test_labels, average=None)
-    seen_types_group = [['sadness',  'anger',  'fear',  'shame',  'love'],['joy',  'disgust',  'surprise',  'guilt']]
-    for i in range(len(seen_types_group)):
-        seen_types = seen_types_group[i]
-
-        seen_f1_accu = 0.0
-        seen_size = 0
-        unseen_f1_accu = 0.0
-        unseen_size = 0
-        for i in range(len(all_test_labels)):
-            f1=f1_score_per_type[i]
-            co = gold_label_list.count(all_test_labels[i])
-            if all_test_labels[i] in seen_types:
-                seen_f1_accu+=f1*co
-                seen_size+=co
-            else:
-                unseen_f1_accu+=f1*co
-                unseen_size+=co
-        print('seen:', seen_f1_accu/seen_size, 'unseen:', unseen_f1_accu/unseen_size)
-    print('overall:', f1_score(gold_label_list, pred_label_list, labels = all_test_labels, average='weighted'))
+    #
+    #
+    #
+    #
+    #
+    # '''emotion'''
+    # type_list = ['sadness', 'joy', 'anger', 'disgust', 'fear', 'surprise', 'shame', 'guilt', 'love']#, 'noemo']
+    # type_2_emb = []
+    # for type in type_list:
+    #     type_2_emb.append(sent_2_emb(type.split()))
+    # readfile = codecs.open('/export/home/Dataset/Stuttgart_Emotion/unify-emotion-datasets-master/zero-shot-split/test.txt', 'r', 'utf-8')
+    # gold_label_list = []
+    # pred_label_list = []
+    # co = 0
+    # for line in readfile:
+    #     parts = line.strip().split('\t')
+    #     gold_label_list.append(parts[0])
+    #     text = parts[2].strip()
+    #     max_cos = 0.0
+    #     max_type = -1
+    #     text_emb = sent_2_emb(text.split())
+    #     for i, type in enumerate(type_list):
+    #
+    #         type_emb = type_2_emb[i]
+    #         cos = 1.0-cosine(text_emb, type_emb)
+    #         if cos > max_cos:
+    #             max_cos = cos
+    #             max_type = type
+    #     if max_cos > 0.0:
+    #         pred_label_list.append(max_type)
+    #     else:
+    #         pred_label_list.append('noemo')
+    #     co+=1
+    #     if co % 1000 == 0:
+    #         print('emotion co:', co)
+    # readfile.close()
+    # print('gold_label_list:', gold_label_list[:200])
+    # print('pred_label_list:', pred_label_list[:200])
+    # all_test_labels = list(set(gold_label_list))
+    # f1_score_per_type = f1_score(gold_label_list, pred_label_list, labels = all_test_labels, average=None)
+    # seen_types_group = [['sadness',  'anger',  'fear',  'shame',  'love'],['joy',  'disgust',  'surprise',  'guilt']]
+    # for i in range(len(seen_types_group)):
+    #     seen_types = seen_types_group[i]
+    #
+    #     seen_f1_accu = 0.0
+    #     seen_size = 0
+    #     unseen_f1_accu = 0.0
+    #     unseen_size = 0
+    #     for i in range(len(all_test_labels)):
+    #         f1=f1_score_per_type[i]
+    #         co = gold_label_list.count(all_test_labels[i])
+    #         if all_test_labels[i] in seen_types:
+    #             seen_f1_accu+=f1*co
+    #             seen_size+=co
+    #         else:
+    #             unseen_f1_accu+=f1*co
+    #             unseen_size+=co
+    #     print('seen:', seen_f1_accu/seen_size, 'unseen:', unseen_f1_accu/unseen_size)
+    # print('overall:', f1_score(gold_label_list, pred_label_list, labels = all_test_labels, average='weighted'))
 
     '''situation'''
     origin_type_list = ['search','evac','infra','utils','water','shelter','med','food', 'crimeviolence', 'terrorism', 'regimechange', 'out-of-domain']
@@ -91,29 +91,47 @@ def baseline_w2v():
     co=0
     for line in readfile:
         parts = line.strip().split('\t')
-        gold_label_list.append(parts[0])
+        gold_label_list.append(parts[0].split())
         text = parts[1].strip()
         max_cos = 0.0
-        max_type = ''
+        pred_type_i = []
         text_emb = sent_2_emb(text.split())
         for i, type in enumerate(origin_type_list[:-1]):
             type_emb = type_2_emb[i]
             cos = 1.0-cosine(text_emb, type_emb)
-            if cos > max_cos:
-                max_cos = cos
-                max_type = type
-        if max_cos > 0.0:
-            pred_label_list.append(max_type)
-        else:
-            pred_label_list.append('out-of-domain')
+            if cos > 0.0:
+                pred_type_i.append(type)
+        if len(pred_type_i) == 0:
+            pred_type_i.append('out-of-domain')
+        pred_label_list.append(pred_type_i)
         co+=1
         if co % 1000 == 0:
             print('situation co:', co)
     readfile.close()
     print('gold_label_list:', gold_label_list[:200])
     print('pred_label_list:', pred_label_list[:200])
-    all_test_labels = list(set(gold_label_list))
-    f1_score_per_type = f1_score(gold_label_list, pred_label_list, labels = all_test_labels, average=None)
+
+    assert len(pred_label_list) ==  len(gold_label_list)
+    total_premise_size = len(gold_label_list)
+    type_in_test = ['search','evac','infra','utils','water','shelter','med','food', 'crimeviolence', 'terrorism', 'regimechange', 'out-of-domain']
+    type2col = { type:i for i, type in enumerate(type_in_test)}
+    gold_array = np.zeros((total_premise_size,12), dtype=int)
+    pred_array = np.zeros((total_premise_size,12), dtype=int)
+    for i in range(total_premise_size):
+        for type in pred_label_list[i]:
+            pred_array[i,type2col.get(type)]=1
+        for type in gold_label_list[i]:
+            gold_array[i,type2col.get(type)]=1
+
+    f1_list = []
+    size_list = []
+    for i in range(len(type_in_test)):
+        f1=f1_score(gold_array[:,i], pred_array[:,i], pos_label=1, average='binary')
+        co = sum(gold_array[:,i])
+        f1_list.append(f1)
+        size_list.append(co)
+
+
     seen_types_group = [['search','infrastructure','water','medical assistance', 'crime violence',  'regime change'],
     ['evacuation','utilities utility','shelter','food', 'terrorism']]
     for i in range(len(seen_types_group)):
@@ -123,17 +141,17 @@ def baseline_w2v():
         seen_size = 0
         unseen_f1_accu = 0.0
         unseen_size = 0
-        for i in range(len(all_test_labels)):
-            f1=f1_score_per_type[i]
-            co = gold_label_list.count(all_test_labels[i])
-            if all_test_labels[i] in seen_types:
-                seen_f1_accu+=f1*co
+        for i in range(len(type_in_test)):
+            if type_in_test[i] in seen_types:
+                seen_f1_accu+=f1_list[i]*size_list[i]
                 seen_size+=co
             else:
-                unseen_f1_accu+=f1*co
+                unseen_f1_accu+=f1_list[i]*size_list[i]
                 unseen_size+=co
         print('seen:', seen_f1_accu/seen_size, 'unseen:', unseen_f1_accu/unseen_size)
-    print('overall:', f1_score(gold_label_list, pred_label_list, labels = all_test_labels, average='weighted'))
+
+    overall = sum([f1_list[i]*size_list[i] for i in len(f1_list)])/sum(size_list)
+    print('overall:', overall)
 
 
 
