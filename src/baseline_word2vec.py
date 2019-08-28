@@ -132,8 +132,8 @@ def baseline_w2v():
         size_list.append(co)
 
 
-    seen_types_group = [['search','infrastructure','water','medical assistance', 'crime violence',  'regime change'],
-    ['evacuation','utilities utility','shelter','food', 'terrorism']]
+    seen_types_group = [['search','infra','water','med', 'crimeviolence', 'regimechange'],
+    ['evac','utils','shelter','food', 'terrorism']]
     for i in range(len(seen_types_group)):
         seen_types = seen_types_group[i]
 
