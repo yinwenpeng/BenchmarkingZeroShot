@@ -684,7 +684,7 @@ def main():
     num_train_optimization_steps = None
     if args.do_train:
         # train_examples = processor.get_train_examples_wenpeng('/home/wyin3/Datasets/glue_data/RTE/train.tsv')
-        train_examples, seen_types = processor.get_examples_situation_train('/export/home/Dataset/LORELEI/zero-shot-split/train_pu_half_v0.txt') #train_pu_half_v1.txt
+        train_examples, seen_types = processor.get_examples_situation_train('/export/home/Dataset/LORELEI/zero-shot-split/train_pu_half_v1.txt') #train_pu_half_v1.txt
         # seen_classes=[0,2,4,6,8]
 
         num_train_optimization_steps = int(
