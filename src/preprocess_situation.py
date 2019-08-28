@@ -188,88 +188,107 @@ def evaluate_situation_zeroshot_TwpPhasePred(pred_probs, pred_binary_labels_hars
         # print('pred_probs_per_premise:',pred_probs_per_premise)
         # print('pred_binary_labels_per_premise:', pred_binary_labels_per_premise)
 
-
-        '''first check if seen types get 'entailment'''
-        seen_get_entail_flag=False
+        pred_type = []
         for j in range(total_hypo_size):
-            if eval_hypo_seen_str_indicator[j] == 'seen' and pred_binary_labels_per_premise_loose[j]==0:
-                seen_get_entail_flag=True
-                break
-        '''first check if unseen types get 'entailment'''
-        unseen_get_entail_flag=False
-        for j in range(total_hypo_size):
-            if eval_hypo_seen_str_indicator[j] == 'unseen' and pred_binary_labels_per_premise_loose[j]==0:
-                unseen_get_entail_flag=True
-                break
+            if (eval_hypo_seen_str_indicator[j] == 'seen' and pred_probs_per_premise[j]>0.6) or \
+            (eval_hypo_seen_str_indicator[j] == 'unseen' and pred_probs_per_premise[j]>0.5):
+                pred_type.append(eval_hypo_2_type_index[j])
 
-        if seen_get_entail_flag and unseen_get_entail_flag:
+        if len(pred_type) ==0:
+            pred_type.append('out-of-domain')
 
-            '''compare their max prob'''
-            max_prob_seen = -1.0
-            max_seen_index = -1
-            max_prob_unseen = -1.0
-            max_unseen_index = -1
-            for j in range(total_hypo_size):
-                its_prob = pred_probs_per_premise[j]
-                if eval_hypo_seen_str_indicator[j] == 'unseen':
-                    if its_prob > max_prob_unseen:
-                        max_prob_unseen = its_prob
-                        max_unseen_index = j
-                else:
-                    if its_prob > max_prob_seen:
-                        max_prob_seen = its_prob
-                        max_seen_index = j
-            if  max_prob_seen - max_prob_unseen > 0.05:
-                pred_type = eval_hypo_2_type_index[max_seen_index]
-            else:
-                pred_type = eval_hypo_2_type_index[max_unseen_index]
 
-        elif unseen_get_entail_flag:
-            '''find the unseen type with highest prob'''
-            max_j = -1
-            max_prob = -1.0
-            for j in range(total_hypo_size):
-                if eval_hypo_seen_str_indicator[j] == 'unseen':
-                    its_prob = pred_probs_per_premise[j]
-                    if its_prob > max_prob:
-                        max_prob = its_prob
-                        max_j = j
-            pred_type = eval_hypo_2_type_index[max_j]
 
-        elif seen_get_entail_flag:
-            '''find the seen type with highest prob'''
-            max_j = -1
-            max_prob = -1.0
-            for j in range(total_hypo_size):
-                if eval_hypo_seen_str_indicator[j] == 'seen' and pred_binary_labels_per_premise_loose[j]==0:
-                    its_prob = pred_probs_per_premise[j]
-                    if its_prob > max_prob:
-                        max_prob = its_prob
-                        max_j = j
-            assert max_prob > 0.5
-            pred_type = eval_hypo_2_type_index[max_j]
-        elif (not seen_get_entail_flag) and (not unseen_get_entail_flag):
-            '''it means noemo'''
-            pred_type = 'out-of-domain'
+        # '''first check if seen types get 'entailment'''
+        # seen_get_entail_flag=False
+        # for j in range(total_hypo_size):
+        #     if eval_hypo_seen_str_indicator[j] == 'seen' and pred_binary_labels_per_premise_loose[j]==0:
+        #         seen_get_entail_flag=True
+        #         break
+        # '''first check if unseen types get 'entailment'''
+        # unseen_get_entail_flag=False
+        # for j in range(total_hypo_size):
+        #     if eval_hypo_seen_str_indicator[j] == 'unseen' and pred_binary_labels_per_premise_loose[j]==0:
+        #         unseen_get_entail_flag=True
+        #         break
+        #
+        # if seen_get_entail_flag and unseen_get_entail_flag:
+        #
+        #     '''compare their max prob'''
+        #     max_prob_seen = -1.0
+        #     max_seen_index = -1
+        #     max_prob_unseen = -1.0
+        #     max_unseen_index = -1
+        #     for j in range(total_hypo_size):
+        #         its_prob = pred_probs_per_premise[j]
+        #         if eval_hypo_seen_str_indicator[j] == 'unseen':
+        #             if its_prob > max_prob_unseen:
+        #                 max_prob_unseen = its_prob
+        #                 max_unseen_index = j
+        #         else:
+        #             if its_prob > max_prob_seen:
+        #                 max_prob_seen = its_prob
+        #                 max_seen_index = j
+        #     if  max_prob_seen - max_prob_unseen > 0.05:
+        #         pred_type = eval_hypo_2_type_index[max_seen_index]
+        #     else:
+        #         pred_type = eval_hypo_2_type_index[max_unseen_index]
+        #
+        # elif unseen_get_entail_flag:
+        #     '''find the unseen type with highest prob'''
+        #     max_j = -1
+        #     max_prob = -1.0
+        #     for j in range(total_hypo_size):
+        #         if eval_hypo_seen_str_indicator[j] == 'unseen':
+        #             its_prob = pred_probs_per_premise[j]
+        #             if its_prob > max_prob:
+        #                 max_prob = its_prob
+        #                 max_j = j
+        #     pred_type = eval_hypo_2_type_index[max_j]
+        #
+        # elif seen_get_entail_flag:
+        #     '''find the seen type with highest prob'''
+        #     max_j = -1
+        #     max_prob = -1.0
+        #     for j in range(total_hypo_size):
+        #         if eval_hypo_seen_str_indicator[j] == 'seen' and pred_binary_labels_per_premise_loose[j]==0:
+        #             its_prob = pred_probs_per_premise[j]
+        #             if its_prob > max_prob:
+        #                 max_prob = its_prob
+        #                 max_j = j
+        #     assert max_prob > 0.5
+        #     pred_type = eval_hypo_2_type_index[max_j]
+        # elif (not seen_get_entail_flag) and (not unseen_get_entail_flag):
+        #     '''it means noemo'''
+        #     pred_type = 'out-of-domain'
         pred_label_list.append(pred_type)
 
     assert len(pred_label_list) ==  len(eval_label_list)
+    type_in_test = ['search','evac','infra','utils','water','shelter','med','food', 'crimeviolence', 'terrorism', 'regimechange', 'out-of-domain']
+    type2col = { type:i for i, type in enumerate(type_in_test)}
+    gold_array = np.zeros((total_premise_size,12), dtype=int)
+    pred_array = np.zeros((total_premise_size,12), dtype=int)
+    for i in range(total_premise_size):
+        for type in pred_label_list[i]:
+            pred_array[i,type2col.get(type)]=1
+        for type in eval_label_list[i]:
+            gold_array[i,type2col.get(type)]=1
 
-    all_test_labels = list(set(eval_label_list))
-    f1_score_per_type = f1_score(eval_label_list, pred_label_list, labels = all_test_labels, average=None)
-    print('all_test_labels:', all_test_labels)
-    print('f1_score_per_type:', f1_score_per_type)
-    print('type size:', [eval_label_list.count(type) for type in all_test_labels])
+    # all_test_labels = list(set(eval_label_list))
+    # f1_score_per_type = f1_score(eval_label_list, pred_label_list, labels = all_test_labels, average=None)
+    # print('all_test_labels:', all_test_labels)
+    # print('f1_score_per_type:', f1_score_per_type)
+    # print('type size:', [eval_label_list.count(type) for type in all_test_labels])
 
     '''seen F1'''
     seen_f1_accu = 0.0
     seen_size = 0
     unseen_f1_accu = 0.0
     unseen_size = 0
-    for i in range(len(all_test_labels)):
-        f1=f1_score_per_type[i]
-        co = eval_label_list.count(all_test_labels[i])
-        if all_test_labels[i] in seen_types:
+    for i in range(len(type_in_test)):
+        f1=f1_score(gold_array[:,i], pred_array[:,i], pos_label=1, average='binary')
+        co = sum(gold_array[:,i])
+        if type_in_test[i] in seen_types:
             seen_f1_accu+=f1*co
             seen_size+=co
         else:
