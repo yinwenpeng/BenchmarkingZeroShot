@@ -341,7 +341,8 @@ if __name__ == '__main__':
     # split_all_labeleddata_into_subdata_per_label()
     # build_zeroshot_test_dev_set()
     # build_zeroshot_train_set()
-    build_zeroshot_test_dev_train_set()
-    statistics()
 
-    # majority_baseline()
+    # build_zeroshot_test_dev_train_set()
+    # statistics()
+
+    majority_baseline()
