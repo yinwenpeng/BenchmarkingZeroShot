@@ -160,7 +160,7 @@ class RteProcessor(DataProcessor):
             line=row.strip().split('\t')
             if len(line)==2: # label_id, text
                 type_index_list =  line[0].strip().split()
-                for type in type_index_list
+                for type in type_index_list:
                     seen_types.add(type)
         readfile.close()
 
