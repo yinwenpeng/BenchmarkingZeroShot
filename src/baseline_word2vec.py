@@ -99,7 +99,7 @@ def baseline_w2v():
         for i, type in enumerate(origin_type_list[:-1]):
             type_emb = type_2_emb[i]
             cos = 1.0-cosine(text_emb, type_emb)
-            if cos > 0.0:
+            if cos > 0.5:
                 pred_type_i.append(type)
         if len(pred_type_i) == 0:
             pred_type_i.append('out-of-domain')
