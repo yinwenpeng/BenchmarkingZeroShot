@@ -131,7 +131,8 @@ def baseline_w2v():
         f1_list.append(f1)
         size_list.append(co)
 
-
+    print('f1_list:',f1_list)
+    print('size_list:', size_list)
     seen_types_group = [['search','infra','water','med', 'crimeviolence', 'regimechange'],
     ['evac','utils','shelter','food', 'terrorism']]
     for i in range(len(seen_types_group)):
@@ -144,10 +145,10 @@ def baseline_w2v():
         for i in range(len(type_in_test)):
             if type_in_test[i] in seen_types:
                 seen_f1_accu+=f1_list[i]*size_list[i]
-                seen_size+=co
+                seen_size+=size_list[i]
             else:
                 unseen_f1_accu+=f1_list[i]*size_list[i]
-                unseen_size+=co
+                unseen_size+=size_list[i]
         print('seen:', seen_f1_accu/seen_size, 'unseen:', unseen_f1_accu/unseen_size)
 
     overall = sum([f1_list[i]*size_list[i] for i in range(len(f1_list))])/sum(size_list)
