@@ -513,7 +513,7 @@ def evaluate_Yahoo_zeroshot_SinglePhasePred(pred_probs, pred_binary_labels_harsh
                 max_prob = pred_probs_per_premise[j]
                 max_index = j
 
-        pred_type = eval_hypo_2_type_index[max_index])
+        pred_type = eval_hypo_2_type_index[max_index]
         gold_type = eval_label_list[i]
 
         # print('pred_type:', pred_type, 'gold_type:', gold_type)
