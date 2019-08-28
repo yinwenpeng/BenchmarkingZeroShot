@@ -150,7 +150,7 @@ def baseline_w2v():
                 unseen_size+=co
         print('seen:', seen_f1_accu/seen_size, 'unseen:', unseen_f1_accu/unseen_size)
 
-    overall = sum([f1_list[i]*size_list[i] for i in len(f1_list)])/sum(size_list)
+    overall = sum([f1_list[i]*size_list[i] for i in range(len(f1_list))])/sum(size_list)
     print('overall:', overall)
 
 
