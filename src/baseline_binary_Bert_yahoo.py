@@ -255,8 +255,8 @@ class RteProcessor(DataProcessor):
                 line_co+=1
                 if line_co % 1000 == 0:
                     print('loading test size:', line_co)
-                if line_co == 1000:
-                    break
+                # if line_co == 1000:
+                #     break
 
 
         readfile.close()
@@ -697,7 +697,7 @@ def main():
     num_train_optimization_steps = None
     if args.do_train:
         # train_examples = processor.get_train_examples_wenpeng('/home/wyin3/Datasets/glue_data/RTE/train.tsv')
-        train_examples, seen_types = processor.get_examples_Yahoo_train('/export/home/Dataset/YahooClassification/yahoo_answers_csv/zero-shot-split/train_pu_half_v0.txt', 100) #train_pu_half_v1.txt
+        train_examples, seen_types = processor.get_examples_Yahoo_train('/export/home/Dataset/YahooClassification/yahoo_answers_csv/zero-shot-split/train_pu_half_v0.txt', 130000) #train_pu_half_v1.txt
         # seen_classes=[0,2,4,6,8]
 
         num_train_optimization_steps = int(
@@ -832,7 +832,7 @@ def main():
                 optimizer.zero_grad()
                 global_step += 1
                 iter_co+=1
-                if iter_co %200==0:
+                if iter_co %400==0:
                     '''
                     start evaluate on dev set after this epoch
                     '''
@@ -893,10 +893,6 @@ def main():
                     if unseen_acc > max_dev_unseen_acc:
                         max_dev_unseen_acc = unseen_acc
                     print('\ndev seen_acc & acc_unseen:', seen_acc,unseen_acc, ' max_dev_unseen_acc:', max_dev_unseen_acc, '\n')
-                    # if seen_acc+unseen_acc > max_overall_acc:
-                    #     max_overall_acc = seen_acc + unseen_acc
-                    # if seen_acc > max_dev_seen_acc:
-                    #     max_dev_seen_acc = seen_acc
                     '''
                     start evaluate on test set after this epoch
                     '''
@@ -940,9 +936,6 @@ def main():
                             pred_binary_labels_loose.append(1)
 
                     seen_acc, unseen_acc = evaluate_Yahoo_zeroshot_SinglePhasePred(pred_probs, pred_binary_labels_harsh, pred_binary_labels_loose, test_label_list, test_hypo_seen_str_indicator, test_hypo_2_type_index, seen_types)
-                    # result = compute_metrics('F1', preds, all_label_ids.numpy())
-                    # loss = tr_loss/nb_tr_steps if args.do_train else None
-                    # test_acc = mean_f1#result.get("f1")
                     if unseen_acc > max_test_unseen_acc:
                         max_test_unseen_acc = unseen_acc
                     print('\n\n\t test seen_acc & acc_unseen:', seen_acc,unseen_acc, ' max_test_unseen_acc:', max_test_unseen_acc, '\n')
