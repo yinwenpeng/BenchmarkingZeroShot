@@ -159,21 +159,22 @@ class RteProcessor(DataProcessor):
         for row in readfile:
             line=row.strip().split('\t')
             if len(line)==2: # label_id, text
-                type_index =  line[0].strip()
-                seen_types.add(type_index)
+                type_index_list =  line[0].strip().split()
+                for type in type_index_list:
+                    seen_types.add(type)
         readfile.close()
 
         readfile = codecs.open(filename, 'r', 'utf-8')
         # type_load_size = defaultdict(int)
         for row in readfile:
             line=row.strip().split('\t')
-            if len(line)==2: # label_id, text
+            if len(line)==2: # label_id_list, text
 
-                type_index =  line[0].strip()
+                type_index_set =  set(line[0].strip().split())
                 # if type_load_size.get(type_index,0)< size_limit_per_type:
                 for type, hypo_list in type2hypothesis.items():
                     # hypo_list = type2hypothesis.get(i)
-                    if type == type_index:
+                    if type in type_index_set:
                         '''pos pair'''
                         for hypo in hypo_list:
                             guid = "train-"+str(exam_co)
@@ -223,26 +224,14 @@ class RteProcessor(DataProcessor):
         gold_label_list = []
         for row in readfile:
             line=row.strip().split('\t')
-            if len(line)==2: # label_id, text
+            if len(line)==2: # label_id_list, text
 
-                type_index =  line[0].strip()
-                gold_label_list.append(type_index)
+                type_index_list =  line[0].strip().split()
+                '''note that here is a type string list'''
+                gold_label_list.append(type_index_list)
                 for type, hypo_list in type2hypothesis.items():
-                # for i in range(10):
-                #     hypo_list = type2hypothesis.get(i)
-                    if type == type_index:
-                        '''pos pair'''
-                        for hypo in hypo_list:
-                            guid = "test-"+str(exam_co)
-                            text_a = line[1]
-                            text_b = hypo
-                            label = 'entailment' #if line[0] == '1' else 'not_entailment'
-                            examples.append(
-                                InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
-                            exam_co+=1
-                    else:
-                        '''neg pair'''
-                        for hypo in hypo_list:
+                    '''here we put not-entail as label just for occupying the arg, not use'''
+                    for hypo in hypo_list:
                             guid = "test-"+str(exam_co)
                             text_a = line[1]
                             text_b = hypo
@@ -695,7 +684,7 @@ def main():
     num_train_optimization_steps = None
     if args.do_train:
         # train_examples = processor.get_train_examples_wenpeng('/home/wyin3/Datasets/glue_data/RTE/train.tsv')
-        train_examples, seen_types = processor.get_examples_situation_train('/export/home/Dataset/LORELEI/zero-shot-split/train_pu_half_v1.txt') #train_pu_half_v1.txt
+        train_examples, seen_types = processor.get_examples_situation_train('/export/home/Dataset/LORELEI/zero-shot-split/train_pu_half_v0.txt') #train_pu_half_v1.txt
         # seen_classes=[0,2,4,6,8]
 
         num_train_optimization_steps = int(
