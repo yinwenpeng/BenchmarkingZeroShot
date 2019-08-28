@@ -3,6 +3,7 @@ import codecs
 from collections import defaultdict
 from sklearn.metrics import f1_score
 import random
+import numpy as np
 
 path = '/export/home/Dataset/LORELEI/'
 
