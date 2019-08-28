@@ -259,11 +259,6 @@ def evaluate_situation_zeroshot_SinglePhasePred(pred_probs, pred_binary_labels_h
             pred_type.append('out-of-domain')
         pred_label_list.append(pred_type)
 
-        if max_index == -1:
-            pred_label_list.append('out-of-domain')
-        else:
-            pred_label_list.append(eval_hypo_2_type_index[max_index])
-
     assert len(pred_label_list) ==  len(eval_label_list)
     type_in_test = ['search','evac','infra','utils','water','shelter','med','food', 'crimeviolence', 'terrorism', 'regimechange', 'out-of-domain']
     type2col = { type:i for i, type in enumerate(type_in_test)}
@@ -295,46 +290,44 @@ def evaluate_situation_zeroshot_SinglePhasePred(pred_probs, pred_binary_labels_h
 
     return seen_f1, unseen_f1
 
-# def majority_baseline():
-#     readfile = codecs.open(path+'zero-shot-split/test.txt', 'r', 'utf-8')
-#     gold_label_list = []
-#     for line in readfile:
-#         gold_label_list.append(line.strip().split('\t')[0])
-#
-#     pred_label_list = ['out-of-domain'] *len(gold_label_list)
-#     f1_score_per_type = f1_score(gold_label_list, pred_label_list, labels = list(set(gold_label_list)), average='weighted')
-#     print(f1_score_per_type)
 
 def majority_baseline():
     readfile = codecs.open(path+'zero-shot-split/test.txt', 'r', 'utf-8')
     gold_label_list = []
     for line in readfile:
-        gold_label_list.append(line.strip().split('\t')[0])
+        gold_label_list.append(line.strip().split('\t')[0].split())
     '''out-of-domain is the main type'''
-    pred_label_list = ['out-of-domain'] *len(gold_label_list)
+    pred_label_list = [['out-of-domain']] *len(gold_label_list)
     # seen_labels = set(['search','evac','infra','utils','water','shelter','med','food', 'crimeviolence', 'terrorism', 'regimechange'])
     seen_types = set(['evac','utils','shelter','food', 'terrorism'])
     # f1_score_per_type = f1_score(gold_label_list, pred_label_list, labels = list(set(gold_label_list)), average='weighted')
 
-    all_test_labels = list(set(gold_label_list))
-    f1_score_per_type = f1_score(gold_label_list, pred_label_list, labels = all_test_labels, average=None)
+    assert len(pred_label_list) ==  len(gold_label_list)
+    total_premise_size = len(gold_label_list)
+    type_in_test = ['search','evac','infra','utils','water','shelter','med','food', 'crimeviolence', 'terrorism', 'regimechange', 'out-of-domain']
+    type2col = { type:i for i, type in enumerate(type_in_test)}
+    gold_array = np.zeros((total_premise_size,12), dtype=int)
+    pred_array = np.zeros((total_premise_size,12), dtype=int)
+    for i in range(total_premise_size):
+        for type in pred_label_list[i]:
+            pred_array[i,type2col.get(type)]=1
+        for type in gold_label_list[i]:
+            gold_array[i,type2col.get(type)]=1
 
+    '''seen F1'''
     seen_f1_accu = 0.0
     seen_size = 0
     unseen_f1_accu = 0.0
     unseen_size = 0
-    for i in range(len(all_test_labels)):
-        f1=f1_score_per_type[i]
-        co = gold_label_list.count(all_test_labels[i])
-        if all_test_labels[i] in seen_types:
+    for i in range(len(type_in_test)):
+        f1=f1_score(gold_array[:,i], pred_array[:,i], pos_label=1, average='binary')
+        co = sum(gold_array[:,i])
+        if type_in_test[i] in seen_types:
             seen_f1_accu+=f1*co
             seen_size+=co
         else:
             unseen_f1_accu+=f1*co
             unseen_size+=co
-
-
-
 
     seen_f1 = seen_f1_accu/(1e-6+seen_size)
     unseen_f1 = unseen_f1_accu/(1e-6+unseen_size)
