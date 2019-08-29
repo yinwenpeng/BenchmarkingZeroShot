@@ -234,7 +234,9 @@ def situation_f1_given_goldlist_and_predlist(eval_label_list, pred_label_list, s
             pred_array[i,type2col.get(type)]=1
         for type in eval_label_list[i]:
             gold_array[i,type2col.get(type)]=1
-
+    print('gold_array:', gold_array)
+    print('pred_array:', pred_array)
+    print('seen_types:', seen_types)
     '''seen F1'''
     seen_f1_accu = 0.0
     seen_size = 0
@@ -246,6 +248,7 @@ def situation_f1_given_goldlist_and_predlist(eval_label_list, pred_label_list, s
     for i in range(len(type_in_test)):
         f1=f1_score(gold_array[:,i], pred_array[:,i], pos_label=1, average='binary')
         co = sum(gold_array[:,i])
+        print('f1 vs co:', f1, co)
         if type_in_test[i] in seen_types:
             seen_f1_accu+=f1*co
             seen_size+=co
@@ -260,7 +263,7 @@ def situation_f1_given_goldlist_and_predlist(eval_label_list, pred_label_list, s
 
     return seen_f1, unseen_f1, all_f1
 
-    
+
 def evaluate_situation_zeroshot_SinglePhasePred(pred_probs, pred_binary_labels_harsh, pred_binary_labels_loose, eval_label_list, eval_hypo_seen_str_indicator, eval_hypo_2_type_index, seen_types):
     '''
     pred_probs: a list, the prob for  "entail"
