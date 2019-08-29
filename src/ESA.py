@@ -322,8 +322,8 @@ def crs_matrix_play():
     print(sub.sum(axis=0))
 
 if __name__ == '__main__':
-    # scan_all_json_files('/home/wyin3/Datasets/Wikipedia20190320/parsed_output/json/')
-    # print('fileset size:', len(fileset)) #fileset size: 13112
+    scan_all_json_files('/export/home/Dataset/wikipedia/parsed_output/json/')
+    print('fileset size:', len(fileset)) #fileset size: 13112
     # load_json()
     # store_ESA()
 
@@ -338,4 +338,4 @@ if __name__ == '__main__':
     # reformat_into_expected_ESA()#super slow
 
     # coo_matrix_toy()
-    crs_matrix_play()
+    # crs_matrix_play()
