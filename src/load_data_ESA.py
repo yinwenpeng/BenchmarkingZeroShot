@@ -31,7 +31,7 @@ def load_ESA_word2id():
 
 def load_yahoo():
     yahoo_path = '/export/home/Dataset/YahooClassification/yahoo_answers_csv/'
-    files = ['test_tokenized.txt'] #'train_tokenized.txt','zero-shot-split/test.txt'
+    files = ['zero-shot-split/test.txt'] #'train_tokenized.txt','zero-shot-split/test.txt'
     # word2id={}
     all_texts=[]
     # all_masks=[]
