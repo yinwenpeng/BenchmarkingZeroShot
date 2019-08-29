@@ -294,7 +294,7 @@ def load_sparse_matrix_4_cos(row1, row2):
 
 def load_ESA_sparse_matrix():
     # print('loading sparse matrix for cosine computation...')
-    sparse_matrix = sparse.load_npz('/home/wyin3/Datasets/Wikipedia20190320/parsed_output/statistics_from_json/ESA_Sparse_v1.npz')
+    sparse_matrix = sparse.load_npz('/export/home/Dataset/wikipedia/parsed_output/statistics_from_json/ESA_Sparse_v1.npz')
     print('load ESA sparse matrix succeed')
     return sparse_matrix
 

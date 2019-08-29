@@ -24,14 +24,14 @@ def transfer_wordlist_2_idlist_with_existing_word2id(token_list):
 
 def load_ESA_word2id():
     global ESA_word2id
-    route = '/home/wyin3/Datasets/Wikipedia20190320/parsed_output/statistics_from_json/'
+    route = '/export/home/Dataset/wikipedia/parsed_output/statistics_from_json/'
     with open(route+'word2id.json', 'r') as fp2:
         ESA_word2id = json.load(fp2)
     print('load ESA word2id succeed')
 
 def load_yahoo():
-    yahoo_path = '/home/wyin3/Datasets/YahooClassification/yahoo_answers_csv/'
-    files = ['test_tokenized.txt'] #'train_tokenized.txt',
+    yahoo_path = '/export/home/Dataset/YahooClassification/yahoo_answers_csv/'
+    files = ['zero-shot-split/test.txt'] #'train_tokenized.txt',
     # word2id={}
     all_texts=[]
     # all_masks=[]
@@ -78,7 +78,7 @@ def load_yahoo():
     return all_texts, all_labels, all_word2DF
 
 def load_labels():
-    yahoo_path = '/home/wyin3/Datasets/YahooClassification/yahoo_answers_csv/'
+    yahoo_path = '/export/home/Dataset/YahooClassification/yahoo_answers_csv/'
     texts=[]
     # text_masks=[]
 
