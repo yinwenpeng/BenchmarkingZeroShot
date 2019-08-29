@@ -175,6 +175,6 @@ def load_yahoo_and_labelnames():
 def load_situation_and_labelnames():
     load_ESA_word2id()
     all_texts, all_labels, all_word2DF = load_situation()
-    print('load all_labels:', all_labels[0][:10])
+    # print('load all_labels:', all_labels[0][:10])
     labelnames = load_labels_situation()
     return all_texts, all_labels, all_word2DF, labelnames

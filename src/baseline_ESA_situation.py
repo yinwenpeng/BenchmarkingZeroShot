@@ -70,7 +70,7 @@ def ESA_cosine():
     # print(label_veclist)
     print('all labelnames are in vec succeed')
     labels = all_labels[0]
-    print('all_labels:', labels[:10])
+    # print('all_labels:', labels[:10])
     sample_size = len(labels)
     print('total test size:', sample_size)
     hit_size = 0
@@ -90,9 +90,9 @@ def ESA_cosine():
                 pred_type_list_i.append(origin_type_list[i])
         if len(pred_type_list_i) == 0:
             pred_type_list_i.append('out-of-domain')
-        print('pred_type_list_i:', pred_type_list_i)
-        print('all_labels:', labels[:10])
-        print('gold_type_list_i:',labels[i], i )
+        # print('pred_type_list_i:', pred_type_list_i)
+        # print('all_labels:', labels[:10])
+        # print('gold_type_list_i:',labels[i], i )
         pred_type_list.append(pred_type_list_i)
         gold_type_list.append(labels[sample_index])
 
