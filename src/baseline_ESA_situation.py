@@ -78,8 +78,8 @@ def ESA_cosine():
     start_time = time.time()
     pred_type_list = []
     gold_type_list = []
-    for i in range(sample_size):
-        text_idlist = all_texts[0][i]
+    for sample_index in range(sample_size):
+        text_idlist = all_texts[0][sample_index]
         '''text rep is weighted sum up of ESA vectors'''
         text_vec = text_idlist_2_ESAVector(text_idlist, True)
         cos_array=cosine_similarity(text_vec, np.vstack(label_veclist))
@@ -94,7 +94,7 @@ def ESA_cosine():
         print('all_labels:', labels[:10])
         print('gold_type_list_i:',labels[i], i )
         pred_type_list.append(pred_type_list_i)
-        gold_type_list.append(labels[i])
+        gold_type_list.append(labels[sample_index])
 
         seen_f1_v0, unseen_f1_v0, all_f1_v0 = situation_f1_given_goldlist_and_predlist(gold_type_list, pred_type_list, set(['search','infra','water','med','crimeviolence', 'regimechange']))
         seen_f1_v1, unseen_f1_v1, all_f1_v1 = situation_f1_given_goldlist_and_predlist(gold_type_list, pred_type_list, set(['evac','utils', 'shelter','food', 'terrorism']))
