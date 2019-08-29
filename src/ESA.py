@@ -15,7 +15,7 @@ title_size = 0
 word2id={} #6161731+1
 word_size = 0
 # WordTitle2Count= lil_matrix((298099,40000))#(6113524, 5828563))
-WordTitle2Count= lil_matrix((6161732, 4000))#(6113524, 5828563))
+WordTitle2Count= lil_matrix((74568, 4000))#(6113524, 5828563))
 Word2TileCount=defaultdict(int)
 fileset=set()
 
