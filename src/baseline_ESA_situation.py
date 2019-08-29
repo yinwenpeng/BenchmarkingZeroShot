@@ -7,6 +7,7 @@ from scipy.sparse import vstack
 import numpy as np
 from operator import itemgetter
 from scipy.special import softmax
+from preprocess_situation import situation_f1_given_goldlist_and_predlist
 
 all_texts, all_labels, all_word2DF, labelnames = load_situation_and_labelnames()
 ESA_sparse_matrix = load_ESA_sparse_matrix().tocsr()
@@ -60,6 +61,7 @@ def text_idlist_2_ESAVector_attention(idlist, text_bool, label_veclist):
     #     return  sub_matrix.sum(axis=0)
 
 def ESA_cosine():
+    origin_type_list = ['search','evac','infra','utils','water','shelter','med','food', 'crimeviolence', 'terrorism', 'regimechange']
     label_veclist = []
     for i in range(len(labelnames)):
         labelname_idlist = labelnames[i]
@@ -70,60 +72,36 @@ def ESA_cosine():
     labels = all_labels[0]
     sample_size = len(labels)
     print('total test size:', sample_size)
-    # seen_type_v0 = set([0,2,4,6,8])
-    # seen_type_v1 = set([1,3,5,7,9])
-    # hit_size_seen_v0 = 0
-    # all_size_seen_v0 = 0
-    # hit_size_unseen_v0 = 0
-    # all_size_unseen_v0 = 0
-    #
-    # hit_size_seen_v1 = 0
-    # all_size_seen_v1 = 0
-    # hit_size_unseen_v1 = 0
-    # all_size_unseen_v1= 0
     hit_size = 0
     co=0
     start_time = time.time()
+    pred_type_list = []
+    gold_type_list = []
     for i in range(sample_size):
         text_idlist = all_texts[0][i]
         '''text rep is weighted sum up of ESA vectors'''
         text_vec = text_idlist_2_ESAVector(text_idlist, True)
         cos_array=cosine_similarity(text_vec, np.vstack(label_veclist))
-        print('cos_array:', cos_array)
-        exit(0)
-        max_id = np.argmax(cos_array, axis=1)
-        gold_label = labels[i]
-        pred_label = max_id[0]
-        '''v0'''
-        if gold_label in seen_type_v0:
-            all_size_seen_v0+=1
-            if gold_label == pred_label:
-                hit_size_seen_v0+=1
-        else:
-            all_size_unseen_v0+=1
-            if gold_label == pred_label:
-                hit_size_unseen_v0+=1
-        '''v1'''
-        if gold_label in seen_type_v1:
-            all_size_seen_v1+=1
-            if gold_label == pred_label:
-                hit_size_seen_v1+=1
-        else:
-            all_size_unseen_v1+=1
-            if gold_label == pred_label:
-                hit_size_unseen_v1+=1
+        list_cosine = list(cos_array[0])
+        pred_type_list_i = []
+        for i in range(len(list_cosine)):
+            if list_cosine[i] > 0.03:
+                pred_type_list_i.append(origin_type_list[i])
+        if len(pred_type_list_i) == 0:
+            pred_type_list_i.append('out-of-domain')
+        pred_type_list.append(pred_type_list_i)
+        gold_type_list.append(labels[i])
 
+        seen_f1_v0, unseen_f1_v0, all_f1_v0 = situation_f1_given_goldlist_and_predlist(gold_type_list, pred_type_list, set(['search','infra','water','med','crimeviolence', 'regimechange']))
+        seen_f1_v1, unseen_f1_v1, all_f1_v1 = situation_f1_given_goldlist_and_predlist(gold_type_list, pred_type_list, set(['evac','utils', 'shelter','food', 'terrorism']))
 
-
-        if max_id[0] == labels[i]:
-            hit_size+=1
         co+=1
-        print(co, '...', hit_size/sample_size, hit_size/co, 'v0:', hit_size_seen_v0/(1e-8+all_size_seen_v0), hit_size_unseen_v0/(1e-8+all_size_unseen_v0), 'v1:', hit_size_seen_v1/(1e-8+all_size_seen_v1), hit_size_unseen_v1/(1e-8+all_size_unseen_v1), 'seen vs. unseen size:', all_size_seen_v0, all_size_unseen_v0)
+        print(co, '...', 'v0:', seen_f1_v0, unseen_f1_v0, 'v1:', seen_f1_v1, unseen_f1_v1, 'all:', all_f1_v0, all_f1_v1)
         if co%10==0:
             spend_time = (time.time()-start_time)/60.0
             print('\t\t\t\t\t',spend_time, 'mins')
-    acc = hit_size/sample_size
-    print('acc:', acc)
+
+    print('over.')
 
 def ESA_cosine_attention():
     '''not used finally'''
