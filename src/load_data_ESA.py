@@ -31,7 +31,7 @@ def load_ESA_word2id():
 
 def load_yahoo():
     yahoo_path = '/export/home/Dataset/YahooClassification/yahoo_answers_csv/'
-    files = ['zero-shot-split/test.txt'] #'train_tokenized.txt',
+    files = ['test_tokenized.txt'] #'train_tokenized.txt','zero-shot-split/test.txt'
     # word2id={}
     all_texts=[]
     # all_masks=[]
@@ -50,7 +50,7 @@ def load_yahoo():
             parts = line.strip().split('\t')
             if len(parts)==2:
                 label_id = int(parts[0])
-                text_wordlist = parts[1].strip().lower().split()
+                text_wordlist = parts[1].strip().lower().split()[:50]
                 text_len=len(text_wordlist)
                 if text_len > max_sen_len:
                     max_sen_len=text_len
