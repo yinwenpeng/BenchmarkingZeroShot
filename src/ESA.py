@@ -9,7 +9,7 @@ from scipy.sparse import coo_matrix, csr_matrix, lil_matrix
 import time
 from scipy import sparse
 from sklearn.metrics.pairwise import cosine_similarity
-
+'''seven global variables'''
 title2id={} #5828562+1
 title_size = 0
 word2id={} #6113523+1
@@ -17,8 +17,8 @@ word_size = 0
 # WordTitle2Count= lil_matrix((298099,40000))#(6113524, 5828563))
 WordTitle2Count= lil_matrix((6113524, 5828563))#(6113524, 5828563))
 Word2TileCount=defaultdict(int)
-
 fileset=set()
+
 def scan_all_json_files(rootDir):
     global fileset
     for lists in os.listdir(rootDir):
@@ -56,6 +56,7 @@ def load_json():
                     title_size+=1
 
                 content = line_dic.get('text')
+                '''this tokenizer step should be time-consuming'''
                 tokenized_text = nltk.word_tokenize(content)
                 word_id_set = set()
                 for word in tokenized_text:
@@ -137,7 +138,7 @@ def store_ESA():
     global word2id
     global WordTitle2Count
     global Word2TileCount
-    route = '/home/wyin3/Datasets/Wikipedia20190320/parsed_output/statistics_from_json/'
+    route = '/export/home/Dataset/wikipedia/parsed_output/statistics_from_json/'
     with open(route+'title2id.json', 'w') as fp1:
         json.dump(title2id, fp1)
     with open(route+'word2id.json', 'w') as fp2:
@@ -155,7 +156,7 @@ def store_ESA():
 
 def tokenize_filter_tokens():
     global fileset
-    route = '/home/wyin3/Datasets/Wikipedia20190320/parsed_output/tokenized_wiki/'
+    route = '/export/home/Dataset/wikipedia/parsed_output/tokenized_wiki/'
     writefile = codecs.open(route+'tokenized_wiki.txt' ,'a+', 'utf-8')
     json_file_size = 0
     wiki_file_size = 0
@@ -323,11 +324,12 @@ def crs_matrix_play():
 
 if __name__ == '__main__':
     scan_all_json_files('/export/home/Dataset/wikipedia/parsed_output/json/')
-    print('fileset size:', len(fileset)) #fileset size: 13112
+    '''note that file size 13354 does not mean wiki pages; each file contains multiple wiki pages'''
+    print('fileset size:', len(fileset)) #fileset size: 13354
     # load_json()
     # store_ESA()
 
-    # tokenize_filter_tokens()
+    tokenize_filter_tokens()
 
     # load_tokenized_json()
     # store_ESA()
