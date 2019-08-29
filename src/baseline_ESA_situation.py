@@ -8,6 +8,9 @@ import numpy as np
 from operator import itemgetter
 from scipy.special import softmax
 from preprocess_situation import situation_f1_given_goldlist_and_predlist
+import warnings
+warnings.filterwarnings('always')
+
 
 all_texts, all_labels, all_word2DF, labelnames = load_situation_and_labelnames()
 ESA_sparse_matrix = load_ESA_sparse_matrix().tocsr()
@@ -96,11 +99,11 @@ def ESA_cosine():
         pred_type_list.append(pred_type_list_i)
         gold_type_list.append(labels[sample_index])
 
-        seen_f1_v0, unseen_f1_v0, all_f1_v0 = situation_f1_given_goldlist_and_predlist(gold_type_list, pred_type_list, set(['search','infra','water','med','crimeviolence', 'regimechange']))
-        seen_f1_v1, unseen_f1_v1, all_f1_v1 = situation_f1_given_goldlist_and_predlist(gold_type_list, pred_type_list, set(['evac','utils', 'shelter','food', 'terrorism']))
+        v0, v1, all_f1 = situation_f1_given_goldlist_and_predlist(gold_type_list, pred_type_list, set(['search','infra','water','med','crimeviolence', 'regimechange']), set(['evac','utils', 'shelter','food', 'terrorism']))
+        # seen_f1_v1, unseen_f1_v1, all_f1_v1 = situation_f1_given_goldlist_and_predlist(gold_type_list, pred_type_list, set(['evac','utils', 'shelter','food', 'terrorism']))
 
         co+=1
-        print(co, '...', 'v0:', seen_f1_v0, unseen_f1_v0, 'v1:', seen_f1_v1, unseen_f1_v1, 'all:', all_f1_v0, all_f1_v1)
+        print(co, '...', v0, v1, all_f1)
         if co%10==0:
             spend_time = (time.time()-start_time)/60.0
             print('\t\t\t\t\t',spend_time, 'mins')

@@ -222,7 +222,7 @@ def evaluate_situation_zeroshot_TwpPhasePred(pred_probs, pred_binary_labels_hars
     return seen_f1, unseen_f1
 
 
-def situation_f1_given_goldlist_and_predlist(eval_label_list, pred_label_list, seen_types):
+def situation_f1_given_goldlist_and_predlist(eval_label_list, pred_label_list, seen_types_v0, seen_types_v1):
     # print('eval_label_list:', eval_label_list)
     # print('pred_label_list:', pred_label_list)
     assert len(pred_label_list) ==  len(eval_label_list)
@@ -240,30 +240,57 @@ def situation_f1_given_goldlist_and_predlist(eval_label_list, pred_label_list, s
     # print('pred_array:', pred_array)
     # print('seen_types:', seen_types)
     '''seen F1'''
-    seen_f1_accu = 0.0
-    seen_size = 0
-    unseen_f1_accu = 0.0
-    unseen_size = 0
+
+    #
+
+
+    f1_list = []
+    co_list = []
+    for i in range(len(type_in_test)):
+        f1=f1_score(gold_array[:,i], pred_array[:,i], pos_label=1, average='binary')
+        co = sum(gold_array[:,i])
+        f1_list.append(f1)
+        co_list.append(co)
+
+    seen_f1_accu_v0 = 0.0
+    seen_size_v0 = 0
+    unseen_f1_accu_v0 = 0.0
+    unseen_size_v0 = 0
+
+    seen_f1_accu_v1 = 0.0
+    seen_size_v1 = 0
+    unseen_f1_accu_v1 = 0.0
+    unseen_size_v1 = 0
 
     f1_accu = 0.0
     size_accu = 0
     for i in range(len(type_in_test)):
-        f1=f1_score(gold_array[:,i], pred_array[:,i], pos_label=1, average='binary')
-        co = sum(gold_array[:,i])
-        # print('f1 vs co:', f1, co)
-        if type_in_test[i] in seen_types:
-            seen_f1_accu+=f1*co
-            seen_size+=co
-        else:
-            unseen_f1_accu+=f1*co
-            unseen_size+=co
+        f1 = f1_list[i]
+        co =co_list[i]
+
         f1_accu+=f1*co
         size_accu+=co
-    seen_f1 = seen_f1_accu/(1e-6+seen_size)
-    unseen_f1 = unseen_f1_accu/(1e-6+unseen_size)
+
+        if type_in_test[i] in seen_types_v0:
+            seen_f1_accu_v0+=f1*co
+            seen_size_v0+=co
+        else:
+            unseen_f1_accu_v0+=f1*co
+            unseen_size_v0+=co
+        if type_in_test[i] in seen_types_v1:
+            seen_f1_accu_v1+=f1*co
+            seen_size_v1+=co
+        else:
+            unseen_f1_accu_v1+=f1*co
+            unseen_size_v1+=co
+
+
     all_f1 = f1_accu/(1e-6+size_accu)
 
-    return seen_f1, unseen_f1, all_f1
+    v0 = (seen_f1_accu_v0/(1e-6+seen_size_v0), unseen_f1_accu_v0/(1e-6+unseen_size_v0))
+    v1 = (seen_f1_accu_v1/(1e-6+seen_size_v1), unseen_f1_accu_v1/(1e-6+unseen_size_v1))
+
+    return v0, v1, all_f1
 
 
 def evaluate_situation_zeroshot_SinglePhasePred(pred_probs, pred_binary_labels_harsh, pred_binary_labels_loose, eval_label_list, eval_hypo_seen_str_indicator, eval_hypo_2_type_index, seen_types):
