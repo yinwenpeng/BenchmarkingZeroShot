@@ -12,10 +12,10 @@ from sklearn.metrics.pairwise import cosine_similarity
 '''seven global variables'''
 title2id={} #5903490+1
 title_size = 0
-word2id={} #6113523+1
+word2id={} #6161731+1
 word_size = 0
 # WordTitle2Count= lil_matrix((298099,40000))#(6113524, 5828563))
-WordTitle2Count= lil_matrix((6113524, 5828563))#(6113524, 5828563))
+WordTitle2Count= lil_matrix((6161732, 5903491))#(6113524, 5828563))
 Word2TileCount=defaultdict(int)
 fileset=set()
 
@@ -144,7 +144,7 @@ def store_ESA():
     # print('ESA sparse matrix stored over, congrats!!!')
     with open(route+'Word2TileCount.json', 'w') as f4:
         json.dump(Word2TileCount, f4)
-    print('store ESA over')
+    print('store ESA statistics over')
     spend_time = (time.time()-start_time)/60.0
     print(spend_time, 'mins')
 
@@ -240,7 +240,7 @@ def reformat_into_sparse_matrix_store():
     start_time = time.time()
     global Word2TileCount
     global WordTitle2Count
-    route = '/home/wyin3/Datasets/Wikipedia20190320/parsed_output/statistics_from_json/'
+    route = '/export/home/Dataset/wikipedia/parsed_output/statistics_from_json/'
     rows=[]
     cols=[]
     values =[]
@@ -371,13 +371,14 @@ if __name__ == '__main__':
     # store_ESA()
     '''to save time, we tokenize wiki dump and save into files for future loading'''
     # tokenize_filter_tokens()
-    get_wordsize_pagesize()
-    # load_tokenized_json()
+    '''word size 6161731; page size: 5903486'''
+    # get_wordsize_pagesize()
+    load_tokenized_json()
     '''store all the statistic dictionary into files for future loading'''
-    # store_ESA()
+    store_ESA()
     # load_sparse_matrix_4_cos(1,2)
 
-    # reformat_into_sparse_matrix_store()
+    reformat_into_sparse_matrix_store()
 
     # reformat_into_expected_ESA()#super slow
 
