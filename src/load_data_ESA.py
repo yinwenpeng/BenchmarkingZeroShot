@@ -50,7 +50,8 @@ def load_yahoo():
             parts = line.strip().split('\t')
             if len(parts)==2:
                 label_id = int(parts[0])
-                text_wordlist = parts[1].strip().lower().split()[:50]
+                '''truncate can speed up'''
+                text_wordlist = parts[1].strip().lower().split()[:30]
                 text_len=len(text_wordlist)
                 if text_len > max_sen_len:
                     max_sen_len=text_len
