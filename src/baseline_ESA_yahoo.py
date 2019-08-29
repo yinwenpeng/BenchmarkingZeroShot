@@ -116,7 +116,7 @@ def ESA_cosine():
         if max_id[0] == labels[i]:
             hit_size+=1
         co+=1
-        print(co, '...', hit_size/sample_size, hit_size/co, 'v0:', hit_size_seen_v0/(1e-8+all_size_seen_v0), hit_size_unseen_v0/(1e-8+all_size_unseen_v0), 'v1:', hit_size_seen_v1/(1e-8+all_size_seen_v1), hit_size_unseen_v1/(1e-8+all_size_unseen_v1))
+        print(co, '...', hit_size/sample_size, hit_size/co, 'v0:', hit_size_seen_v0/(1e-8+all_size_seen_v0), hit_size_unseen_v0/(1e-8+all_size_unseen_v0), 'v1:', hit_size_seen_v1/(1e-8+all_size_seen_v1), hit_size_unseen_v1/(1e-8+all_size_unseen_v1), 'seen vs. unseen size:', all_size_seen_v0, all_size_unseen_v0)
         if co%10==0:
             spend_time = (time.time()-start_time)/60.0
             print('\t\t\t\t\t',spend_time, 'mins')
