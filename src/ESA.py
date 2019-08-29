@@ -15,7 +15,7 @@ title_size = 0
 word2id={} #6161731+1
 word_size = 0
 # WordTitle2Count= lil_matrix((298099,40000))#(6113524, 5828563))
-WordTitle2Count= lil_matrix((74568, 4000))#(6113524, 5828563))
+WordTitle2Count= lil_matrix((6161731, 5903486))#(6113524, 5828563))
 Word2TileCount=defaultdict(int)
 fileset=set()
 
@@ -118,8 +118,8 @@ def load_tokenized_json():
             wiki_file_size+=1
             if wiki_file_size%10000==0:
                 print(wiki_file_size, '...over')
-            if wiki_file_size ==4000:
-                break
+            # if wiki_file_size ==4000:
+            #     break
     f.close()
     print('load_tokenized_json over.....words:', word_size, ' title size:', title_size)
     WordTitle2Count = divide_sparseMatrix_by_list_row_wise(WordTitle2Count, Word2TileCount.values())
@@ -145,7 +145,7 @@ def store_ESA():
     print('ESA sparse matrix stored over, congrats!!!')
     with open(route+'Word2TileCount.json', 'w') as f4:
         json.dump(Word2TileCount, f4)
-    print('store ESA statistics over')
+    print('store ESA over')
     spend_time = (time.time()-start_time)/60.0
     print(spend_time, 'mins')
 
