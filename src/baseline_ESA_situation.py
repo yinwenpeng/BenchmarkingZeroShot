@@ -8,8 +8,7 @@ import numpy as np
 from operator import itemgetter
 from scipy.special import softmax
 from preprocess_situation import situation_f1_given_goldlist_and_predlist
-import warnings
-warnings.filterwarnings('always')
+
 
 
 all_texts, all_labels, all_word2DF, labelnames = load_situation_and_labelnames()

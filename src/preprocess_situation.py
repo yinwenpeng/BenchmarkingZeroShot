@@ -247,7 +247,10 @@ def situation_f1_given_goldlist_and_predlist(eval_label_list, pred_label_list, s
     f1_list = []
     co_list = []
     for i in range(len(type_in_test)):
-        f1=f1_score(gold_array[:,i], pred_array[:,i], pos_label=1, average='binary')
+        if sum(pred_array[:,i]) < 1:
+            f1=0.0
+        else:
+            f1=f1_score(gold_array[:,i], pred_array[:,i], pos_label=1, average='binary')
         co = sum(gold_array[:,i])
         f1_list.append(f1)
         co_list.append(co)

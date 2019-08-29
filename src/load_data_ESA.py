@@ -121,7 +121,7 @@ def load_situation():
             # if i==0 and line_co==train_size_limit:
             #     break
 
-
+        readfile.close()
         all_texts.append(texts)
         all_labels.append(labels)
         print('\t\t\t size:', len(labels), 'samples')
