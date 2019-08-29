@@ -358,8 +358,8 @@ def get_wordsize_pagesize():
             wiki_file_size+=1
             if wiki_file_size%1000==0:
                 print(wiki_file_size, '...over')
-            # if wiki_file_size ==40000:
-            #     break
+            if wiki_file_size ==4000:
+                break
     f.close()
     print('word size:', word_size, ' title size:', title_size)
 
@@ -372,15 +372,10 @@ if __name__ == '__main__':
     '''to save time, we tokenize wiki dump and save into files for future loading'''
     # tokenize_filter_tokens()
     '''word size 6161731; page size: 5903486'''
-    # get_wordsize_pagesize()
-    load_tokenized_json()
+    get_wordsize_pagesize()
+    # load_tokenized_json()
     '''store all the statistic dictionary into files for future loading'''
-    store_ESA()
+    # store_ESA()
     # load_sparse_matrix_4_cos(1,2)
 
-    reformat_into_sparse_matrix_store()
-
-    # reformat_into_expected_ESA()#super slow
-
-    # coo_matrix_toy()
-    # crs_matrix_play()
+    # reformat_into_sparse_matrix_store()
