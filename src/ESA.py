@@ -140,8 +140,9 @@ def store_ESA():
         json.dump(word2id, fp2)
     # with open(route+'WordTitle2Count.json', 'w') as f3:
     #     json.dump(WordTitle2Count, f3)
-    # sparse.save_npz(route+"ESA_Sparse_v1.npz", WordTitle2Count)
-    # print('ESA sparse matrix stored over, congrats!!!')
+    '''note that WordTitle2Count is always a sparse matrix, not a dictionary'''
+    sparse.save_npz(route+"ESA_Sparse_v1.npz", WordTitle2Count)
+    print('ESA sparse matrix stored over, congrats!!!')
     with open(route+'Word2TileCount.json', 'w') as f4:
         json.dump(Word2TileCount, f4)
     print('store ESA statistics over')
@@ -192,6 +193,7 @@ def reformat_into_expected_ESA():
     cols=[]
     values =[]
     size = 0
+    print('WordTitle2Count:', WordTitle2Count)
     for key, value in WordTitle2Count.items(): #"0:0": 8, "1:0": 24,
         key_parts = key.split(':')
         word_id_str = key_parts[0]
@@ -378,4 +380,4 @@ if __name__ == '__main__':
     store_ESA()
     # load_sparse_matrix_4_cos(1,2)
 
-    reformat_into_sparse_matrix_store()
+    # reformat_into_sparse_matrix_store()
