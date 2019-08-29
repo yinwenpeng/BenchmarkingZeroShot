@@ -91,7 +91,8 @@ def ESA_cosine():
         if len(pred_type_list_i) == 0:
             pred_type_list_i.append('out-of-domain')
         print('pred_type_list_i:', pred_type_list_i)
-        print('gold_type_list_i:',labels[i] )
+        print('all_labels:', labels[:10])
+        print('gold_type_list_i:',labels[i], i )
         pred_type_list.append(pred_type_list_i)
         gold_type_list.append(labels[i])
 
