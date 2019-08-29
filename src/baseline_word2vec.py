@@ -19,65 +19,65 @@ def sent_2_emb(wordlist):
 
 
 def baseline_w2v():
-    #
-    #
-    #
-    #
-    #
-    # '''emotion'''
-    # type_list = ['sadness', 'joy', 'anger', 'disgust', 'fear', 'surprise', 'shame', 'guilt', 'love']#, 'noemo']
-    # type_2_emb = []
-    # for type in type_list:
-    #     type_2_emb.append(sent_2_emb(type.split()))
-    # readfile = codecs.open('/export/home/Dataset/Stuttgart_Emotion/unify-emotion-datasets-master/zero-shot-split/test.txt', 'r', 'utf-8')
-    # gold_label_list = []
-    # pred_label_list = []
-    # co = 0
-    # for line in readfile:
-    #     parts = line.strip().split('\t')
-    #     gold_label_list.append(parts[0])
-    #     text = parts[2].strip()
-    #     max_cos = 0.0
-    #     max_type = -1
-    #     text_emb = sent_2_emb(text.split())
-    #     for i, type in enumerate(type_list):
-    #
-    #         type_emb = type_2_emb[i]
-    #         cos = 1.0-cosine(text_emb, type_emb)
-    #         if cos > max_cos:
-    #             max_cos = cos
-    #             max_type = type
-    #     if max_cos > 0.0:
-    #         pred_label_list.append(max_type)
-    #     else:
-    #         pred_label_list.append('noemo')
-    #     co+=1
-    #     if co % 1000 == 0:
-    #         print('emotion co:', co)
-    # readfile.close()
-    # print('gold_label_list:', gold_label_list[:200])
-    # print('pred_label_list:', pred_label_list[:200])
-    # all_test_labels = list(set(gold_label_list))
-    # f1_score_per_type = f1_score(gold_label_list, pred_label_list, labels = all_test_labels, average=None)
-    # seen_types_group = [['sadness',  'anger',  'fear',  'shame',  'love'],['joy',  'disgust',  'surprise',  'guilt']]
-    # for i in range(len(seen_types_group)):
-    #     seen_types = seen_types_group[i]
-    #
-    #     seen_f1_accu = 0.0
-    #     seen_size = 0
-    #     unseen_f1_accu = 0.0
-    #     unseen_size = 0
-    #     for i in range(len(all_test_labels)):
-    #         f1=f1_score_per_type[i]
-    #         co = gold_label_list.count(all_test_labels[i])
-    #         if all_test_labels[i] in seen_types:
-    #             seen_f1_accu+=f1*co
-    #             seen_size+=co
-    #         else:
-    #             unseen_f1_accu+=f1*co
-    #             unseen_size+=co
-    #     print('seen:', seen_f1_accu/seen_size, 'unseen:', unseen_f1_accu/unseen_size)
-    # print('overall:', f1_score(gold_label_list, pred_label_list, labels = all_test_labels, average='weighted'))
+    
+
+
+
+
+    '''emotion'''
+    type_list = ['sadness', 'joy', 'anger', 'disgust', 'fear', 'surprise', 'shame', 'guilt', 'love']#, 'noemo']
+    type_2_emb = []
+    for type in type_list:
+        type_2_emb.append(sent_2_emb(type.split()))
+    readfile = codecs.open('/export/home/Dataset/Stuttgart_Emotion/unify-emotion-datasets-master/zero-shot-split/test.txt', 'r', 'utf-8')
+    gold_label_list = []
+    pred_label_list = []
+    co = 0
+    for line in readfile:
+        parts = line.strip().split('\t')
+        gold_label_list.append(parts[0])
+        text = parts[2].strip()
+        max_cos = 0.0
+        max_type = -1
+        text_emb = sent_2_emb(text.split())
+        for i, type in enumerate(type_list):
+
+            type_emb = type_2_emb[i]
+            cos = 1.0-cosine(text_emb, type_emb)
+            if cos > max_cos:
+                max_cos = cos
+                max_type = type
+        if max_cos > 0.0:
+            pred_label_list.append(max_type)
+        else:
+            pred_label_list.append('noemo')
+        co+=1
+        if co % 1000 == 0:
+            print('emotion co:', co)
+    readfile.close()
+    print('gold_label_list:', gold_label_list[:200])
+    print('pred_label_list:', pred_label_list[:200])
+    all_test_labels = list(set(gold_label_list))
+    f1_score_per_type = f1_score(gold_label_list, pred_label_list, labels = all_test_labels, average=None)
+    seen_types_group = [['sadness',  'anger',  'fear',  'shame',  'love'],['joy',  'disgust',  'surprise',  'guilt']]
+    for i in range(len(seen_types_group)):
+        seen_types = seen_types_group[i]
+
+        seen_f1_accu = 0.0
+        seen_size = 0
+        unseen_f1_accu = 0.0
+        unseen_size = 0
+        for i in range(len(all_test_labels)):
+            f1=f1_score_per_type[i]
+            co = gold_label_list.count(all_test_labels[i])
+            if all_test_labels[i] in seen_types:
+                seen_f1_accu+=f1*co
+                seen_size+=co
+            else:
+                unseen_f1_accu+=f1*co
+                unseen_size+=co
+        print('seen:', seen_f1_accu/seen_size, 'unseen:', unseen_f1_accu/unseen_size)
+    print('overall:', f1_score(gold_label_list, pred_label_list, labels = all_test_labels, average='weighted'))
 
     '''situation'''
     origin_type_list = ['search','evac','infra','utils','water','shelter','med','food', 'crimeviolence', 'terrorism', 'regimechange', 'out-of-domain']
