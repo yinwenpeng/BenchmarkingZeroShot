@@ -70,6 +70,7 @@ def ESA_cosine():
     # print(label_veclist)
     print('all labelnames are in vec succeed')
     labels = all_labels[0]
+    print('all_labels:', labels[:10])
     sample_size = len(labels)
     print('total test size:', sample_size)
     hit_size = 0
