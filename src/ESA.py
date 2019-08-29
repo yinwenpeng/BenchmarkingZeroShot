@@ -15,7 +15,7 @@ title_size = 0
 word2id={} #6161731+1
 word_size = 0
 # WordTitle2Count= lil_matrix((298099,40000))#(6113524, 5828563))
-WordTitle2Count= lil_matrix((6161732, 5903491))#(6113524, 5828563))
+WordTitle2Count= lil_matrix((6161732, 4000))#(6113524, 5828563))
 Word2TileCount=defaultdict(int)
 fileset=set()
 
@@ -118,8 +118,8 @@ def load_tokenized_json():
             wiki_file_size+=1
             if wiki_file_size%10000==0:
                 print(wiki_file_size, '...over')
-            # if wiki_file_size ==40000:
-            #     break
+            if wiki_file_size ==4000:
+                break
     f.close()
     print('load_tokenized_json over.....words:', word_size, ' title size:', title_size)
     WordTitle2Count = divide_sparseMatrix_by_list_row_wise(WordTitle2Count, Word2TileCount.values())
@@ -372,10 +372,10 @@ if __name__ == '__main__':
     '''to save time, we tokenize wiki dump and save into files for future loading'''
     # tokenize_filter_tokens()
     '''word size 6161731; page size: 5903486'''
-    get_wordsize_pagesize()
-    # load_tokenized_json()
+    # get_wordsize_pagesize()
+    load_tokenized_json()
     '''store all the statistic dictionary into files for future loading'''
-    # store_ESA()
+    store_ESA()
     # load_sparse_matrix_4_cos(1,2)
 
-    # reformat_into_sparse_matrix_store()
+    reformat_into_sparse_matrix_store()
