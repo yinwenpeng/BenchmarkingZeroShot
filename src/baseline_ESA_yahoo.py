@@ -110,8 +110,6 @@ def ESA_cosine_attention():
         print('diagonal:', cos_array.diagonal(), 'ground truth:', labels[i])
         # exit(0)
         max_id = np.argmax(cos_array.diagonal())
-        # print('max_id:',max_id)
-        # exit(0)
         if max_id == labels[i]:
             hit_size+=1
         co+=1
