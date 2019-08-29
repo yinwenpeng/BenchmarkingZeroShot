@@ -106,6 +106,9 @@ def load_situation():
                 if text_len > max_sen_len:
                     max_sen_len=text_len
                 text_idlist=transfer_wordlist_2_idlist_with_existing_word2id(text_wordlist)
+                if parts[0].strip() == 'out-of-domain':
+                    print('text_idlist:', text_idlist)
+                    exit(0)
                 if len(text_idlist) >0:
                     texts.append(text_idlist)
                     labels.append(label_id)
