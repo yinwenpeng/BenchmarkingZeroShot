@@ -10,7 +10,7 @@ import time
 from scipy import sparse
 from sklearn.metrics.pairwise import cosine_similarity
 '''seven global variables'''
-title2id={} #5828562+1
+title2id={} #5903490+1
 title_size = 0
 word2id={} #6113523+1
 word_size = 0
@@ -89,7 +89,7 @@ def load_tokenized_json():
     global Word2TileCount
     # global fileset
 
-    route = '/home/wyin3/Datasets/Wikipedia20190320/parsed_output/tokenized_wiki/'
+    route = '/export/home/Dataset/wikipedia/parsed_output/tokenized_wiki/'
     wiki_file_size = 0
     with codecs.open(route+'tokenized_wiki.txt', 'r', 'utf-8') as f:
         for line in f:
@@ -108,17 +108,12 @@ def load_tokenized_json():
             tokenized_text = line_dic.get('text').split()
             word2tf=Counter(tokenized_text)
             for word, tf in word2tf.items():
-
-            # word_id_set = set()
-            # for word in tokenized_text:
                 word_id = word2id.get(word)
                 if word_id is None:
                     word_id = word_size
                     word2id[word]=word_id
                     word_size+=1
                 WordTitle2Count[word_id, title_id]=tf
-            #     word_id_set.add(word_id)
-            # for each_word_id in word_id_set:
                 Word2TileCount[word_id]+=1 #this word meets a new title
             wiki_file_size+=1
             if wiki_file_size%10000==0:
@@ -145,7 +140,7 @@ def store_ESA():
         json.dump(word2id, fp2)
     # with open(route+'WordTitle2Count.json', 'w') as f3:
     #     json.dump(WordTitle2Count, f3)
-    sparse.save_npz(route+"ESA_Sparse_v1.npz", WordTitle2Count)
+    # sparse.save_npz(route+"ESA_Sparse_v1.npz", WordTitle2Count)
     # print('ESA sparse matrix stored over, congrats!!!')
     with open(route+'Word2TileCount.json', 'w') as f4:
         json.dump(Word2TileCount, f4)
@@ -242,9 +237,6 @@ def reformat_into_expected_ESA():
     print(spend_time, 'mins')
 
 def reformat_into_sparse_matrix_store():
-    '''
-    super super slow. do not use it
-    '''
     start_time = time.time()
     global Word2TileCount
     global WordTitle2Count
@@ -322,16 +314,66 @@ def crs_matrix_play():
     print('haha',sub)
     print(sub.sum(axis=0))
 
+
+def get_wordsize_pagesize():
+    '''
+    we first tokenzie tool output json files into a single json file "tokenized_wiki.txt"
+    now we do statistics on it
+    '''
+    start_time = time.time()
+    global title2id
+    global word2id
+    global title_size
+    global word_size
+    # global WordTitle2Count
+    # global Word2TileCount
+    # global fileset
+
+    route = '/export/home/Dataset/wikipedia/parsed_output/tokenized_wiki/'
+    wiki_file_size = 0
+    with codecs.open(route+'tokenized_wiki.txt', 'r', 'utf-8') as f:
+        for line in f:
+            try:
+                line_dic = json.loads(line)
+            except ValueError:
+                continue
+            title = line_dic.get('title')
+            title_id = title2id.get(title)
+            if title_id is None: # if word was not in the vocabulary
+                title_id=title_size  # id of true words starts from 1, leaving 0 to "pad id"
+                title2id[title]=title_id
+                title_size+=1
+
+            # content = line_dic.get('text')
+            tokenized_text = line_dic.get('text').split()
+            word2tf=Counter(tokenized_text)
+            for word, tf in word2tf.items():
+                word_id = word2id.get(word)
+                if word_id is None:
+                    word_id = word_size
+                    word2id[word]=word_id
+                    word_size+=1
+                # WordTitle2Count[word_id, title_id]=tf
+                # Word2TileCount[word_id]+=1 #this word meets a new title
+            wiki_file_size+=1
+            if wiki_file_size%1000==0:
+                print(wiki_file_size, '...over')
+            # if wiki_file_size ==40000:
+            #     break
+    f.close()
+    print('word size:', word_size, ' title size:', title_size)
+
 if __name__ == '__main__':
-    scan_all_json_files('/export/home/Dataset/wikipedia/parsed_output/json/')
+    # scan_all_json_files('/export/home/Dataset/wikipedia/parsed_output/json/')
     '''note that file size 13354 does not mean wiki pages; each file contains multiple wiki pages'''
-    print('fileset size:', len(fileset)) #fileset size: 13354
-    # load_json()
+    # print('fileset size:', len(fileset)) #fileset size: 13354
+    # load_json() #time-consuming, not useful
     # store_ESA()
-
-    tokenize_filter_tokens()
-
+    '''to save time, we tokenize wiki dump and save into files for future loading'''
+    # tokenize_filter_tokens()
+    get_wordsize_pagesize()
     # load_tokenized_json()
+    '''store all the statistic dictionary into files for future loading'''
     # store_ESA()
     # load_sparse_matrix_4_cos(1,2)
 

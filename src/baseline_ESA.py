@@ -63,6 +63,7 @@ def ESA_cosine():
     label_veclist = []
     for i in range(len(labelnames)):
         labelname_idlist = labelnames[i]
+        '''label rep is sum up all word ESA vectors'''
         label_veclist.append(text_idlist_2_ESAVector(labelname_idlist, False))
     # print(label_veclist)
     print('all labelnames are in vec succeed')
@@ -74,6 +75,7 @@ def ESA_cosine():
     start_time = time.time()
     for i in range(sample_size):
         text_idlist = all_texts[0][i]
+        '''text rep is weighted sum up of ESA vectors'''
         text_vec = text_idlist_2_ESAVector(text_idlist, True)
         cos_array=cosine_similarity(text_vec, np.vstack(label_veclist))
         max_id = np.argmax(cos_array, axis=1)
