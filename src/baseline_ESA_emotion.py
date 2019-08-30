@@ -93,7 +93,7 @@ def ESA_cosine():
             if list_cosine[i] > max_prob:
                 max_prob = list_cosine[i]
                 max_index = i
-        if max_index ==-1 or max_prob < 0.01:
+        if max_index ==-1 or max_prob < 0.002:
             pred_type = 'noemo'
         else:
             pred_type = origin_type_list[max_index]
