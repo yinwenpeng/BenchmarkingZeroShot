@@ -11,15 +11,19 @@ def build_wiki_category_dataset():
             line_dic = json.loads(line)
         except ValueError:
             continue
-        # title = line_dic.get('title')
-        title_id = line_dic.get('id')
-        article = WikipediaPage(pageid=title_id)
+
+        try:
+            # title = line_dic.get('title')
+            title_id = line_dic.get('id')
+            article = WikipediaPage(pageid=title_id)
+        except AttributeError:
+            continue
         type_list = article.categories
         line_dic['categories'] = type_list
         writefile.write(json.dumps(line_dic)+'\n')
         co+=1
-        if co % 100 == 0:
-            break
+        if co % 1 == 0:
+            print(co)
         if co == 100000:
             break
     writefile.close()
