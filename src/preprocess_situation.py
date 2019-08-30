@@ -224,8 +224,6 @@ def evaluate_situation_zeroshot_TwpPhasePred(pred_probs, pred_binary_labels_hars
 
 
 def situation_f1_given_goldlist_and_predlist(eval_label_list, pred_label_list, seen_types_v0, seen_types_v1):
-    # print('eval_label_list:', eval_label_list)
-    # print('pred_label_list:', pred_label_list)
     assert len(pred_label_list) ==  len(eval_label_list)
     total_premise_size = len(eval_label_list)
     type_in_test = ['search','evac','infra','utils','water','shelter','med','food', 'crimeviolence', 'terrorism', 'regimechange', 'out-of-domain']
