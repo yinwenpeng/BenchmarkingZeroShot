@@ -791,8 +791,6 @@ def main():
         elif output_mode == "regression":
             all_label_ids = torch.tensor([f.label_id for f in train_features], dtype=torch.float)
 
-        # print('train all_label_ids:', all_label_ids)
-        # exit(0)
         train_data = TensorDataset(all_input_ids, all_input_mask, all_segment_ids, all_label_ids)
         train_sampler = RandomSampler(train_data)
 
