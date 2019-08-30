@@ -1,4 +1,4 @@
-import wikipedia
+from wikipedia import WikipediaPage
 
 
 
