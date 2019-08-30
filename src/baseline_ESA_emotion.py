@@ -94,10 +94,10 @@ def ESA_cosine():
                 max_prob = list_cosine[i]
                 max_index = i
         if max_index ==-1 or max_prob < 0.01:
-                pred_type = 'noemo'
+            pred_type = 'noemo'
         else:
             pred_type = origin_type_list[max_index]
-
+        print('pred_type:', pred_type)
         # print('pred_type_list_i:', pred_type_list_i)
         # print('all_labels:', labels[:10])
         # print('gold_type_list_i:',labels[i], i )
