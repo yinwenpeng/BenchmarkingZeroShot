@@ -165,6 +165,7 @@ class RteProcessor(DataProcessor):
 
             text = line_dic.get('text')
             type_list = line_dic.get('categories')
+            history_types= history_types|set(type_list)
             neg_types = history_types - set(type_list)
             if len(neg_types) > 3:
                 sampled_type_set = random.sample(neg_types, 3)
