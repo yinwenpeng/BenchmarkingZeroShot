@@ -128,6 +128,54 @@ def load_situation():
     print('load situation text succeed, max sen len:',   max_sen_len)
     return all_texts, all_labels, all_word2DF
 
+def load_emotion():
+    yahoo_path = '/export/home/Dataset/Stuttgart_Emotion/unify-emotion-datasets-master/'
+    files = ['zero-shot-split/test.txt'] #'train_tokenized.txt','zero-shot-split/test.txt'
+    # word2id={}
+    all_texts=[]
+    # all_masks=[]
+    all_labels=[]
+    all_word2DF=defaultdict(int)
+    max_sen_len=0
+    for i in range(len(files)):
+        print('loading file:', yahoo_path+files[i], '...')
+
+        texts=[]
+        # text_masks=[]
+        labels=[]
+        readfile=codecs.open(yahoo_path+files[i], 'r', 'utf-8')
+        line_co=0
+        for line in readfile:
+            parts = line.strip().split('\t')
+            if len(parts)==3:
+                label_id = parts[0].strip()
+                '''truncate can speed up'''
+                text_wordlist = parts[2].strip().lower().split()[:30]#[:30]
+                text_len=len(text_wordlist)
+                if text_len > max_sen_len:
+                    max_sen_len=text_len
+                text_idlist=transfer_wordlist_2_idlist_with_existing_word2id(text_wordlist)
+                if len(text_idlist) >0:
+                    texts.append(text_idlist)
+                    labels.append(label_id)
+                    idset = set(text_idlist)
+                    for iddd in idset:
+                        all_word2DF[iddd]+=1
+                else:
+                    continue
+
+            line_co+=1
+            if line_co%100==0:
+                print('line_co:', line_co)
+            # if i==0 and line_co==train_size_limit:
+            #     break
+
+        readfile.close()
+        all_texts.append(texts)
+        all_labels.append(labels)
+        print('\t\t\t size:', len(labels), 'samples')
+    print('load situation text succeed, max sen len:',   max_sen_len)
+    return all_texts, all_labels, all_word2DF
 
 def load_labels():
     yahoo_path = '/export/home/Dataset/YahooClassification/yahoo_answers_csv/'
@@ -166,6 +214,25 @@ def load_labels_situation():
 
     return texts
 
+def load_labels_emotion():
+    # yahoo_path = '/export/home/Dataset/YahooClassification/yahoo_answers_csv/'
+    type_list = ['sadness', 'joy', 'anger', 'disgust', 'fear', 'surprise', 'shame', 'guilt', 'love']
+    texts=[]
+    # text_masks=[]
+
+    # readfile=codecs.open(yahoo_path+'classes.txt', 'r', 'utf-8')
+    for type in type_list:
+        wordlist = type.split()
+
+        text_idlist=transfer_wordlist_2_idlist_with_existing_word2id(wordlist)
+        if len(text_idlist) >0:
+            texts.append(text_idlist)
+    assert len(texts) ==  len(type_list)
+
+    print('load yahoo labelnames succeed, totally :', len(texts), 'label names')
+
+    return texts
+
 def load_yahoo_and_labelnames():
     load_ESA_word2id()
     all_texts, all_labels, all_word2DF = load_yahoo()
@@ -177,4 +244,11 @@ def load_situation_and_labelnames():
     all_texts, all_labels, all_word2DF = load_situation()
     # print('load all_labels:', all_labels[0][:10])
     labelnames = load_labels_situation()
+    return all_texts, all_labels, all_word2DF, labelnames
+
+def load_emotion_and_labelnames():
+    load_ESA_word2id()
+    all_texts, all_labels, all_word2DF = load_emotion()
+    # print('load all_labels:', all_labels[0][:10])
+    labelnames = load_labels_emotion()
     return all_texts, all_labels, all_word2DF, labelnames

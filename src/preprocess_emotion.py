@@ -429,7 +429,53 @@ def majority_baseline():
 
     print('seen_f1:', seen_f1, 'unseen_f1:', unseen_f1)
 
+def emotion_f1_given_goldlist_and_predlist(gold_label_list, pred_label_list, seen_types_v0, seen_types_v1):
+    # seen_types = set(['joy',  'disgust',  'surprise',  'guilt'])
+    # f1_score_per_type = f1_score(gold_label_list, pred_label_list, labels = list(set(gold_label_list)), average='weighted')
 
+    all_test_labels = list(set(gold_label_list))
+    f1_score_per_type = f1_score(gold_label_list, pred_label_list, labels = all_test_labels, average=None)
+
+    seen_f1_accu_v0 = 0.0
+    seen_size_v0 = 0
+    unseen_f1_accu_v0 = 0.0
+    unseen_size_v0 = 0
+
+    seen_f1_accu_v1 = 0.0
+    seen_size_v1 = 0
+    unseen_f1_accu_v1 = 0.0
+    unseen_size_v1 = 0
+
+    f1_accu = 0.0
+    size_accu = 0
+    for i in range(len(all_test_labels)):
+        f1=f1_score_per_type[i]
+        co = gold_label_list.count(all_test_labels[i])
+
+        f1_accu+=f1*co
+        size_accu+=co
+
+        if all_test_labels[i] in seen_types_v0:
+            seen_f1_accu_v0+=f1*co
+            seen_size_v0+=co
+        else:
+            unseen_f1_accu_v0+=f1*co
+            unseen_size_v0+=co
+
+        if all_test_labels[i] in seen_types_v1:
+            seen_f1_accu_v1+=f1*co
+            seen_size_v1+=co
+        else:
+            unseen_f1_accu_v1+=f1*co
+            unseen_size_v1+=co
+
+
+    v0 = (seen_f1_accu_v0/(1e-6+seen_size_v0), unseen_f1_accu_v0/(1e-6+unseen_size_v0))
+    v1 = (seen_f1_accu_v1/(1e-6+seen_size_v1), unseen_f1_accu_v1/(1e-6+unseen_size_v1))
+    all_f1 = f1_accu/(1e-6+size_accu)
+
+
+    print(v0, v1, all_f1)
 
 if __name__ == '__main__':
     # statistics()
