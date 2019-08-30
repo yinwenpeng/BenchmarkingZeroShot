@@ -2,7 +2,7 @@
 
 import json
 import codecs
-import nltk
+# import nltk
 from collections import defaultdict
 # import numpy as np
 # from scipy.sparse import coo_matrix, csr_matrix, lil_matrix
@@ -150,8 +150,10 @@ def load_emotion():
             if len(parts)==3:
                 label_id = parts[0].strip()
                 '''truncate can speed up'''
-                text_wordlist =  [word for word in  nltk.word_tokenize(parts[2].strip()) if word.isalpha()]
-                text_wordlist = text_wordlist[:30]#[:30]
+                text_wordlist = parts[2].strip().split()[:30]#[:30]
+                '''we found use the tokenzied text make performance always zero'''
+                # text_wordlist =  [word for word in  nltk.word_tokenize(parts[2].strip()) if word.isalpha()]
+                # text_wordlist = text_wordlist[:30]#[:30]
                 text_len=len(text_wordlist)
                 if text_len > max_sen_len:
                     max_sen_len=text_len
