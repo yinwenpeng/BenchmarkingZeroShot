@@ -7,7 +7,7 @@ from scipy.sparse import vstack
 import numpy as np
 from operator import itemgetter
 from scipy.special import softmax
-from preprocess_situation import emotion_f1_given_goldlist_and_predlist
+from preprocess_emotion import emotion_f1_given_goldlist_and_predlist
 
 
 
