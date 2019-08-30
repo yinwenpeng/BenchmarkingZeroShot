@@ -16,7 +16,7 @@ def build_wiki_category_dataset():
         article = WikipediaPage(pageid=title_id)
         type_list = article.categories
         line_dic['categories'] = type_list
-        writefile.write(json.dumps(line_dic))
+        writefile.write(json.dumps(line_dic)+'\n')
         co+=1
         if co == 10:
             break
