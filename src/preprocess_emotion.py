@@ -431,11 +431,11 @@ def majority_baseline():
 
 def emotion_f1_given_goldlist_and_predlist(gold_label_list, pred_label_list, seen_types_v0, seen_types_v1):
 
-    print('gold_label_list:', gold_label_list)
-    print('pred_label_list:', pred_label_list)
+    # print('gold_label_list:', gold_label_list)
+    # print('pred_label_list:', pred_label_list)
     all_test_labels = list(set(gold_label_list))
     f1_score_per_type = f1_score(gold_label_list, pred_label_list, labels = all_test_labels, average=None)
-    print('f1_score_per_type:', f1_score_per_type)
+    # print('f1_score_per_type:', f1_score_per_type)
     seen_f1_accu_v0 = 0.0
     seen_size_v0 = 0
     unseen_f1_accu_v0 = 0.0
@@ -451,8 +451,8 @@ def emotion_f1_given_goldlist_and_predlist(gold_label_list, pred_label_list, see
     for i in range(len(all_test_labels)):
         f1=f1_score_per_type[i]
         co = gold_label_list.count(all_test_labels[i])
-        print('f1:', f1)
-        print('co:', co)
+        # print('f1:', f1)
+        # print('co:', co)
 
         f1_accu+=f1*co
         size_accu+=co
