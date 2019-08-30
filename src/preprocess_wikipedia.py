@@ -19,6 +19,7 @@ def build_wiki_category_dataset():
         except AttributeError:
             continue
         type_list = article.categories
+        print(type_list)
         line_dic['categories'] = type_list
         writefile.write(json.dumps(line_dic)+'\n')
         co+=1
