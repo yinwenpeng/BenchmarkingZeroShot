@@ -86,18 +86,18 @@ def ESA_cosine():
         text_vec = text_idlist_2_ESAVector(text_idlist, True)
         cos_array=cosine_similarity(text_vec, np.vstack(label_veclist))
         list_cosine = list(cos_array[0])
-        print('list_cosine:', list_cosine)
+        # print('list_cosine:', list_cosine)
         max_prob = -100.0
         max_index = -1
         for i in range(len(list_cosine)):
             if list_cosine[i] > max_prob:
                 max_prob = list_cosine[i]
                 max_index = i
-        if max_index ==-1 or max_prob < 0.01:
+        if max_index ==-1 or max_prob < 0.02:
             pred_type = 'noemo'
         else:
             pred_type = origin_type_list[max_index]
-        print('pred_type:', pred_type)
+        # print('pred_type:', pred_type)
         # print('pred_type_list_i:', pred_type_list_i)
         # print('all_labels:', labels[:10])
         # print('gold_type_list_i:',labels[i], i )
