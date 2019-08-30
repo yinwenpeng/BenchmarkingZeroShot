@@ -487,7 +487,7 @@ def forfun():
         if line.strip().split('\t')[0] != 'noemo':
             co+=1
         else:
-            print(co)
+            print(co) #4685
             break
     readfile.close()
 if __name__ == '__main__':
