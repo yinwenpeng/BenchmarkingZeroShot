@@ -479,9 +479,22 @@ def emotion_f1_given_goldlist_and_predlist(gold_label_list, pred_label_list, see
 
     return v0, v1, all_f1
 
+
+def forfun():
+    readfile = codecs.open('/export/home/Dataset/Stuttgart_Emotion/unify-emotion-datasets-master/zero-shot-split/test.txt', 'r', 'utf-8')
+    co=0
+    for line in readfile:
+        if line.strip().split('\t')[0] != 'noemo':
+            co+=1
+        else:
+            print(c0)
+            break
+    readfile.close()
 if __name__ == '__main__':
     # statistics()
     # build_zeroshot_test_dev_set()
     # build_zeroshot_train_set()
 
-    majority_baseline()
+    # majority_baseline()
+
+    forfun()
