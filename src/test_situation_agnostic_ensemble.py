@@ -246,7 +246,6 @@ class RteProcessor(DataProcessor):
                 # if line_co == 1000:
                 #     break
 
-
         readfile.close()
         print('loaded size:', line_co)
         return examples, gold_label_list, hypo_seen_str_indicator, hypo_2_type_index
