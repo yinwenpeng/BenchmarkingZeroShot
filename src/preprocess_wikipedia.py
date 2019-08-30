@@ -5,7 +5,7 @@ import codecs
 def build_wiki_category_dataset():
     readfile = codecs.open('/export/home/Dataset/wikipedia/parsed_output/tokenized_wiki/tokenized_wiki.txt', 'r', 'utf-8')
     writefile = codecs.open('/export/home/Dataset/wikipedia/parsed_output/tokenized_wiki/tokenized_wiki2categories.txt', 'w', 'utf-8')
-    for line in f:
+    for line in readfile:
         try:
             line_dic = json.loads(line)
         except ValueError:
