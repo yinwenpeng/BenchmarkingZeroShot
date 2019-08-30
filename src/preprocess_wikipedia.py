@@ -11,7 +11,7 @@ def build_wiki_category_dataset():
         except ValueError:
             continue
         # title = line_dic.get('title')
-        title_id = title2id.get('id')
+        title_id = line_dic.get('id')
         article = WikipediaPage(pageid=title_id)
         type_list = article.categories
         print(type_list)
