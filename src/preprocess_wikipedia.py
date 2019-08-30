@@ -5,6 +5,7 @@ import codecs
 def build_wiki_category_dataset():
     readfile = codecs.open('/export/home/Dataset/wikipedia/parsed_output/tokenized_wiki/tokenized_wiki.txt', 'r', 'utf-8')
     writefile = codecs.open('/export/home/Dataset/wikipedia/parsed_output/tokenized_wiki/tokenized_wiki2categories.txt', 'w', 'utf-8')
+    co = 0
     for line in readfile:
         try:
             line_dic = json.loads(line)
@@ -14,8 +15,13 @@ def build_wiki_category_dataset():
         title_id = line_dic.get('id')
         article = WikipediaPage(pageid=title_id)
         type_list = article.categories
-        print(type_list)
-        exit(0)
+        line_dic['categories'] = type_list
+        writefile.write(json.dumps(line_dic))
+        co+=1
+        if co == 10:
+            break
+    writefile.close()
+    readfile.close()
 
 
 if __name__ == '__main__':
