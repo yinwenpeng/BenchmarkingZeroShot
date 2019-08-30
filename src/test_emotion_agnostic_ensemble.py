@@ -213,7 +213,7 @@ class RteProcessor(DataProcessor):
         hypo_2_type_index=[]
         '''notice that noemo hasnt be set as unseen, we treat it in evaluation part'''
         for type, hypo_list in type2hypothesis.items():
-            for hypo in hypo_list:
+            for hypo in hypo_list[:1]:
                 hypo_2_type_index.append(type) # this hypo is for type i
                 if type in seen_types:
                     hypo_seen_str_indicator.append('seen')# this hypo is for a seen type
@@ -228,11 +228,9 @@ class RteProcessor(DataProcessor):
                 type_index =  line[0].strip()
                 gold_label_list.append(type_index)
                 for type, hypo_list in type2hypothesis.items():
-                # for i in range(10):
-                #     hypo_list = type2hypothesis.get(i)
                     if type == type_index:
                         '''pos pair'''
-                        for hypo in hypo_list:
+                        for hypo in hypo_list[:1]:
                             guid = "test-"+str(exam_co)
                             text_a = line[2]
                             text_b = hypo
@@ -242,7 +240,7 @@ class RteProcessor(DataProcessor):
                             exam_co+=1
                     else:
                         '''neg pair'''
-                        for hypo in hypo_list:
+                        for hypo in hypo_list[:1]:
                             guid = "test-"+str(exam_co)
                             text_a = line[2]
                             text_b = hypo

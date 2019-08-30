@@ -214,7 +214,7 @@ class RteProcessor(DataProcessor):
         hypo_2_type_index=[]
         '''notice that noemo hasnt be set as unseen, we treat it in evaluation part'''
         for type, hypo_list in type2hypothesis.items():
-            for hypo in hypo_list[1:]:
+            for hypo in hypo_list:
                 hypo_2_type_index.append(type) # this hypo is for type i
                 if type in seen_types:
                     hypo_seen_str_indicator.append('seen')# this hypo is for a seen type
@@ -231,7 +231,7 @@ class RteProcessor(DataProcessor):
                 gold_label_list.append(type_index_list)
                 for type, hypo_list in type2hypothesis.items():
                     '''here we put not-entail as label just for occupying the arg, not use'''
-                    for hypo in hypo_list[1:]:
+                    for hypo in hypo_list: # both
 
                             guid = "test-"+str(exam_co)
                             text_a = line[1]
@@ -245,6 +245,7 @@ class RteProcessor(DataProcessor):
                     print('loading test size:', line_co)
                 # if line_co == 1000:
                 #     break
+
 
         readfile.close()
         print('loaded size:', line_co)
