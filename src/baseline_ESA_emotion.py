@@ -86,7 +86,7 @@ def ESA_cosine():
         text_vec = text_idlist_2_ESAVector(text_idlist, True)
         cos_array=cosine_similarity(text_vec, np.vstack(label_veclist))
         list_cosine = list(cos_array[0])
-        print('list_cosine:', list_cosine)
+        # print('list_cosine:', list_cosine)
         max_prob = -100.0
         max_index = -1
         for i in range(len(list_cosine)):
