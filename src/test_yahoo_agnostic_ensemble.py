@@ -216,7 +216,7 @@ class RteProcessor(DataProcessor):
         hypo_2_type_index=[]
         for i in range(10):
             hypo_list = type2hypothesis.get(i)
-            for hypo in hypo_list[1:]:
+            for hypo in hypo_list[:1]:
                 hypo_2_type_index.append(i) # this hypo is for type i
                 if i in seen_types:
                     hypo_seen_str_indicator.append('seen')# this hypo is for a seen type
@@ -234,7 +234,7 @@ class RteProcessor(DataProcessor):
                     hypo_list = type2hypothesis.get(i)
                     if i == type_index:
                         '''pos pair'''
-                        for hypo in hypo_list[1:]:
+                        for hypo in hypo_list[:1]:
                             guid = "test-"+str(exam_co)
                             text_a = line[1]
                             text_b = hypo
@@ -244,7 +244,7 @@ class RteProcessor(DataProcessor):
                             exam_co+=1
                     else:
                         '''neg pair'''
-                        for hypo in hypo_list[1:]:
+                        for hypo in hypo_list[:1]:
                             guid = "test-"+str(exam_co)
                             text_a = line[1]
                             text_b = hypo
