@@ -1,5 +1,6 @@
 from wikipedia import WikipediaPage
 import json
+import codecs
 
 def build_wiki_category_dataset():
     readfile = codecs.open('/export/home/Dataset/wikipedia/parsed_output/tokenized_wiki/tokenized_wiki.txt', 'r', 'utf-8')
