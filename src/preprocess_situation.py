@@ -208,6 +208,7 @@ def evaluate_situation_zeroshot_TwpPhasePred(pred_probs, pred_binary_labels_hars
     unseen_size = 0
     for i in range(len(type_in_test)):
         f1=f1_score(gold_array[:,i], pred_array[:,i], pos_label=1, average='binary')
+        print(i, ':', f1)
         co = sum(gold_array[:,i])
         if type_in_test[i] in seen_types:
             seen_f1_accu+=f1*co
