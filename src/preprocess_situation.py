@@ -395,9 +395,15 @@ def majority_baseline():
     seen_size = 0
     unseen_f1_accu = 0.0
     unseen_size = 0
+
+    f1_accu = 0.0
+    size_accu = 0
     for i in range(len(type_in_test)):
         f1=f1_score(gold_array[:,i], pred_array[:,i], pos_label=1, average='binary')
         co = sum(gold_array[:,i])
+
+        f1_accu+=f1*co
+        size_accu+=co
         if type_in_test[i] in seen_types:
             seen_f1_accu+=f1*co
             seen_size+=co
@@ -408,7 +414,8 @@ def majority_baseline():
     seen_f1 = seen_f1_accu/(1e-6+seen_size)
     unseen_f1 = unseen_f1_accu/(1e-6+unseen_size)
 
-    print('seen_f1:', seen_f1, 'unseen_f1:', unseen_f1)
+    all_f1 = f1_accu/(1e-6+size_accu)
+    print('seen_f1:', seen_f1, 'unseen_f1:', unseen_f1, 'all:', all_f1)
 
 
 if __name__ == '__main__':
