@@ -24,6 +24,7 @@ import os
 import random
 import sys
 import codecs
+import json
 import numpy as np
 import torch
 from collections import defaultdict
@@ -236,8 +237,8 @@ class RteProcessor(DataProcessor):
                 line_co+=1
                 if line_co % 100 == 0:
                     print('loading test size:', line_co)
-                # if line_co == 1000:
-                #     break
+                if line_co == 1000:
+                    break
 
 
         readfile.close()
@@ -677,7 +678,7 @@ def main():
     train_examples = None
     num_train_optimization_steps = None
     if args.do_train:
-        train_examples, seen_types = processor.get_examples_Wikipedia_train('/export/home/Dataset/wikipedia/parsed_output/tokenized_wiki/tokenized_wiki2categories.txt', 100000) #train_pu_half_v1.txt
+        train_examples, seen_types = processor.get_examples_Wikipedia_train('/export/home/Dataset/wikipedia/parsed_output/tokenized_wiki/tokenized_wiki2categories.txt', 1000) #train_pu_half_v1.txt
         # seen_classes=[0,2,4,6,8]
 
         num_train_optimization_steps = int(
