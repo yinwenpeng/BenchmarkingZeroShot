@@ -763,7 +763,7 @@ def main():
         label_ids = label_ids.to(device)
 
         with torch.no_grad():
-            logits = model(input_ids, segment_ids, input_mask, labels=None)
+            logits = model(input_ids, input_mask,segment_ids, labels=None)
         logits = logits[0]
         if len(preds) == 0:
             preds.append(logits.detach().cpu().numpy())
