@@ -685,5 +685,6 @@ def main():
     pred_probs = softmax(preds,axis=1)[:,0]
     return max(pred_probs)
 if __name__ == "__main__":
-    main()
+    prob = main()
+    print('prob:', prob)
 # CUDA_VISIBLE_DEVICES=1,2 python -u demo.py --task_name rte --do_train --do_lower_case --bert_model bert-base-uncased --max_seq_length 128 --train_batch_size 32 --learning_rate 2e-5 --num_train_epochs 3 --data_dir '' --output_dir ''
