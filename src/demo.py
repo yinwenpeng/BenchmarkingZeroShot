@@ -665,7 +665,7 @@ def main():
     test_loss = 0
     nb_test_steps = 0
     preds = []
-    print('Testing...')
+    # print('Testing...')
     for input_ids, input_mask, segment_ids, label_ids in test_dataloader:
         input_ids = input_ids.to(device)
         input_mask = input_mask.to(device)
@@ -687,4 +687,7 @@ def main():
 if __name__ == "__main__":
     prob = main()
     print('prob:', prob)
-# CUDA_VISIBLE_DEVICES=1,2 python -u demo.py --task_name rte --do_train --do_lower_case --bert_model bert-base-uncased --max_seq_length 128 --train_batch_size 32 --learning_rate 2e-5 --num_train_epochs 3 --data_dir '' --output_dir ''
+
+    '''
+    CUDA_VISIBLE_DEVICES=7 python -u demo.py --premise_str 'fuck why my email not come yet' --hypo_list 'anger | this text expresses anger | the guy is very unhappy'
+    '''
